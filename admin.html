@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bayes MCP — démonstration agent administratif (service-public.fr)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F2EFE9;
+    --ink: #000000;
+    --ink-soft: rgba(0,0,0,0.8);
+    --muted: #657180;
+    --cream: #F7F7F2;
+    --card: #FFFFFF;
+    --gold: #9A6F24;
+    --gold-bg: #EBE092;
+    --accent-orange: #FF8400;
+    --accent-blue: #1067FE;
+    --border-soft: #DBCCAF;
+    --border: #EAECF0;
+    --ok: #1F7A3F;
+    --ok-soft: #DDEBDF;
+    --warn: #9A4A04;
+    --warn-soft: #FCE6CC;
+    --danger: #9A1B1B;
+    --danger-soft: #F6D9D9;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.06);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5; min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV (matches www.bayesimpact.org) */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    height: 72px;
+    padding: 0 32px;
+    display: flex; align-items: center;
+    gap: 22px;
+    background: rgba(242,239,233,0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav-home { display: inline-flex; align-items: center; transition: opacity .15s ease; }
+  .nav-home:hover { opacity: 0.7; }
+  .nav-home img { height: 28px; width: auto; display: block; }
+  .nav-sep { color: var(--muted); font-size: 11px; letter-spacing: 0.08em; font-family: 'JetBrains Mono', monospace; font-weight: 700; padding-left: 18px; border-left: 1px solid var(--border-soft); }
+  .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+  .nav-dropdown-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 100px;
+    background: transparent;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    color: rgba(0,0,0,0.72);
+    cursor: pointer; user-select: none;
+    transition: border-color .18s ease, color .18s ease, background .18s ease;
+  }
+  .nav-dropdown-label:hover, .nav-dropdown.open .nav-dropdown-label { border-color: rgba(0,0,0,0.45); color: var(--ink); }
+  .nav-dropdown-label .nd-chev { transition: transform .2s; opacity: 0.6; }
+  .nav-dropdown.open .nav-dropdown-label .nd-chev { transform: rotate(180deg); }
+  .nav-dropdown-menu {
+    position: absolute; top: 40px; left: 0; z-index: 200;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+    padding: 6px;
+    min-width: 240px;
+    opacity: 0; pointer-events: none; transform: translateY(-4px);
+    transition: all .2s;
+  }
+  .nav-dropdown.open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .nav-dropdown-menu a { display: block; padding: 9px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 500; color: var(--ink); }
+  .nav-dropdown-menu a:hover { background: var(--bg); }
+  .nav-dropdown-menu a.active { background: var(--ink); color: var(--bg); }
+  .nav-dropdown-menu a .nd-sub { display: block; font-size: 11.5px; color: var(--muted); font-weight: 400; margin-top: 1px; }
+  .nav-dropdown-menu a.active .nd-sub { color: rgba(255,255,255,0.55); }
+
+  .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(0,0,0,0.6); transition: color .15s ease; font-weight: 500; }
+  .nav-back:hover { color: var(--ink); }
+  .nav-back svg { display: block; }
+  .nav-spacer { flex: 1; }
+
+  .lang-toggle {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer; user-select: none;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+    padding: 6px 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 100px;
+    color: rgba(0,0,0,0.7);
+    background: transparent;
+    transition: border-color .18s ease, color .18s ease, background .18s ease;
+    font-family: inherit;
+  }
+  .lang-toggle:hover, .lang-toggle.open { border-color: rgba(0,0,0,0.45); color: var(--ink); }
+  .lang-globe { color: rgba(0,0,0,0.55); flex: 0 0 auto; display: block; }
+  .lang-toggle:hover .lang-globe, .lang-toggle.open .lang-globe { color: var(--ink); }
+  .lang-chevron { transition: transform .2s; flex: 0 0 auto; opacity: 0.6; display: block; }
+  .lang-toggle.open .lang-chevron { transform: rotate(180deg); }
+  .lang-menu {
+    position: absolute; top: 40px; right: 0;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+    padding: 6px;
+    min-width: 120px;
+    opacity: 0; pointer-events: none; transform: translateY(-4px);
+    transition: all .2s;
+  }
+  .lang-toggle.open .lang-menu { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .lang-menu a { display: block; width: 100%; padding: 8px 12px; text-align: left; border-radius: 8px; font-size: 13.5px; font-weight: 500; cursor: pointer; }
+  .lang-menu a:hover { background: var(--bg); }
+  .lang-menu a.active { background: var(--ink); color: var(--bg); }
+
+  .hero { max-width: 1400px; margin: 0 auto; padding: 44px 28px 8px; }
+  .hero h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 700; max-width: 880px; }
+  .hero h1 em { font-style: normal; background: linear-gradient(180deg, transparent 60%, var(--gold-bg) 60%); padding: 0 2px; }
+  .hero p { font-size: 16px; color: var(--ink-soft); max-width: 820px; margin: 0 0 18px; }
+
+  .sources { max-width: 1400px; margin: 0 auto; padding: 0 28px 24px; }
+  .sources-cmd { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.02em; }
+  .sources-cmd .prompt { color: var(--accent-orange); font-weight: 700; }
+  .sources-cmd .cmd-text::after { content: ''; display: inline-block; width: 6px; height: 11px; background: currentColor; margin-left: 3px; animation: caret 1s infinite; vertical-align: middle; }
+  .sources-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .src-item { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--card); border: 1px solid var(--border-soft); border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--ink); opacity: 0; transform: translateY(4px); animation: srcIn .35s ease forwards; }
+  @keyframes srcIn { to { opacity: 1; transform: translateY(0); } }
+  .src-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  .src-name { font-weight: 700; letter-spacing: 0.02em; }
+  .src-meta { color: var(--muted); font-weight: 400; }
+
+  .scenarios { max-width: 1400px; margin: 0 auto; padding: 8px 28px 20px; }
+  .scenarios-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  .scenarios-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .scn-btn { text-align: left; background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; transition: all .18s ease; font-family: inherit; color: var(--ink); display: flex; flex-direction: column; gap: 4px; }
+  .scn-btn:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .scn-btn.active { border-color: var(--ink); background: var(--ink); color: #fff; }
+  .scn-btn.active .scn-tag { color: var(--gold-bg); }
+  .scn-btn.active .scn-sub { color: rgba(255,255,255,0.7); }
+  .scn-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent-orange); font-family: 'JetBrains Mono', monospace; }
+  .scn-title { font-size: 14px; font-weight: 600; }
+  .scn-sub { font-size: 12px; color: var(--muted); }
+
+  .controls { max-width: 1400px; margin: 0 auto; padding: 0 28px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn { border: 1px solid var(--ink); background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; transition: all .15s ease; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+  .controls-hint { font-size: 12.5px; color: var(--muted); margin-left: 6px; }
+
+  /* STAGE */
+  .stage { max-width: 1400px; margin: 0 auto; padding: 8px 28px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; align-items: start; }
+  .vs { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); background: var(--bg); padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; z-index: 1; }
+  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+  .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .panel-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14.5px; }
+  .panel-title .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+  .badge-plain { background: var(--cream); color: var(--ink-soft); border: 1px solid var(--border-soft); }
+  .badge-mcp { background: var(--ink); color: var(--gold-bg); }
+  .panel-sub { font-size: 12px; color: var(--muted); }
+  .panel.left .panel-header { background: linear-gradient(180deg, var(--cream) 0%, #fff 100%); }
+  .panel.right .panel-header { background: linear-gradient(180deg, #FBF7EE 0%, #fff 100%); }
+
+  .chat { flex: 1; padding: 22px 18px; display: flex; flex-direction: column; gap: 18px; }
+  .msg.user { align-self: flex-end; max-width: 90%; background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 14px; border-bottom-right-radius: 5px; font-size: 13.5px; line-height: 1.5; animation: fadeUp .3s ease; }
+  .msg.ai { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: flex-start; animation: fadeUp .35s ease; }
+  .ai-avatar { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; background: var(--cream); color: var(--ink-soft); border: 1px solid var(--border-soft); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; }
+  .msg.ai.verified .ai-avatar { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .ai-avatar svg { width: 16px; height: 16px; display: block; }
+  .ai-body { min-width: 0; }
+  .phase-tag { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .phase-tag.verified { color: var(--ok); }
+  .ai-text { color: var(--ink); font-size: 13.5px; line-height: 1.6; }
+  .ai-text strong { font-weight: 600; }
+  .typing { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite ease-in-out; }
+  .typing span:nth-child(2) { animation-delay: .15s; }
+  .typing span:nth-child(3) { animation-delay: .30s; }
+  @keyframes blink { 0%,80%,100%{transform:scale(0.7);opacity:0.4;} 40%{transform:scale(1);opacity:1;} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes caret { 50% { opacity: 0; } }
+
+  /* TOOL CALL (compact) */
+  .toolcall {
+    border: 1px solid var(--border-soft); background: #FBF7EE;
+    border-radius: 10px; padding: 12px 14px; position: relative;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    animation: fadeUp .35s ease;
+  }
+  .toolcall::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--ink); }
+  .toolcall-head { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-soft); margin-bottom: 8px; font-weight: 600; font-size: 11.5px; color: var(--ink); }
+  .toolcall-head .ico { width: 16px; height: 16px; display: grid; place-items: center; color: var(--ink); }
+  .toolcall-head .ico svg { width: 100%; height: 100%; }
+  .toolcall-head .ttl { flex: 1; }
+  .toolcall-head .status { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .tc-row { display: grid; grid-template-columns: 14px 1fr auto; gap: 8px; align-items: center; padding: 5px 0; font-size: 11px; color: var(--ink-soft); opacity: 0.35; transition: opacity .3s ease; border-bottom: 1px dashed rgba(0,0,0,0.06); }
+  .tc-row:last-child { border-bottom: none; }
+  .tc-row.active, .tc-row.done { opacity: 1; }
+  .tc-ico { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--muted); display: grid; place-items: center; font-size: 8px; color: var(--muted); }
+  .tc-row.active .tc-ico { border-color: var(--ink); color: var(--ink); animation: spin 0.9s linear infinite; border-top-color: transparent; }
+  .tc-row.done .tc-ico { background: var(--ok); border-color: var(--ok); color: #fff; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .tc-name { color: var(--ink); font-weight: 600; font-size: 11px; }
+  .tc-result { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--ok-soft); color: var(--ok); font-weight: 600; white-space: nowrap; }
+  .tc-row:not(.done) .tc-result { visibility: hidden; }
+
+  /* SOURCE DEEPLINK (à la HAS verdict source-link) */
+  .form-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .form-link:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .form-link .fl-ico { width: 28px; height: 28px; background: var(--cream); border-radius: 7px; display: grid; place-items: center; color: var(--ink); flex-shrink: 0; }
+  .form-link .fl-ico svg { width: 14px; height: 14px; }
+  .form-link .fl-body { flex: 1; min-width: 0; }
+  .form-link .fl-title { font-size: 12.5px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .form-link .fl-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  .form-link .fl-arrow { color: var(--accent-blue); flex-shrink: 0; }
+
+  /* EXTRACTED CARD */
+  .extracted {
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .extracted-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .extracted-list { display: flex; flex-direction: column; gap: 5px; }
+  .extracted-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 8px; align-items: baseline; font-size: 12.5px; }
+  .extracted-row .er-ico { width: 14px; height: 14px; border-radius: 4px; display: grid; place-items: center; font-size: 9px; font-weight: 800; }
+  .extracted-row.ok .er-ico { background: var(--ok); color: #fff; }
+  .extracted-row.missing .er-ico { background: var(--cream); color: var(--ink-soft); border: 1px solid var(--border-soft); }
+  .extracted-row .er-label { color: var(--ink-soft); }
+  .extracted-row.ok .er-label { color: var(--ink); }
+  .extracted-row .er-value { font-weight: 600; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  .extracted-row.missing .er-value { color: var(--muted); font-style: italic; font-family: inherit; }
+  .extracted-divider {
+    border-top: 1px solid var(--border-soft);
+    margin: 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+    padding-top: 8px;
+  }
+
+  /* PRECISION QUESTION (clickable options) */
+  .precision {
+    border: 1px solid rgba(154,74,4,0.25);
+    background: var(--warn-soft);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .precision-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--warn); font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .precision-question { font-size: 13px; color: var(--ink); margin-bottom: 10px; }
+  .precision-options { display: flex; flex-wrap: wrap; gap: 6px; }
+  .precision-opt {
+    padding: 5px 10px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .precision-opt.chosen {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  /* UPLOAD REQUEST (button-like prompt) */
+  .upload-req {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px dashed var(--border-soft);
+    border-radius: 10px;
+    background: var(--cream);
+  }
+  .upload-req .ur-ico { color: var(--ink-soft); flex-shrink: 0; }
+  .upload-req .ur-body { flex: 1; }
+  .upload-req .ur-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .upload-req .ur-meta { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+  .upload-req .ur-btn { padding: 6px 12px; background: var(--ink); color: #fff; border-radius: 8px; font-size: 12px; font-weight: 600; }
+
+  /* UPLOAD DONE (file card with validation chips) */
+  .upload-done {
+    border: 1px solid var(--ok-soft);
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .ud-head {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 8px;
+  }
+  .ud-head .ud-ico { width: 32px; height: 32px; background: var(--cream); border-radius: 7px; display: grid; place-items: center; color: var(--ink); flex-shrink: 0; }
+  .ud-head .ud-ico svg { width: 16px; height: 16px; }
+  .ud-head .ud-name { font-size: 12.5px; font-weight: 600; color: var(--ink); font-family: 'JetBrains Mono', monospace; }
+  .ud-head .ud-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .ud-checks { display: flex; flex-direction: column; gap: 4px; }
+  .ud-row { display: flex; align-items: baseline; gap: 8px; font-size: 12px; }
+  .ud-row .udr-ico { width: 14px; height: 14px; border-radius: 4px; display: inline-grid; place-items: center; font-size: 9px; font-weight: 800; flex-shrink: 0; transform: translateY(2px); }
+  .ud-row.ok .udr-ico { background: var(--ok); color: #fff; }
+  .ud-row.warn .udr-ico { background: var(--warn); color: #fff; }
+  .ud-row.ok .udr-label { color: var(--ink); }
+  .ud-row.warn .udr-label { color: var(--warn); }
+  .ud-row .udr-value { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-left: auto; }
+
+  /* EMAIL INPUT (mock) */
+  .email-input-row {
+    display: flex; gap: 8px; align-items: center;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+  }
+  .email-input-row .ei-ico { color: var(--ink-soft); flex-shrink: 0; }
+  .email-input-row .ei-label { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+  .email-input-row .ei-typed { font-size: 13px; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .email-input-row .ei-typed::after { content: ''; display: inline-block; width: 1px; height: 12px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; vertical-align: middle; }
+
+  /* FINAL CONFIRMATION CARD */
+  .final-card {
+    background: var(--ink); color: #fff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    animation: fadeUp .4s ease;
+  }
+  .fc-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  .fc-head .fc-ico { width: 28px; height: 28px; background: var(--ok); color: #fff; border-radius: 7px; display: grid; place-items: center; flex-shrink: 0; font-size: 16px; }
+  .fc-head .fc-title { font-size: 14px; font-weight: 700; }
+  .fc-head .fc-sub { font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  .fc-rows { display: flex; flex-direction: column; gap: 8px; }
+  .fc-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; font-size: 12px; align-items: baseline; }
+  .fc-row .fc-key { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+  .fc-row .fc-val { color: #fff; }
+  .fc-row .fc-val strong { color: var(--gold-bg); font-weight: 700; }
+  .fc-foot {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .fc-foot .ico { color: var(--gold-bg); flex-shrink: 0; font-size: 14px; }
+
+  .generic-links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .generic-links li { font-size: 12.5px; color: var(--accent-blue); text-decoration: underline; text-decoration-color: rgba(16,103,254,0.3); }
+
+  .inputbar { border-top: 1px solid var(--border-soft); background: #fff; padding: 12px 16px; display: flex; gap: 10px; align-items: center; }
+  .fake-input { flex: 1; border: 1px solid var(--border-soft); border-radius: 10px; padding: 9px 12px; font-size: 13px; color: var(--muted); background: var(--cream); min-height: 38px; display: flex; align-items: center; font-family: inherit; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .fake-input .caret { display: inline-block; width: 1px; height: 14px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; }
+  .inputbar button { border: none; background: var(--ink); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+
+  .footer-strip { max-width: 1400px; margin: 0 auto; padding: 24px 28px 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .fact { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 18px 20px; }
+  .fact-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 600; letter-spacing: 0.06em; }
+  .fact h4 { margin: 6px 0 6px; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .fact p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
+  @media (max-width: 1100px) { .stage { grid-template-columns: 1fr; } .vs { display: none; } .footer-strip { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .nav { padding: 0 16px; gap: 10px; } .nav-sep, .nav-back { display: none; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bi-mark" viewBox="0 0 415 410">
+    <path d="M309.36,246h63.39a41.67,41.67,0,0,0,0-83.33H309.22L402,71.55a41.67,41.67,0,1,0-58.41-59.44L249,105V42.15a41.67,41.67,0,1,0-83.33,0v63l-94.86-93a41.67,41.67,0,0,0-58.35,59.5l92.88,91.08H41.67a41.67,41.67,0,1,0,0,83.33h63.56L12.52,336.72a41.67,41.67,0,0,0,58.29,59.55L165.7,303.4v63.1a41.67,41.67,0,0,0,83.33,0v-63l94.54,92.71a41.67,41.67,0,0,0,58.35-59.5Z" fill="currentColor"/>
+    <circle cx="207.59" cy="41.49" r="41.34" fill="currentColor"/>
+    <circle cx="207.59" cy="367.01" r="41.34" fill="currentColor"/>
+    <circle cx="41.37" cy="204.4" r="41.34" fill="currentColor"/>
+    <circle cx="373.76" cy="204.4" r="41.34" fill="currentColor"/>
+    <circle cx="373.52" cy="366.86" r="41.34" fill="currentColor"/>
+    <circle cx="41.34" cy="366.86" r="41.34" fill="currentColor"/>
+    <circle cx="41.34" cy="41.34" r="41.34" fill="currentColor"/>
+    <circle cx="373.52" cy="41.34" r="41.34" fill="currentColor"/>
+    <circle cx="207.57" cy="204.25" r="41.34" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/>
+  </symbol>
+  <symbol id="ic-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+  </symbol>
+  <symbol id="ic-id" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="9" cy="12" r="2"/><path d="M14 10h5M14 14h4"/>
+  </symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/>
+  </symbol>
+  <symbol id="ic-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 9l5-5"/><path d="M5 4h5v5"/>
+  </symbol>
+</svg>
+
+<nav class="nav">
+  <a class="nav-home" href="https://www.bayesimpact.org" target="_blank" rel="noopener" title="bayesimpact.org">
+    <img src="bi-colors.svg" alt="Bayes Impact" />
+  </a>
+  <span class="nav-sep" data-i18n="topbar.demo">MCP · DÉMO</span>
+  <div class="nav-dropdown" id="demo-dropdown">
+    <button class="nav-dropdown-label" type="button" aria-haspopup="true" aria-expanded="false">
+      <span data-i18n="topbar.toggle.admin">Administratif</span>
+      <svg class="nd-chev" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="nav-dropdown-menu" role="menu">
+      <a href="./" data-i18n="dropdown.health"><span>Santé</span><span class="nd-sub" data-i18n="dropdown.health.sub">Conformité HAS &amp; ANSM</span></a>
+      <a href="employment.html" data-i18n="dropdown.employment"><span>Emploi</span><span class="nd-sub" data-i18n="dropdown.employment.sub">France Travail, dispositifs régionaux</span></a>
+      <a href="admin.html" class="active" data-i18n="dropdown.admin"><span>Administratif</span><span class="nd-sub" data-i18n="dropdown.admin.sub">Pré-remplir une démarche en ligne</span></a>
+    </div>
+  </div>
+  <a class="nav-back" href="https://www.bayesimpact.org" target="_blank" rel="noopener">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M7.5 9 4 6l3.5-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span data-i18n="nav.back">bayesimpact.org</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="lang-toggle" id="lang-toggle" tabindex="0" aria-label="Language">
+    <svg class="lang-globe" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+    <span id="lang-current">FR</span>
+    <svg class="lang-chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="lang-menu" id="lang-menu" role="menu">
+      <a data-lang="fr" class="active">Français</a>
+      <a data-lang="en">English</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1 data-i18n="hero.h1">Pré-remplir une démarche en ligne <em>depuis une simple conversation</em>.</h1>
+  <p data-i18n="hero.p">Un assistant IA répond avec des liens et un mode d'emploi. Le serveur MCP Bayes identifie la bonne procédure sur service-public.fr, extrait les informations déjà fournies, pose les questions manquantes, vérifie le format et les pièces, et prépare un dossier prêt à transmettre à l'administration concernée.</p>
+</section>
+
+<section class="sources">
+  <div class="sources-cmd">
+    <span class="prompt">$</span>
+    <span class="cmd-text" data-i18n="sources.cmd">bayes_mcp.list_connected_sources()</span>
+  </div>
+  <ul class="sources-list" id="sources-list"></ul>
+</section>
+
+<section class="scenarios">
+  <div class="scenarios-label" data-i18n="scenarios.label">Choisir une démarche</div>
+  <div class="scenarios-row" id="scenarios-row"></div>
+</section>
+
+<section class="controls">
+  <button class="btn" id="play-btn" data-i18n="controls.play">▶ Lancer la démonstration</button>
+  <button class="btn ghost" id="reset-btn" data-i18n="controls.reset">↻ Réinitialiser</button>
+  <span class="controls-hint" data-i18n="controls.hint">Même question, à gauche un assistant générique, à droite l'agent administratif Bayes MCP.</span>
+</section>
+
+<section class="stage">
+  <span class="vs">vs.</span>
+  <div class="panel left">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">
+          <span class="badge badge-plain" data-i18n="panel.left.badge">SANS MCP</span>
+          <span data-i18n="panel.left.title">Assistant IA généraliste</span>
+        </div>
+        <div class="panel-sub" data-i18n="panel.left.sub">Pas d'accès aux formulaires officiels</div>
+      </div>
+      <span class="pill" style="background:var(--danger-soft);border-color:rgba(154,27,27,0.25);color:var(--danger); display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:500;" data-i18n="panel.left.tag">Générique</span>
+    </div>
+    <div class="chat" id="chat-left"></div>
+    <div class="inputbar">
+      <div class="fake-input" id="input-left">Posez une question…<span class="caret"></span></div>
+      <button disabled data-i18n="input.send">Envoyer</button>
+    </div>
+  </div>
+  <div class="panel right">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">
+          <span class="badge badge-mcp" data-i18n="panel.right.badge">AVEC MCP</span>
+          <span data-i18n="panel.right.title">Agent administratif + Bayes MCP</span>
+        </div>
+        <div class="panel-sub" data-i18n="panel.right.sub">service-public.fr, CERFA, ANTS, France Connect</div>
+      </div>
+      <span class="pill" style="background:var(--ok-soft);border-color:rgba(31,122,63,0.25);color:var(--ok); display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:500;" data-i18n="panel.right.tag">Dossier prêt</span>
+    </div>
+    <div class="chat" id="chat-right"></div>
+    <div class="inputbar">
+      <div class="fake-input" id="input-right">Posez une question…<span class="caret"></span></div>
+      <button disabled data-i18n="input.send">Envoyer</button>
+    </div>
+  </div>
+</section>
+
+<section class="footer-strip">
+  <div class="fact">
+    <div class="fact-num" data-i18n="footer.f1.num">01 · POURQUOI</div>
+    <h4 data-i18n="footer.f1.h">Les démarches sont mal saisies</h4>
+    <p data-i18n="footer.f1.p">Selon la Cour des comptes, plus de 30 % des demandes d'aides sociales sont incomplètes ou mal formulées. Pas par mauvaise volonté : par méconnaissance des règles, des formulaires et des pièces attendues.</p>
+  </div>
+  <div class="fact">
+    <div class="fact-num" data-i18n="footer.f2.num">02 · COMMENT</div>
+    <h4 data-i18n="footer.f2.h">Un agent qui sait lire les règles</h4>
+    <p data-i18n="footer.f2.p">Le serveur MCP Bayes connecte service-public.fr, les bases CERFA, l'ANTS et France Connect à n'importe quel assistant IA. Il sait quelles questions poser, quels formats accepter, quels documents vérifier.</p>
+  </div>
+  <div class="fact">
+    <div class="fact-num" data-i18n="footer.f3.num">03 · POUR QUI</div>
+    <h4 data-i18n="footer.f3.h">Pour le citoyen, et l'agent</h4>
+    <p data-i18n="footer.f3.p">Pour le citoyen, un dossier prêt en quelques minutes. Pour l'agent en mairie ou en préfecture, un dossier déjà complet à instruire. Pour l'État, moins de relances, plus de droits effectivement ouverts.</p>
+  </div>
+</section>
+
+<script>
+// ---------- LANGUAGE ----------
+const LANG_KEY = 'bayes-mcp-demo-lang';
+let LANG = 'fr';
+try {
+  const saved = localStorage.getItem(LANG_KEY);
+  if (saved === 'fr' || saved === 'en') LANG = saved;
+} catch (e) {}
+
+const T = {
+  fr: {
+    'topbar.demo': 'MCP · DÉMO',
+    'topbar.toggle.health': 'Santé',
+    'topbar.toggle.employment': 'Emploi',
+    'topbar.toggle.admin': 'Administratif',
+    'dropdown.health': '<span>Santé</span><span class="nd-sub">Conformité HAS &amp; ANSM</span>',
+    'dropdown.health.sub': 'Conformité HAS &amp; ANSM',
+    'dropdown.employment': '<span>Emploi</span><span class="nd-sub">France Travail, dispositifs régionaux</span>',
+    'dropdown.employment.sub': 'France Travail, dispositifs régionaux',
+    'dropdown.admin': '<span>Administratif</span><span class="nd-sub">Pré-remplir une démarche en ligne</span>',
+    'dropdown.admin.sub': 'Pré-remplir une démarche en ligne',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Pré-remplir une démarche en ligne <em>depuis une simple conversation</em>.",
+    'hero.p': "Un assistant IA répond avec des liens et un mode d'emploi. Le serveur MCP Bayes identifie la bonne procédure sur service-public.fr, extrait les informations déjà fournies, pose les questions manquantes, vérifie le format et les pièces, et prépare un dossier prêt à transmettre à l'administration concernée.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Choisir une démarche',
+    'controls.play': '▶ Lancer la démonstration',
+    'controls.reset': '↻ Réinitialiser',
+    'controls.hint': "Même question, à gauche un assistant générique, à droite l'agent administratif Bayes MCP.",
+    'controls.playing': '● En cours…',
+    'controls.replay': '↻ Rejouer ce scénario',
+    'input.placeholder': 'Posez une question…',
+    'input.send': 'Envoyer',
+    'panel.left.badge': 'SANS MCP',
+    'panel.left.title': 'Assistant IA généraliste',
+    'panel.left.sub': "Pas d'accès aux formulaires officiels",
+    'panel.left.tag': 'Générique',
+    'panel.right.badge': 'AVEC MCP',
+    'panel.right.title': 'Agent administratif + Bayes MCP',
+    'panel.right.sub': 'service-public.fr, CERFA, ANTS, France Connect',
+    'panel.right.tag': 'Dossier prêt',
+    'phaseTag.initial': '● Réponse générique · sans intégration',
+    'phaseTag.verified': '● Agent administratif · Bayes MCP',
+    'footer.f1.num': '01 · POURQUOI',
+    'footer.f1.h': 'Les démarches sont mal saisies',
+    'footer.f1.p': "Selon la Cour des comptes, plus de 30 % des demandes d'aides sociales sont incomplètes ou mal formulées. Pas par mauvaise volonté : par méconnaissance des règles, des formulaires et des pièces attendues.",
+    'footer.f2.num': '02 · COMMENT',
+    'footer.f2.h': 'Un agent qui sait lire les règles',
+    'footer.f2.p': "Le serveur MCP Bayes connecte service-public.fr, les bases CERFA, l'ANTS et France Connect à n'importe quel assistant IA. Il sait quelles questions poser, quels formats accepter, quels documents vérifier.",
+    'footer.f3.num': '03 · POUR QUI',
+    'footer.f3.h': 'Pour le citoyen, et l\'agent',
+    'footer.f3.p': "Pour le citoyen, un dossier prêt en quelques minutes. Pour l'agent en mairie ou en préfecture, un dossier déjà complet à instruire. Pour l'État, moins de relances, plus de droits effectivement ouverts."
+  },
+  en: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Health',
+    'topbar.toggle.employment': 'Employment',
+    'topbar.toggle.admin': 'Public services',
+    'dropdown.health': '<span>Health</span><span class="nd-sub">HAS &amp; ANSM compliance</span>',
+    'dropdown.health.sub': 'HAS &amp; ANSM compliance',
+    'dropdown.employment': '<span>Employment</span><span class="nd-sub">France Travail, regional schemes</span>',
+    'dropdown.employment.sub': 'France Travail, regional schemes',
+    'dropdown.admin': '<span>Public services</span><span class="nd-sub">Pre-fill an online procedure</span>',
+    'dropdown.admin.sub': 'Pre-fill an online procedure',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Pre-fill a public-service form <em>from a simple chat</em>.",
+    'hero.p': "An AI assistant answers with links and instructions. The Bayes MCP server identifies the right procedure on service-public.fr, extracts the information already provided, asks the remaining questions, validates formats and documents, and prepares a complete dossier ready to send to the relevant administration.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Pick a procedure',
+    'controls.play': '▶ Run the demo',
+    'controls.reset': '↻ Reset',
+    'controls.hint': 'Same question, generic assistant on the left, Bayes MCP admin agent on the right.',
+    'controls.playing': '● Running…',
+    'controls.replay': '↻ Replay this scenario',
+    'input.placeholder': 'Ask a question…',
+    'input.send': 'Send',
+    'panel.left.badge': 'WITHOUT MCP',
+    'panel.left.title': 'General-purpose AI assistant',
+    'panel.left.sub': 'No access to official forms',
+    'panel.left.tag': 'Generic',
+    'panel.right.badge': 'WITH MCP',
+    'panel.right.title': 'Admin agent + Bayes MCP',
+    'panel.right.sub': 'service-public.fr, CERFA, ANTS, France Connect',
+    'panel.right.tag': 'Dossier ready',
+    'phaseTag.initial': '● Generic response · no integration',
+    'phaseTag.verified': '● Admin agent · Bayes MCP',
+    'footer.f1.num': '01 · WHY',
+    'footer.f1.h': 'Forms are filled badly',
+    'footer.f1.p': "According to France's Court of Auditors, more than 30 % of social-benefit applications are incomplete or badly drafted. Not out of bad faith: out of unfamiliarity with rules, forms and required documents.",
+    'footer.f2.num': '02 · HOW',
+    'footer.f2.h': 'An agent that reads the rules',
+    'footer.f2.p': "The Bayes MCP server connects service-public.fr, CERFA form databases, ANTS and France Connect to any AI assistant. It knows which questions to ask, which formats to accept, which documents to verify.",
+    'footer.f3.num': '03 · FOR WHOM',
+    'footer.f3.h': 'For citizens, and for civil servants',
+    'footer.f3.p': "For citizens, a complete dossier in minutes. For staff at town halls and prefectures, a dossier ready to process. For the State, fewer back-and-forths, more rights actually claimed."
+  }
+};
+
+function tx(key) { return (T[LANG] && T[LANG][key]) || (T.fr && T.fr[key]) || key; }
+function L(field) {
+  if (field == null) return '';
+  if (typeof field === 'string') return field;
+  return field[LANG] ?? field.fr ?? '';
+}
+
+// ---------- SOURCES ----------
+const SOURCES = [
+  { name: 'service-public.fr', meta: { fr: 'base réglementaire', en: 'regulatory reference' } },
+  { name: 'CERFA', meta: { fr: 'catalogue de formulaires', en: 'form catalogue' } },
+  { name: 'ANTS', meta: { fr: 'titres sécurisés', en: 'secure ID titles' } },
+  { name: 'France Connect', meta: { fr: 'identité officielle', en: 'official identity' } },
+  { name: 'DGFiP', meta: { fr: 'vérification avis d\'imposition', en: 'tax notice verification' } }
+];
+
+function renderSources() {
+  const el = document.getElementById('sources-list');
+  el.innerHTML = SOURCES.map((s, i) => `
+    <li class="src-item" style="animation-delay: ${0.1 + i * 0.14}s">
+      <span class="src-dot"></span>
+      <span class="src-name">${s.name}</span>
+      <span class="src-meta">${L(s.meta)}</span>
+    </li>
+  `).join('');
+}
+
+// ---------- SCENARIOS ----------
+const SCENARIOS = [
+  {
+    id: 'logement',
+    tag: { fr: 'AIDE AU LOGEMENT', en: 'HOUSING APPLICATION' },
+    title: { fr: 'Demande de logement social', en: 'Social housing application' },
+    sub: { fr: 'Maman solo · Lyon · 2 enfants', en: 'Single mom · Lyon · 2 children' },
+    question: {
+      fr: "Bonjour, je cherche à faire une demande de logement social à Lyon. Je suis maman solo avec 2 enfants, je gagne 1 400 € net par mois et je vis dans un T2 que je n'arrive plus à payer. Comment je fais ?",
+      en: "Hi, I'd like to apply for social housing in Lyon. I'm a single mom with 2 children, I earn €1,400 net per month and live in a 1-bedroom flat I can no longer afford. How do I apply?"
+    },
+    plainAnswer: {
+      fr: [
+        "Pour faire une demande de logement social en France, voici les grandes étapes :",
+        "• Rendez-vous sur <strong>demande-logement-social.gouv.fr</strong> et créez un compte",
+        "• Remplissez le formulaire CERFA en ligne (informations sur le foyer, ressources, logement souhaité)",
+        "• Joignez les pièces justificatives : pièce d'identité, avis d'imposition, justificatif de domicile",
+        "• Une fois validée, votre demande est enregistrée au niveau national et un numéro unique vous est attribué",
+        "• Les délais varient selon les départements et la tension locative",
+        "<ul class='generic-links'><li>demande-logement-social.gouv.fr</li><li>service-public.fr (rubrique logement)</li><li>action-logement.fr</li></ul>"
+      ],
+      en: [
+        "To apply for social housing in France, here are the main steps:",
+        "• Go to <strong>demande-logement-social.gouv.fr</strong> and create an account",
+        "• Fill in the CERFA form online (household, income, housing wanted)",
+        "• Attach the supporting documents: ID, tax notice, proof of residence",
+        "• Once validated, your application is registered nationally and you get a unique reference number",
+        "• Processing times vary by department and how tight the housing market is",
+        "<ul class='generic-links'><li>demande-logement-social.gouv.fr</li><li>service-public.fr (housing section)</li><li>action-logement.fr</li></ul>"
+      ]
+    },
+    turns: [
+      // 1. tool call: identify regulation + form
+      {
+        type: 'toolcall',
+        title: { fr: 'bayes_mcp.find_procedure()', en: 'bayes_mcp.find_procedure()' },
+        steps: [
+          { name: { fr: 'Recherche sur service-public.fr', en: 'Search on service-public.fr' }, result: { fr: 'F869 trouvé', en: 'F869 found' } },
+          { name: { fr: 'Identification du formulaire CERFA', en: 'CERFA form lookup' }, result: { fr: '14069*04', en: '14069*04' } },
+          { name: { fr: 'Extraction des champs requis', en: 'Required fields extracted' }, result: { fr: '23 champs · 3 documents', en: '23 fields · 3 docs' } }
+        ],
+        formLink: {
+          title: { fr: 'Demande de logement social — CERFA 14069*04', en: 'Social housing application — CERFA 14069*04' },
+          meta: 'service-public.fr · F869',
+          url: 'https://www.service-public.fr/particuliers/vosdroits/F869'
+        }
+      },
+      // 2. extracted fields recap
+      {
+        type: 'extracted',
+        headerOk: { fr: 'Informations déjà fournies', en: 'Information already provided' },
+        headerMissing: { fr: 'Informations manquantes', en: 'Missing information' },
+        ok: [
+          { label: { fr: 'Composition du foyer', en: 'Household composition' }, value: { fr: '1 adulte · 2 enfants', en: '1 adult · 2 children' } },
+          { label: { fr: 'Revenu mensuel net', en: 'Net monthly income' }, value: { fr: '1 400 €', en: '€1,400' } },
+          { label: { fr: 'Logement actuel', en: 'Current housing' }, value: { fr: 'T2 · trop cher', en: '1-bedroom · unaffordable' } },
+          { label: { fr: 'Ville souhaitée', en: 'Desired city' }, value: { fr: 'Lyon (à préciser)', en: 'Lyon (to clarify)' } },
+          { label: { fr: 'Motif de la demande', en: 'Reason' }, value: { fr: 'difficulté financière', en: 'financial hardship' } }
+        ],
+        missing: [
+          { label: { fr: 'Identité complète', en: 'Full identity' } },
+          { label: { fr: 'Arrondissement de Lyon', en: 'Lyon district' } },
+          { label: { fr: 'Revenu fiscal de référence (N-2)', en: 'Reference tax income (N-2)' } },
+          { label: { fr: 'Type de logement souhaité', en: 'Desired housing type' } }
+        ]
+      },
+      // 3. AI question
+      {
+        type: 'ai',
+        content: {
+          fr: "J'ai trouvé la bonne démarche. Quelques précisions me permettront de pré-remplir le dossier. <strong>Quelle est votre identité complète</strong> (nom, prénom, date de naissance) ?",
+          en: "I found the right procedure. A few precisions will let me pre-fill the dossier. <strong>What is your full identity</strong> (last name, first name, date of birth)?"
+        }
+      },
+      // 4. user types answer
+      {
+        type: 'user_typed',
+        content: {
+          fr: 'Sophie Martin, née le 15 mars 1990. Française.',
+          en: 'Sophie Martin, born March 15, 1990. French.'
+        }
+      },
+      // 5. AI precision question (Lyon arrondissement)
+      {
+        type: 'precision',
+        header: { fr: 'Précision nécessaire', en: 'Clarification needed' },
+        question: {
+          fr: "Vous m'avez parlé de Lyon. La ville compte 9 arrondissements et chacun dépend d'un bailleur différent. <strong>Lequel correspond à votre situation</strong> ?",
+          en: "You mentioned Lyon. The city has 9 districts, each handled by a different social landlord. <strong>Which one matches your situation</strong>?"
+        },
+        options: [
+          { label: 'Lyon 1er · 69001' },
+          { label: 'Lyon 3e · 69003' },
+          { label: 'Lyon 7e · 69007', chosen: true },
+          { label: 'Lyon 8e · 69008' },
+          { label: { fr: 'Autre…', en: 'Other…' } }
+        ]
+      },
+      // 6. AI asks for tax info
+      {
+        type: 'ai',
+        content: {
+          fr: "Parfait. Pour vérifier votre éligibilité aux plafonds de ressources (Lyon est en zone B1), j'ai besoin de votre <strong>avis d'imposition 2024</strong> (revenus 2023). Ce document est demandé en N-2.",
+          en: "Great. To check your income eligibility (Lyon is in zone B1), I need your <strong>2024 tax notice</strong> (covering 2023 income). It's the N-2 document the procedure requires."
+        }
+      },
+      // 7. upload request: avis d'imposition
+      {
+        type: 'upload_req',
+        ico: 'ic-doc',
+        title: { fr: "Avis d'imposition 2024", en: '2024 tax notice' },
+        meta: { fr: 'PDF · revenus 2023 · 5 Mo max', en: 'PDF · 2023 income · max 5 MB' }
+      },
+      // 8. upload done: avis d'imposition
+      {
+        type: 'upload_done',
+        ico: 'ic-doc',
+        name: 'avis_imposition_2024.pdf',
+        meta: { fr: '245 Ko · contrôle DGFiP', en: '245 KB · DGFiP cross-check' },
+        checks: [
+          { ok: true, label: { fr: 'Format reconnu', en: 'Format recognised' }, value: 'PDF/A' },
+          { ok: true, label: { fr: "Émetteur vérifié", en: 'Issuer verified' }, value: 'DGFiP' },
+          { ok: true, label: { fr: 'Année correcte (N-2)', en: 'Correct year (N-2)' }, value: '2024' },
+          { ok: true, label: { fr: 'Revenu fiscal de référence extrait', en: 'Reference tax income extracted' }, value: '17 200 €' },
+          { ok: true, label: { fr: 'Plafond PLAI/PLUS Lyon zone B1', en: 'PLAI/PLUS ceiling Lyon B1' }, value: { fr: 'éligible', en: 'eligible' } }
+        ]
+      },
+      // 9. AI asks for ID
+      {
+        type: 'ai',
+        content: {
+          fr: "Excellent, vous êtes éligible. Dernière pièce : <strong>votre pièce d'identité</strong> (carte nationale d'identité ou titre de séjour).",
+          en: "Great, you're eligible. Last document: <strong>your ID</strong> (national ID card or residence permit)."
+        }
+      },
+      // 10. upload request: ID
+      {
+        type: 'upload_req',
+        ico: 'ic-id',
+        title: { fr: "Pièce d'identité", en: 'National ID' },
+        meta: { fr: 'PDF ou JPG · recto-verso', en: 'PDF or JPG · both sides' }
+      },
+      // 11. upload done: ID
+      {
+        type: 'upload_done',
+        ico: 'ic-id',
+        name: 'cni_sophie_martin.pdf',
+        meta: { fr: '1,2 Mo · contrôle ANTS', en: '1.2 MB · ANTS cross-check' },
+        checks: [
+          { ok: true, label: { fr: 'CNI française reconnue', en: 'French national ID recognised' }, value: { fr: 'modèle 2021', en: '2021 model' } },
+          { ok: true, label: { fr: 'Validité', en: 'Validity' }, value: { fr: "jusqu'au 14 mars 2031", en: 'until Mar 14, 2031' } },
+          { ok: true, label: { fr: 'MRZ lisible', en: 'MRZ readable' }, value: 'OK' },
+          { ok: true, label: { fr: 'Identité cohérente', en: 'Identity consistent' }, value: { fr: 'concordance', en: 'matches' } }
+        ]
+      },
+      // 12. AI confirms and asks email
+      {
+        type: 'ai',
+        content: {
+          fr: "Tout est conforme. Votre dossier est complet. <strong>À quelle adresse email souhaitez-vous recevoir la confirmation</strong> et votre numéro unique d'enregistrement ?",
+          en: "Everything checks out. Your dossier is complete. <strong>Which email should I send the confirmation</strong> and your unique reference number to?"
+        }
+      },
+      // 13. email input typed
+      {
+        type: 'email_input',
+        typed: 'sophie.martin@gmail.com'
+      },
+      // 14. final card
+      {
+        type: 'final',
+        title: { fr: 'Dossier prêt à transmettre', en: 'Dossier ready to send' },
+        sub: { fr: 'Demande de logement social · CERFA 14069*04', en: 'Social housing application · CERFA 14069*04' },
+        rows: [
+          { key: { fr: 'Numéro unique', en: 'Unique reference' }, value: '<strong>069-2026-068472</strong>' },
+          { key: { fr: 'Transmis à', en: 'Sent to' }, value: { fr: 'DDT du Rhône (69) · 4 bailleurs sociaux', en: 'DDT du Rhône (69) · 4 social landlords' } },
+          { key: { fr: 'Pièces jointes', en: 'Attachments' }, value: { fr: 'CERFA · avis d\'imposition · CNI', en: 'CERFA · tax notice · national ID' } },
+          { key: 'Email', value: 'sophie.martin@gmail.com' }
+        ],
+        foot: { fr: 'Vous serez recontactée sous 30 jours. Vous pouvez suivre l\'état de votre demande sur demande-logement-social.gouv.fr avec votre numéro unique.', en: 'You will be contacted within 30 days. You can track your application on demande-logement-social.gouv.fr using your reference number.' }
+      }
+    ]
+  },
+  {
+    id: 'cni',
+    tag: { fr: "TITRE D'IDENTITÉ", en: 'ID DOCUMENT' },
+    title: { fr: "Renouveler sa carte d'identité", en: 'Renew national ID' },
+    sub: { fr: 'Adulte · Bordeaux · expire dans 3 mois', en: 'Adult · Bordeaux · expires in 3 months' },
+    question: {
+      fr: "Bonjour, je dois refaire ma carte d'identité, elle expire dans 3 mois. J'habite à Bordeaux.",
+      en: "Hi, I need to renew my national ID, it expires in 3 months. I live in Bordeaux."
+    },
+    plainAnswer: {
+      fr: [
+        "Pour renouveler votre carte nationale d'identité, voici la marche à suivre :",
+        "• Faites une <strong>pré-demande en ligne</strong> sur ants.gouv.fr",
+        "• Prenez rendez-vous dans une mairie équipée d'un dispositif de recueil",
+        "• Préparez les pièces : photo d'identité aux normes, justificatif de domicile, ancienne carte",
+        "• Le retrait se fait en personne dans les 3 mois suivant la délivrance",
+        "<ul class='generic-links'><li>ants.gouv.fr</li><li>service-public.fr (rubrique papiers)</li></ul>"
+      ],
+      en: [
+        "To renew your national ID card, here are the steps:",
+        "• Make a <strong>pre-application online</strong> on ants.gouv.fr",
+        "• Book an appointment at a town hall equipped to take biometrics",
+        "• Prepare documents: ID photo (standards-compliant), proof of residence, old card",
+        "• Pickup is in person within 3 months of issue",
+        "<ul class='generic-links'><li>ants.gouv.fr</li><li>service-public.fr (papers section)</li></ul>"
+      ]
+    },
+    turns: [
+      {
+        type: 'toolcall',
+        title: { fr: 'bayes_mcp.find_procedure()', en: 'bayes_mcp.find_procedure()' },
+        steps: [
+          { name: { fr: 'Recherche sur service-public.fr', en: 'Search on service-public.fr' }, result: { fr: 'N358 trouvé', en: 'N358 found' } },
+          { name: { fr: 'Identification du téléservice ANTS', en: 'ANTS e-service lookup' }, result: { fr: 'pré-demande CNI', en: 'CNI pre-application' } },
+          { name: { fr: 'Plafonds & règles photo', en: 'Photo rules' }, result: { fr: 'norme ISO/IEC 19794-5', en: 'ISO/IEC 19794-5' } }
+        ],
+        formLink: {
+          title: { fr: "Carte nationale d'identité — pré-demande ANTS", en: 'National ID — ANTS pre-application' },
+          meta: 'service-public.fr · N358',
+          url: 'https://www.service-public.fr/particuliers/vosdroits/N358'
+        }
+      },
+      {
+        type: 'extracted',
+        headerOk: { fr: 'Informations déjà fournies', en: 'Information already provided' },
+        headerMissing: { fr: 'Informations manquantes', en: 'Missing information' },
+        ok: [
+          { label: { fr: 'Type de démarche', en: 'Procedure type' }, value: { fr: 'renouvellement CNI', en: 'CNI renewal' } },
+          { label: { fr: 'Urgence', en: 'Urgency' }, value: { fr: 'expire dans 3 mois', en: 'expires in 3 months' } },
+          { label: { fr: 'Ville', en: 'City' }, value: { fr: 'Bordeaux (à préciser)', en: 'Bordeaux (to clarify)' } }
+        ],
+        missing: [
+          { label: { fr: 'Identité complète', en: 'Full identity' } },
+          { label: { fr: 'Date de naissance', en: 'Date of birth' } },
+          { label: { fr: 'Code postal exact', en: 'Exact postal code' } },
+          { label: { fr: "Photo d'identité aux normes", en: 'Standards-compliant ID photo' } },
+          { label: { fr: 'Justificatif de domicile', en: 'Proof of residence' } }
+        ]
+      },
+      {
+        type: 'ai',
+        content: {
+          fr: "J'ai trouvé la pré-demande sur l'ANTS. <strong>Quelle est votre identité</strong> (nom, prénom, date de naissance) ?",
+          en: "I found the ANTS pre-application. <strong>What is your identity</strong> (last name, first name, date of birth)?"
+        }
+      },
+      {
+        type: 'user_typed',
+        content: {
+          fr: "Pierre Durand, né le 12 juin 1978.",
+          en: "Pierre Durand, born June 12, 1978."
+        }
+      },
+      {
+        type: 'precision',
+        header: { fr: 'Précision nécessaire', en: 'Clarification needed' },
+        question: {
+          fr: "Bordeaux est sur plusieurs codes postaux selon le quartier. <strong>Lequel correspond à votre adresse</strong> ?",
+          en: "Bordeaux has several postal codes depending on the neighbourhood. <strong>Which one matches your address</strong>?"
+        },
+        options: [
+          { label: '33000 · centre' },
+          { label: '33100 · La Bastide', chosen: true },
+          { label: '33200 · Caudéran' },
+          { label: '33300 · Le Lac' },
+          { label: '33800 · Saint-Michel' }
+        ]
+      },
+      {
+        type: 'ai',
+        content: {
+          fr: "Merci. Pour la pré-demande, l'ANTS exige une <strong>photo d'identité aux normes</strong> (fond uni clair, regard de face, expression neutre, 35×45 mm). Je vais la vérifier en local avant envoi.",
+          en: "Thank you. The ANTS pre-application requires a <strong>standards-compliant ID photo</strong> (light plain background, looking straight, neutral expression, 35×45 mm). I'll verify it locally before sending."
+        }
+      },
+      {
+        type: 'upload_req',
+        ico: 'ic-upload',
+        title: { fr: "Photo d'identité", en: 'ID photo' },
+        meta: { fr: 'JPG · ISO/IEC 19794-5 · ≤ 1 Mo', en: 'JPG · ISO/IEC 19794-5 · ≤ 1 MB' }
+      },
+      {
+        type: 'upload_done',
+        ico: 'ic-upload',
+        name: 'photo_pierre_durand.jpg',
+        meta: { fr: '720 Ko · analyse biométrique locale', en: '720 KB · local biometric check' },
+        checks: [
+          { ok: true, label: { fr: 'Dimensions', en: 'Dimensions' }, value: '35×45 mm' },
+          { ok: true, label: { fr: 'Fond uni clair', en: 'Plain light background' }, value: 'OK' },
+          { ok: true, label: { fr: 'Regard de face', en: 'Looking straight' }, value: 'OK' },
+          { ok: true, label: { fr: 'Expression neutre', en: 'Neutral expression' }, value: 'OK' },
+          { ok: true, label: { fr: 'Pas de lunettes teintées ni couvre-chef', en: 'No tinted glasses or hat' }, value: 'OK' }
+        ]
+      },
+      {
+        type: 'ai',
+        content: {
+          fr: "Photo conforme. Dernier élément : <strong>un justificatif de domicile de moins de 3 mois</strong> (facture EDF, quittance de loyer, avis d'imposition).",
+          en: "Photo compliant. Last item: <strong>a proof of residence less than 3 months old</strong> (utility bill, rent receipt, tax notice)."
+        }
+      },
+      {
+        type: 'upload_req',
+        ico: 'ic-doc',
+        title: { fr: 'Justificatif de domicile', en: 'Proof of residence' },
+        meta: { fr: 'PDF · < 3 mois', en: 'PDF · < 3 months old' }
+      },
+      {
+        type: 'upload_done',
+        ico: 'ic-doc',
+        name: 'edf_avril_2026.pdf',
+        meta: { fr: '186 Ko · vérification date', en: '186 KB · date verified' },
+        checks: [
+          { ok: true, label: { fr: 'Émetteur', en: 'Issuer' }, value: 'EDF' },
+          { ok: true, label: { fr: "Date d'émission", en: 'Issue date' }, value: { fr: '12 avril 2026', en: 'Apr 12, 2026' } },
+          { ok: true, label: { fr: 'Ancienneté', en: 'Age' }, value: { fr: '< 3 mois', en: '< 3 months' } },
+          { ok: true, label: { fr: 'Adresse cohérente', en: 'Address consistent' }, value: { fr: 'Bordeaux 33100', en: 'Bordeaux 33100' } }
+        ]
+      },
+      {
+        type: 'ai',
+        content: {
+          fr: "Tout est conforme. Je prépare la pré-demande ANTS. <strong>À quelle adresse email envoyer la confirmation</strong> avec le numéro de pré-demande et le créneau de rendez-vous en mairie ?",
+          en: "Everything checks out. I'm preparing the ANTS pre-application. <strong>Which email should I send the confirmation</strong> to, with the pre-application reference and the town-hall appointment slot?"
+        }
+      },
+      {
+        type: 'email_input',
+        typed: 'pierre.durand@orange.fr'
+      },
+      {
+        type: 'final',
+        title: { fr: 'Pré-demande envoyée à l\'ANTS', en: 'Pre-application sent to ANTS' },
+        sub: { fr: "Renouvellement carte d'identité · norme 2021", en: 'National ID renewal · 2021 model' },
+        rows: [
+          { key: { fr: 'Numéro pré-demande', en: 'Pre-application ref.' }, value: '<strong>ANTS-26-CNI-58372941</strong>' },
+          { key: { fr: 'Rendez-vous proposé', en: 'Suggested appointment' }, value: { fr: 'Mairie de Bordeaux La Bastide · 4 juin · 10h30', en: 'Bordeaux La Bastide town hall · June 4 · 10:30 AM' } },
+          { key: { fr: 'Pièces jointes', en: 'Attachments' }, value: { fr: 'photo · justif. domicile', en: 'photo · proof of residence' } },
+          { key: 'Email', value: 'pierre.durand@orange.fr' }
+        ],
+        foot: { fr: 'Le retrait de la nouvelle carte se fera 2 à 3 semaines après le rendez-vous, sur place. Pensez à apporter l\'ancienne carte.', en: 'New ID pickup will be 2 to 3 weeks after the appointment, in person. Bring the old card.' }
+      }
+    ]
+  }
+];
+
+// ---------- STATE ----------
+let currentScn = SCENARIOS[0];
+let isPlaying = false;
+let timers = [];
+
+// ---------- SCENARIO BUTTONS ----------
+const scnRow = document.getElementById('scenarios-row');
+function renderScenarioButtons() {
+  scnRow.innerHTML = SCENARIOS.map((s) => `
+    <button class="scn-btn ${s.id === currentScn.id ? 'active' : ''}" data-id="${s.id}">
+      <span class="scn-tag">${L(s.tag)}</span>
+      <span class="scn-title">${L(s.title)}</span>
+      <span class="scn-sub">${L(s.sub)}</span>
+    </button>
+  `).join('');
+  scnRow.querySelectorAll('.scn-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const s = SCENARIOS.find(x => x.id === b.dataset.id);
+      if (!s) return;
+      currentScn = s;
+      resetStage();
+      renderScenarioButtons();
+      setTimeout(play, 200);
+    });
+  });
+}
+
+// ---------- HELPERS ----------
+function wait(ms) { return new Promise(resolve => { const t = setTimeout(resolve, ms); timers.push(t); }); }
+function clearAllTimers() { timers.forEach(clearTimeout); timers = []; }
+function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function resetStage() {
+  clearAllTimers();
+  isPlaying = false;
+  const btn = document.getElementById('play-btn');
+  btn.disabled = false;
+  btn.innerHTML = tx('controls.play');
+  document.getElementById('chat-left').innerHTML = '';
+  document.getElementById('chat-right').innerHTML = '';
+  document.getElementById('input-left').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+  document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+}
+
+async function typeInto(elId, text, perChar = 12) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '<span class="caret"></span>';
+  for (let i = 0; i < text.length; i++) {
+    el.innerHTML = text.slice(0, i + 1) + '<span class="caret"></span>';
+    await wait(perChar);
+  }
+}
+
+function appendUserMsg(chatId, text) {
+  const chat = document.getElementById(chatId);
+  const node = document.createElement('div');
+  node.className = 'msg user';
+  node.textContent = text;
+  chat.appendChild(node);
+}
+
+function buildAiMsg(chatId, phase) {
+  const isVerified = phase === 'verified';
+  const avatar = isVerified
+    ? '<svg viewBox="0 0 415 410" width="16" height="16"><use href="#bi-mark"/></svg>'
+    : '<span>AI</span>';
+  const tag = isVerified
+    ? `<span class="phase-tag verified">${tx('phaseTag.verified')}</span>`
+    : `<span class="phase-tag">${tx('phaseTag.initial')}</span>`;
+  const node = document.createElement('div');
+  node.className = `msg ai ${isVerified ? 'verified' : ''}`;
+  node.innerHTML = `
+    <div class="ai-avatar">${avatar}</div>
+    <div class="ai-body">
+      ${tag}
+      <div class="ai-text"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+  `;
+  document.getElementById(chatId).appendChild(node);
+  return node;
+}
+
+async function streamAiAnswer(chatId, lines, phase, opts = {}) {
+  const node = buildAiMsg(chatId, phase);
+  const textEl = node.querySelector('.ai-text');
+  await wait(opts.initialDelay ?? 700);
+  textEl.innerHTML = '';
+  for (let i = 0; i < lines.length; i++) {
+    textEl.innerHTML = (i === 0 ? lines[i] : textEl.innerHTML + '<br/>' + lines[i]);
+    await wait(opts.linePause ?? 220);
+  }
+}
+
+// streams a single AI bubble with one HTML chunk (for shorter agent prompts)
+async function streamAiOnce(chatId, html, opts = {}) {
+  const node = buildAiMsg(chatId, 'verified');
+  const textEl = node.querySelector('.ai-text');
+  await wait(opts.initialDelay ?? 600);
+  textEl.innerHTML = html;
+}
+
+function appendBlock(chatId, html) {
+  const chat = document.getElementById(chatId);
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  chat.appendChild(wrap.firstElementChild);
+}
+
+// ---------- RIGHT-SIDE TURN ENGINE ----------
+async function turnToolCall(turn) {
+  const html = `
+    <div class="toolcall" data-tc>
+      <div class="toolcall-head">
+        <span class="ico"><svg viewBox="0 0 415 410"><use href="#bi-mark"/></svg></span>
+        <span class="ttl">${L(turn.title)}</span>
+        <span class="status">${turn.steps.length} ${LANG==='fr'?'étapes':'steps'}</span>
+      </div>
+      ${turn.steps.map((s, i) => `
+        <div class="tc-row" id="tc-row-${i}">
+          <span class="tc-ico" id="tc-ico-${i}"></span>
+          <span class="tc-name">${L(s.name)}</span>
+          <span class="tc-result" id="tc-result-${i}">${L(s.result)}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  appendBlock('chat-right', html);
+
+  for (let i = 0; i < turn.steps.length; i++) {
+    const row = document.getElementById(`tc-row-${i}`);
+    row.classList.add('active');
+    await wait(450 + Math.random() * 200);
+    row.classList.remove('active');
+    row.classList.add('done');
+    document.getElementById(`tc-ico-${i}`).innerHTML = '✓';
+    await wait(100);
+  }
+
+  if (turn.formLink) {
+    const fl = turn.formLink;
+    appendBlock('chat-right', `
+      <a class="form-link" href="${fl.url}" target="_blank" rel="noopener">
+        <span class="fl-ico"><svg><use href="#ic-doc"/></svg></span>
+        <span class="fl-body">
+          <span class="fl-title">${L(fl.title)}</span>
+          <span class="fl-meta">${fl.meta}</span>
+        </span>
+        <span class="fl-arrow"><svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span>
+      </a>
+    `);
+  }
+}
+
+function turnExtracted(turn) {
+  const okRows = turn.ok.map(r => `
+    <div class="extracted-row ok">
+      <span class="er-ico">✓</span>
+      <span class="er-label">${L(r.label)}</span>
+      <span class="er-value">${L(r.value)}</span>
+    </div>
+  `).join('');
+  const missingRows = turn.missing.map(r => `
+    <div class="extracted-row missing">
+      <span class="er-ico">?</span>
+      <span class="er-label">${L(r.label)}</span>
+      <span class="er-value">${LANG==='fr'?'à recueillir':'to collect'}</span>
+    </div>
+  `).join('');
+  appendBlock('chat-right', `
+    <div class="extracted">
+      <div class="extracted-head"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg> ${L(turn.headerOk)}</div>
+      <div class="extracted-list">${okRows}</div>
+      <div class="extracted-divider">${L(turn.headerMissing)}</div>
+      <div class="extracted-list">${missingRows}</div>
+    </div>
+  `);
+}
+
+function turnPrecision(turn) {
+  const opts = turn.options.map(o => `
+    <span class="precision-opt ${o.chosen ? 'chosen' : ''}">${L(o.label)}</span>
+  `).join('');
+  appendBlock('chat-right', `
+    <div class="precision">
+      <div class="precision-head">⚠ ${L(turn.header)}</div>
+      <div class="precision-question">${L(turn.question)}</div>
+      <div class="precision-options">${opts}</div>
+    </div>
+  `);
+}
+
+function turnUploadReq(turn) {
+  appendBlock('chat-right', `
+    <div class="upload-req">
+      <span class="ur-ico"><svg width="20" height="20"><use href="#${turn.ico}"/></svg></span>
+      <span class="ur-body">
+        <span class="ur-title">${L(turn.title)}</span>
+        <span class="ur-meta">${L(turn.meta)}</span>
+      </span>
+      <span class="ur-btn">${LANG==='fr'?'Téléverser':'Upload'}</span>
+    </div>
+  `);
+}
+
+async function turnUploadDone(turn) {
+  const checks = turn.checks.map(c => `
+    <div class="ud-row ${c.ok ? 'ok' : 'warn'}">
+      <span class="udr-ico">${c.ok ? '✓' : '!'}</span>
+      <span class="udr-label">${L(c.label)}</span>
+      <span class="udr-value">${L(c.value)}</span>
+    </div>
+  `).join('');
+  appendBlock('chat-right', `
+    <div class="upload-done">
+      <div class="ud-head">
+        <span class="ud-ico"><svg><use href="#${turn.ico}"/></svg></span>
+        <span>
+          <div class="ud-name">${turn.name}</div>
+          <div class="ud-meta">${L(turn.meta)}</div>
+        </span>
+      </div>
+      <div class="ud-checks">${checks}</div>
+    </div>
+  `);
+}
+
+async function turnEmailInput(turn) {
+  const node = document.createElement('div');
+  node.className = 'email-input-row';
+  node.innerHTML = `
+    <span class="ei-ico"><svg width="18" height="18"><use href="#ic-mail"/></svg></span>
+    <span class="ei-label">email →</span>
+    <span class="ei-typed" id="email-typed"></span>
+  `;
+  document.getElementById('chat-right').appendChild(node);
+  // type out
+  const out = node.querySelector('#email-typed');
+  for (let i = 0; i < turn.typed.length; i++) {
+    out.textContent = turn.typed.slice(0, i + 1);
+    await wait(40);
+  }
+}
+
+function turnFinal(turn) {
+  const rows = turn.rows.map(r => `
+    <div class="fc-row">
+      <span class="fc-key">${L(r.key)}</span>
+      <span class="fc-val">${L(r.value)}</span>
+    </div>
+  `).join('');
+  appendBlock('chat-right', `
+    <div class="final-card">
+      <div class="fc-head">
+        <span class="fc-ico">✓</span>
+        <span>
+          <div class="fc-title">${L(turn.title)}</div>
+          <div class="fc-sub">${L(turn.sub)}</div>
+        </span>
+      </div>
+      <div class="fc-rows">${rows}</div>
+      <div class="fc-foot"><span class="ico">📨</span><span>${L(turn.foot)}</span></div>
+    </div>
+  `);
+}
+
+async function processTurns(turns) {
+  for (const t of turns) {
+    switch (t.type) {
+      case 'toolcall':
+        await turnToolCall(t);
+        await wait(450);
+        break;
+      case 'extracted':
+        turnExtracted(t);
+        await wait(900);
+        break;
+      case 'ai':
+        await streamAiOnce('chat-right', L(t.content), { initialDelay: 600 });
+        await wait(500);
+        break;
+      case 'user_typed':
+        await typeInto('input-right', L(t.content), 8);
+        await wait(200);
+        appendUserMsg('chat-right', L(t.content));
+        document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+        await wait(400);
+        break;
+      case 'precision':
+        turnPrecision(t);
+        await wait(700);
+        break;
+      case 'upload_req':
+        turnUploadReq(t);
+        await wait(600);
+        break;
+      case 'upload_done':
+        await turnUploadDone(t);
+        await wait(600);
+        break;
+      case 'email_input':
+        await turnEmailInput(t);
+        await wait(450);
+        break;
+      case 'final':
+        turnFinal(t);
+        await wait(400);
+        break;
+    }
+  }
+}
+
+// ---------- MAIN PLAY ----------
+async function play() {
+  resetStage();
+  isPlaying = true;
+  const btn = document.getElementById('play-btn');
+  btn.disabled = true;
+  btn.innerHTML = tx('controls.playing');
+
+  const scn = currentScn;
+  const q = L(scn.question);
+
+  // 1. type question in both inputs
+  await Promise.all([
+    typeInto('input-left', q, 10),
+    typeInto('input-right', q, 10)
+  ]);
+  await wait(250);
+
+  appendUserMsg('chat-left', q);
+  appendUserMsg('chat-right', q);
+  document.getElementById('input-left').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+  document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+  await wait(400);
+
+  // 2. left panel: stream generic answer (full)
+  const leftStream = streamAiAnswer('chat-left', L(scn.plainAnswer), 'initial', { initialDelay: 650, linePause: 260 });
+
+  // 3. right panel: process turns
+  await wait(300);
+  await processTurns(scn.turns);
+
+  await leftStream;
+
+  isPlaying = false;
+  btn.disabled = false;
+  btn.innerHTML = tx('controls.replay');
+}
+
+// ---------- LANG APPLICATION ----------
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[LANG] && T[LANG][key] != null) el.innerHTML = T[LANG][key];
+  });
+  document.getElementById('lang-current').textContent = LANG.toUpperCase();
+  document.querySelectorAll('#lang-menu a').forEach(a => {
+    a.classList.toggle('active', a.dataset.lang === LANG);
+  });
+  renderSources();
+  renderScenarioButtons();
+}
+
+function wireDropdown(rootId) {
+  const root = document.getElementById(rootId);
+  if (!root) return;
+  root.addEventListener('click', (e) => {
+    if (e.target.closest('a[data-lang]')) return;
+    if (e.target.closest('.nav-dropdown-menu a')) return;
+    e.stopPropagation();
+    root.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!root.contains(e.target)) root.classList.remove('open');
+  });
+}
+wireDropdown('demo-dropdown');
+wireDropdown('lang-toggle');
+
+document.querySelectorAll('#lang-menu a[data-lang]').forEach(a => {
+  a.addEventListener('click', () => {
+    const next = a.dataset.lang;
+    if (next === LANG) return;
+    LANG = next;
+    try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+    document.getElementById('lang-toggle').classList.remove('open');
+    applyLang();
+    resetStage();
+    setTimeout(play, 400);
+  });
+});
+
+document.getElementById('play-btn').addEventListener('click', () => { if (!isPlaying) play(); });
+document.getElementById('reset-btn').addEventListener('click', () => {
+  resetStage();
+  setTimeout(play, 200);
+});
+
+applyLang();
+window.addEventListener('load', () => setTimeout(play, 600));
+</script>
+</body>
+</html>
