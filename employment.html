@@ -1099,12 +1099,21 @@ function injectFinalResponse(chatId, html) {
   const node = buildAiMsg(chatId, 'verified');
   const textEl = node.querySelector('.ai-text');
   textEl.innerHTML = html;
-  const sections = textEl.querySelectorAll('.plan-section, .plan-header, .warn-banner, .alert-banner');
-  sections.forEach((el, i) => {
+  // Reveal each item progressively rather than each section block-at-once
+  const items = textEl.querySelectorAll(
+    '.plan-header, .plan-section-title, .plan-text, .res-card, .check-list li, .stat, .warn-banner, .alert-banner'
+  );
+  items.forEach((el) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(6px)';
-    el.style.transition = 'opacity .35s ease, transform .35s ease';
-    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; scrollChat(chatId); }, 120 * i + 120);
+    el.style.transition = 'opacity .32s ease, transform .32s ease';
+  });
+  items.forEach((el, i) => {
+    setTimeout(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+      scrollChat(chatId);
+    }, 70 * i + 80);
   });
 }
 
