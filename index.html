@@ -41,86 +41,143 @@
     line-height: 1.5;
     min-height: 100vh;
   }
+  a { color: inherit; text-decoration: none; }
 
-  .topbar {
-    border-bottom: 1px solid var(--border-soft);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-    backdrop-filter: blur(8px);
+  /* ---------- TOP NAV (matches www.bayesimpact.org) ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    height: 72px;
+    padding: 0 32px;
+    display: flex; align-items: center;
+    gap: 22px;
+    background: rgba(242,239,233,0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
   }
-  .topbar-inner {
-    max-width: 1100px; margin: 0 auto;
-    padding: 16px 28px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px;
+  .nav-home {
+    display: inline-flex; align-items: center;
+    transition: opacity .15s ease;
   }
-  .brand { display: flex; align-items: center; gap: 14px; color: var(--ink); flex-wrap: wrap; }
-  .brand-logo { height: 26px; width: auto; display: block; }
-  .brand-sep {
+  .nav-home:hover { opacity: 0.7; }
+  .nav-home img { height: 28px; width: auto; display: block; }
+  .nav-sep {
     color: var(--muted);
-    font-size: 11.5px;
+    font-size: 11px;
     letter-spacing: 0.08em;
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 600;
+    font-weight: 700;
+    padding-left: 18px;
     border-left: 1px solid var(--border-soft);
-    padding-left: 14px;
   }
-  .demo-toggle {
-    display: inline-flex;
-    background: #fff;
-    border: 1px solid var(--border-soft);
-    border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
+
+  /* dropdown for switching demos */
+  .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+  .nav-dropdown-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 100px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.72);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .18s ease, color .18s ease, background .18s ease;
   }
-  .dt-link {
-    padding: 5px 14px;
-    border-radius: 999px;
-    text-decoration: none;
-    font-size: 12.5px; font-weight: 600;
-    color: var(--ink-soft);
-    transition: all 0.15s ease;
+  .nav-dropdown-label:hover,
+  .nav-dropdown.open .nav-dropdown-label { border-color: rgba(0,0,0,0.45); color: var(--ink); }
+  .nav-dropdown-label .nd-chev { transition: transform .2s; opacity: 0.6; }
+  .nav-dropdown.open .nav-dropdown-label .nd-chev { transform: rotate(180deg); }
+  .nav-dropdown-menu {
+    position: absolute; top: 40px; left: 0; z-index: 200;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+    padding: 6px;
+    min-width: 200px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: all .2s;
+  }
+  .nav-dropdown.open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .nav-dropdown-menu a {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .nav-dropdown-menu a:hover { background: var(--bg); }
+  .nav-dropdown-menu a.active { background: var(--ink); color: var(--bg); }
+  .nav-dropdown-menu a .nd-sub { display: block; font-size: 11.5px; color: var(--muted); font-weight: 400; margin-top: 1px; }
+  .nav-dropdown-menu a.active .nd-sub { color: rgba(255,255,255,0.55); }
+
+  .nav-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px;
+    color: rgba(0,0,0,0.6);
+    transition: color .15s ease;
+    font-weight: 500;
+  }
+  .nav-back:hover { color: var(--ink); }
+  .nav-back svg { display: block; }
+
+  .nav-spacer { flex: 1; }
+
+  /* language toggle (matches www.bayesimpact.org) */
+  .lang-toggle {
+    position: relative;
+    display: inline-flex; align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 6px 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 100px;
+    color: rgba(0,0,0,0.7);
+    background: transparent;
+    transition: border-color .18s ease, color .18s ease, background .18s ease;
     font-family: inherit;
   }
-  .dt-link:hover { color: var(--ink); }
-  .dt-link.active { background: var(--ink); color: #fff; }
-
-  .lang-toggle {
-    display: inline-flex;
-    background: #fff;
-    border: 1px solid var(--border-soft);
-    border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
+  .lang-toggle:hover, .lang-toggle.open { border-color: rgba(0,0,0,0.45); color: var(--ink); }
+  .lang-globe { color: rgba(0,0,0,0.55); flex: 0 0 auto; display: block; }
+  .lang-toggle:hover .lang-globe, .lang-toggle.open .lang-globe { color: var(--ink); }
+  .lang-chevron { transition: transform .2s; flex: 0 0 auto; opacity: 0.6; display: block; }
+  .lang-toggle.open .lang-chevron { transform: rotate(180deg); }
+  .lang-menu {
+    position: absolute; top: 40px; right: 0;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+    padding: 6px;
+    min-width: 120px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: all .2s;
   }
-  .lt-btn {
-    border: none; background: transparent;
-    padding: 5px 10px;
-    border-radius: 999px;
-    font-size: 11px; font-weight: 700;
-    color: var(--ink-soft);
+  .lang-toggle.open .lang-menu { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .lang-menu a {
+    display: block; width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
     cursor: pointer;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.06em;
-    transition: all 0.15s ease;
   }
-  .lt-btn:hover { color: var(--ink); }
-  .lt-btn.active { background: var(--ink); color: #fff; }
+  .lang-menu a:hover { background: var(--bg); }
+  .lang-menu a.active { background: var(--ink); color: var(--bg); }
 
-  .topbar-meta { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
-  .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 10px; border-radius: 999px;
-    background: var(--card); border: 1px solid var(--border-soft);
-    font-size: 12px; color: var(--ink-soft); font-weight: 500;
-  }
-  .pill .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--ok);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-
+  /* ---------- HERO ---------- */
   .hero {
     max-width: 1100px; margin: 0 auto;
     padding: 44px 28px 8px;
@@ -137,12 +194,51 @@
     background: linear-gradient(180deg, transparent 60%, var(--gold-bg) 60%);
     padding: 0 2px;
   }
-  .hero p {
-    font-size: 16px; color: var(--ink-soft);
-    max-width: 760px;
-    margin: 0 0 22px;
-  }
+  .hero p { font-size: 16px; color: var(--ink-soft); max-width: 760px; margin: 0 0 18px; }
 
+  /* ---------- CONNECTED SOURCES (terminal-style readout) ---------- */
+  .sources { max-width: 1100px; margin: 0 auto; padding: 0 28px 24px; }
+  .sources-cmd {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .sources-cmd .prompt { color: var(--accent-orange); font-weight: 700; }
+  .sources-cmd .cmd-text::after {
+    content: ''; display: inline-block;
+    width: 6px; height: 11px;
+    background: currentColor;
+    margin-left: 3px;
+    animation: caret 1s infinite;
+    vertical-align: middle;
+  }
+  .sources-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .src-item {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink);
+    opacity: 0;
+    transform: translateY(4px);
+    animation: srcIn .35s ease forwards;
+  }
+  @keyframes srcIn { to { opacity: 1; transform: translateY(0); } }
+  .src-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  .src-name { font-weight: 700; letter-spacing: 0.02em; }
+  .src-meta { color: var(--muted); font-weight: 400; }
+
+  /* ---------- SCENARIOS ---------- */
   .scenarios { max-width: 1100px; margin: 0 auto; padding: 8px 28px 20px; }
   .scenarios-label {
     font-size: 12px; text-transform: uppercase;
@@ -175,6 +271,7 @@
   .scn-title { font-size: 14px; font-weight: 600; }
   .scn-sub { font-size: 12px; color: var(--muted); }
 
+  /* ---------- CONTROLS ---------- */
   .controls {
     max-width: 1100px; margin: 0 auto;
     padding: 0 28px 24px;
@@ -258,11 +355,7 @@
   .ai-text strong { font-weight: 600; }
 
   .typing { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
-  .typing span {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--muted);
-    animation: blink 1.2s infinite ease-in-out;
-  }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite ease-in-out; }
   .typing span:nth-child(2) { animation-delay: .15s; }
   .typing span:nth-child(3) { animation-delay: .30s; }
   @keyframes blink { 0%,80%,100%{transform:scale(0.7);opacity:0.4;} 40%{transform:scale(1);opacity:1;} }
@@ -430,9 +523,10 @@
   .fact p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
 
   @media (max-width: 900px) {
+    .nav { padding: 0 16px; gap: 10px; }
+    .nav-sep, .nav-back { display: none; }
     .scenarios-row { grid-template-columns: repeat(2, 1fr); }
     .footer-strip { grid-template-columns: 1fr; }
-    .topbar-meta { display: none; }
   }
 </style>
 </head>
@@ -453,30 +547,54 @@
   </symbol>
 </svg>
 
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <img class="brand-logo" src="bi-colors.svg" alt="Bayes Impact" />
-      <span class="brand-sep" data-i18n="topbar.demo">MCP · DÉMO</span>
-      <div class="demo-toggle">
-        <a href="./" class="dt-link active" data-i18n="topbar.toggle.health">Santé</a>
-        <a href="employment.html" class="dt-link" data-i18n="topbar.toggle.employment">Emploi</a>
-      </div>
-      <div class="lang-toggle">
-        <button class="lt-btn" data-lang="fr">FR</button>
-        <button class="lt-btn" data-lang="en">EN</button>
-      </div>
-    </div>
-    <div class="topbar-meta">
-      <span class="pill"><span class="dot"></span> <span data-i18n="topbar.pill.has">HAS · base à jour 2026.05.12</span></span>
-      <span class="pill"><span class="dot"></span> <span data-i18n="topbar.pill.ansm">ANSM · base à jour 2026.05.15</span></span>
+<nav class="nav">
+  <a class="nav-home" href="https://www.bayesimpact.org" target="_blank" rel="noopener" title="bayesimpact.org">
+    <img src="bi-colors.svg" alt="Bayes Impact" />
+  </a>
+  <span class="nav-sep" data-i18n="topbar.demo">MCP · DÉMO</span>
+
+  <div class="nav-dropdown" id="demo-dropdown">
+    <button class="nav-dropdown-label" type="button" aria-haspopup="true" aria-expanded="false">
+      <span data-i18n="topbar.toggle.health">Santé</span>
+      <svg class="nd-chev" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="nav-dropdown-menu" role="menu">
+      <a href="./" class="active" data-i18n="dropdown.health"><span>Santé</span><span class="nd-sub" data-i18n="dropdown.health.sub">Conformité HAS &amp; ANSM</span></a>
+      <a href="employment.html" data-i18n="dropdown.employment"><span>Emploi</span><span class="nd-sub" data-i18n="dropdown.employment.sub">France Travail, dispositifs régionaux</span></a>
     </div>
   </div>
-</header>
+
+  <a class="nav-back" href="https://www.bayesimpact.org" target="_blank" rel="noopener">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M7.5 9 4 6l3.5-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span data-i18n="nav.back">bayesimpact.org</span>
+  </a>
+
+  <div class="nav-spacer"></div>
+
+  <div class="lang-toggle" id="lang-toggle" tabindex="0" aria-label="Language">
+    <svg class="lang-globe" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+    <span id="lang-current">FR</span>
+    <svg class="lang-chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="lang-menu" id="lang-menu" role="menu">
+      <a data-lang="fr" class="active">Français</a>
+      <a data-lang="en">English</a>
+    </div>
+  </div>
+</nav>
 
 <section class="hero">
   <h1 data-i18n="hero.h1">Vérifier les réponses des IA médicales contre les <em>référentiels français</em>.</h1>
   <p data-i18n="hero.p">Un assistant IA répond à une question clinique. Le serveur MCP Bayes vérifie automatiquement la réponse contre les recommandations de la HAS et les décisions de l'ANSM, puis la corrige si nécessaire.</p>
+</section>
+
+<section class="sources">
+  <div class="sources-cmd">
+    <span class="prompt">$</span>
+    <span class="cmd-text" data-i18n="sources.cmd">bayes_mcp.list_connected_sources()</span>
+  </div>
+  <ul class="sources-list" id="sources-list"></ul>
 </section>
 
 <section class="scenarios">
@@ -527,16 +645,20 @@ try {
   if (saved === 'fr' || saved === 'en') LANG = saved;
 } catch (e) {}
 
-// ---------- TRANSLATIONS ----------
+// ---------- TRANSLATIONS (UI chrome) ----------
 const T = {
   fr: {
     'topbar.demo': 'MCP · DÉMO',
     'topbar.toggle.health': 'Santé',
     'topbar.toggle.employment': 'Emploi',
-    'topbar.pill.has': 'HAS · base à jour 2026.05.12',
-    'topbar.pill.ansm': 'ANSM · base à jour 2026.05.15',
+    'dropdown.health': '<span>Santé</span><span class="nd-sub">Conformité HAS &amp; ANSM</span>',
+    'dropdown.health.sub': 'Conformité HAS &amp; ANSM',
+    'dropdown.employment': '<span>Emploi</span><span class="nd-sub">France Travail, dispositifs régionaux</span>',
+    'dropdown.employment.sub': 'France Travail, dispositifs régionaux',
+    'nav.back': 'bayesimpact.org',
     'hero.h1': 'Vérifier les réponses des IA médicales contre les <em>référentiels français</em>.',
     'hero.p': "Un assistant IA répond à une question clinique. Le serveur MCP Bayes vérifie automatiquement la réponse contre les recommandations de la HAS et les décisions de l'ANSM, puis la corrige si nécessaire.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
     'scenarios.label': 'Choisir un scénario clinique',
     'controls.play': '▶ Lancer la démonstration',
     'controls.reset': '↻ Réinitialiser',
@@ -566,10 +688,14 @@ const T = {
     'topbar.demo': 'MCP · DEMO',
     'topbar.toggle.health': 'Health',
     'topbar.toggle.employment': 'Employment',
-    'topbar.pill.has': 'HAS · updated 2026-05-12',
-    'topbar.pill.ansm': 'ANSM · updated 2026-05-15',
+    'dropdown.health': '<span>Health</span><span class="nd-sub">HAS &amp; ANSM compliance</span>',
+    'dropdown.health.sub': 'HAS &amp; ANSM compliance',
+    'dropdown.employment': '<span>Employment</span><span class="nd-sub">France Travail, regional schemes</span>',
+    'dropdown.employment.sub': 'France Travail, regional schemes',
+    'nav.back': 'bayesimpact.org',
     'hero.h1': "Check medical AI answers against <em>France's clinical guidelines</em>.",
     'hero.p': "An AI assistant answers a clinical question. The Bayes MCP server automatically checks the response against HAS (France's Health Authority) and ANSM (Medicines Safety Agency) guidance, then corrects it if needed.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
     'scenarios.label': 'Pick a clinical scenario',
     'controls.play': '▶ Run the demo',
     'controls.reset': '↻ Reset',
@@ -604,7 +730,24 @@ function L(field) {
   return field[LANG] ?? field.fr ?? '';
 }
 
-// ---------- SCENARIOS (bilingual) ----------
+// ---------- CONNECTED SOURCES (body) ----------
+const SOURCES = [
+  { name: 'HAS', meta: { fr: 'base à jour 2026.05.12', en: 'updated 2026-05-12' } },
+  { name: 'ANSM', meta: { fr: 'base à jour 2026.05.15', en: 'updated 2026-05-15' } }
+];
+
+function renderSources() {
+  const el = document.getElementById('sources-list');
+  el.innerHTML = SOURCES.map((s, i) => `
+    <li class="src-item" style="animation-delay: ${0.1 + i * 0.18}s">
+      <span class="src-dot"></span>
+      <span class="src-name">${s.name}</span>
+      <span class="src-meta">${L(s.meta)}</span>
+    </li>
+  `).join('');
+}
+
+// ---------- SCENARIOS ----------
 const SCENARIOS = [
   {
     id: 'bronchio',
@@ -656,26 +799,10 @@ const SCENARIOS = [
       en: '{ "query": "infant bronchiolitis <12mo", "context": "respiratory physiotherapy" }'
     },
     steps: [
-      {
-        name: { fr: 'Extraction des actes et molécules cités', en: 'Extract procedures and drugs cited' },
-        result: { fr: 'kinésithérapie respiratoire AFE', en: 'expiratory flow physio (AFE)' },
-        tone: 'neutral'
-      },
-      {
-        name: { fr: 'Croisement avec base HAS', en: 'Cross-check with HAS database' },
-        result: { fr: 'reco HAS-3160826 trouvée', en: 'guideline HAS-3160826 found' },
-        tone: 'neutral'
-      },
-      {
-        name: { fr: 'Vérification ANSM (médicaments)', en: 'ANSM check (drugs)' },
-        result: { fr: 'aucun médicament', en: 'no drugs' },
-        tone: 'ok'
-      },
-      {
-        name: { fr: 'Analyse de divergence', en: 'Divergence analysis' },
-        result: { fr: 'CONTRADICTION', en: 'CONTRADICTION' },
-        tone: 'warn'
-      }
+      { name: { fr: 'Extraction des actes et molécules cités', en: 'Extract procedures and drugs cited' }, result: { fr: 'kinésithérapie respiratoire AFE', en: 'expiratory flow physio (AFE)' }, tone: 'neutral' },
+      { name: { fr: 'Croisement avec base HAS', en: 'Cross-check with HAS database' }, result: { fr: 'reco HAS-3160826 trouvée', en: 'guideline HAS-3160826 found' }, tone: 'neutral' },
+      { name: { fr: 'Vérification ANSM (médicaments)', en: 'ANSM check (drugs)' }, result: { fr: 'aucun médicament', en: 'no drugs' }, tone: 'ok' },
+      { name: { fr: 'Analyse de divergence', en: 'Divergence analysis' }, result: { fr: 'CONTRADICTION', en: 'CONTRADICTION' }, tone: 'warn' }
     ],
     verdict: {
       level: 'warn',
@@ -924,6 +1051,7 @@ function renderScenarioButtons() {
       currentScn = s;
       resetStage();
       renderScenarioButtons();
+      setTimeout(play, 200);
     });
   });
 }
@@ -932,9 +1060,7 @@ function renderScenarioButtons() {
 function wait(ms) { return new Promise(resolve => { const t = setTimeout(resolve, ms); timers.push(t); }); }
 function clearAllTimers() { timers.forEach(clearTimeout); timers = []; }
 function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-function scrollChat() { /* autoscroll disabled */ }
 
-// ---------- RESET ----------
 function resetStage() {
   clearAllTimers();
   isPlaying = false;
@@ -1086,7 +1212,6 @@ function appendVerdict(verdict) {
   tc.appendChild(node);
 }
 
-// ---------- MAIN PLAY ----------
 async function play() {
   resetStage();
   isPlaying = true;
@@ -1095,10 +1220,11 @@ async function play() {
   btn.innerHTML = tx('controls.playing');
 
   const scn = currentScn;
-  await typeInto(L(scn.question));
+  const q = L(scn.question);
+  await typeInto(q);
   await wait(300);
 
-  appendUserMsg(L(scn.question));
+  appendUserMsg(q);
   document.getElementById('chat-input').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
   await wait(500);
 
@@ -1128,17 +1254,39 @@ function applyLang() {
     const key = el.dataset.i18n;
     if (T[LANG] && T[LANG][key] != null) el.innerHTML = T[LANG][key];
   });
-  document.querySelectorAll('.lt-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === LANG);
+  document.getElementById('lang-current').textContent = LANG.toUpperCase();
+  document.querySelectorAll('#lang-menu a').forEach(a => {
+    a.classList.toggle('active', a.dataset.lang === LANG);
   });
+  renderSources();
   renderScenarioButtons();
 }
 
-document.querySelectorAll('.lt-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    if (b.dataset.lang === LANG) return;
-    LANG = b.dataset.lang;
+// ---------- DROPDOWN HANDLERS ----------
+function wireDropdown(rootId) {
+  const root = document.getElementById(rootId);
+  if (!root) return;
+  const label = root.querySelector('.nav-dropdown-label, .lang-toggle, [aria-haspopup]') || root;
+  root.addEventListener('click', (e) => {
+    if (e.target.closest('a[data-lang]')) return;
+    if (e.target.closest('.nav-dropdown-menu a')) return;
+    e.stopPropagation();
+    root.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!root.contains(e.target)) root.classList.remove('open');
+  });
+}
+wireDropdown('demo-dropdown');
+wireDropdown('lang-toggle');
+
+document.querySelectorAll('#lang-menu a[data-lang]').forEach(a => {
+  a.addEventListener('click', () => {
+    const next = a.dataset.lang;
+    if (next === LANG) return;
+    LANG = next;
     try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+    document.getElementById('lang-toggle').classList.remove('open');
     applyLang();
     resetStage();
     setTimeout(play, 400);
@@ -1146,7 +1294,10 @@ document.querySelectorAll('.lt-btn').forEach(b => {
 });
 
 document.getElementById('play-btn').addEventListener('click', () => { if (!isPlaying) play(); });
-document.getElementById('reset-btn').addEventListener('click', resetStage);
+document.getElementById('reset-btn').addEventListener('click', () => {
+  resetStage();
+  setTimeout(play, 200);
+});
 
 applyLang();
 window.addEventListener('load', () => setTimeout(play, 600));
