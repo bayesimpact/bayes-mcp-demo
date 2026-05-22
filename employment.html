@@ -327,10 +327,23 @@
   .generic-links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 4px; }
   .generic-links li { font-size: 12.5px; color: var(--accent-blue); text-decoration: underline; text-decoration-color: rgba(16,103,254,0.3); }
 
-  .inputbar { border-top: 1px solid var(--border-soft); background: #fff; padding: 12px 16px; display: flex; gap: 10px; align-items: center; }
+  .inputbar { border-top: 1px solid var(--border-soft); background: #fff; padding: 12px 16px; display: flex; gap: 6px; align-items: center; }
+  .inputbar-icon-btn {
+    flex-shrink: 0;
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    display: grid; place-items: center;
+    cursor: default;
+    opacity: 0.55;
+    font-family: inherit;
+  }
+  .inputbar-icon-btn svg { width: 18px; height: 18px; display: block; }
   .fake-input { flex: 1; border: 1px solid var(--border-soft); border-radius: 10px; padding: 9px 12px; font-size: 13px; color: var(--muted); background: var(--cream); min-height: 38px; display: flex; align-items: center; font-family: inherit; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .fake-input .caret { display: inline-block; width: 1px; height: 14px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; }
-  .inputbar button { border: none; background: var(--ink); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+  .inputbar button:not(.inputbar-icon-btn) { border: none; background: var(--ink); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
 
   .footer-strip { max-width: 920px; margin: 0 auto; padding: 32px 28px 60px; }
   .osn { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 22px 26px; }
@@ -458,7 +471,9 @@
     </div>
     <div class="chat" id="chat-left"></div>
     <div class="inputbar">
-      <div class="fake-input" id="input-left">Posez une question…<span class="caret"></span></div>
+      <button class="inputbar-icon-btn" disabled aria-label="Joindre un fichier" title="Joindre un fichier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 0 1 5.66 5.66l-8.58 8.57a2 2 0 0 1-2.83-2.83l6.36-6.36"/></svg></button>
+      <div class="fake-input" id="input-left">Décrivez votre situation…<span class="caret"></span></div>
+      <button class="inputbar-icon-btn" disabled aria-label="Dicter" title="Dicter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button>
       <button disabled data-i18n="input.send">Envoyer</button>
     </div>
   </div>
@@ -475,7 +490,9 @@
     </div>
     <div class="chat" id="chat-right"></div>
     <div class="inputbar">
-      <div class="fake-input" id="input-right">Posez une question…<span class="caret"></span></div>
+      <button class="inputbar-icon-btn" disabled aria-label="Joindre un fichier" title="Joindre un fichier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 0 1 5.66 5.66l-8.58 8.57a2 2 0 0 1-2.83-2.83l6.36-6.36"/></svg></button>
+      <div class="fake-input" id="input-right">Décrivez votre situation…<span class="caret"></span></div>
+      <button class="inputbar-icon-btn" disabled aria-label="Dicter" title="Dicter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button>
       <button disabled data-i18n="input.send">Envoyer</button>
     </div>
   </div>
@@ -516,7 +533,7 @@ const T = {
     'controls.play': '▶ Run the demo', 'controls.reset': '↻ Reset',
     'controls.hint': 'Same question, asked at the same moment in both panels.',
     'controls.playing': '● Running…', 'controls.replay': '↻ Replay this scenario',
-    'input.placeholder': 'Ask a question…', 'input.send': 'Send',
+    'input.placeholder': 'Describe your situation…', 'input.send': 'Send',
     'panel.left.badge': 'WITHOUT MCP', 'panel.left.title': 'General-purpose AI assistant', 'panel.left.sub': 'No access to public-employment systems', 'panel.left.tag': 'Generic',
     'panel.right.badge': 'WITH MCP', 'panel.right.title': 'AI assistant + Bayes MCP', 'panel.right.sub': 'Connected to DWP, councils, skills boards', 'panel.right.tag': 'Contextualised',
     'phaseTag.initial': '● Generic response · no integration', 'phaseTag.verified': '● Contextualised response · Bayes MCP',
@@ -541,7 +558,7 @@ const T = {
     'controls.play': '▶ Lancer la démonstration', 'controls.reset': '↻ Réinitialiser',
     'controls.hint': 'Même question, posée au même moment dans les deux panneaux.',
     'controls.playing': '● En cours…', 'controls.replay': '↻ Rejouer ce scénario',
-    'input.placeholder': 'Posez une question…', 'input.send': 'Envoyer',
+    'input.placeholder': 'Décrivez votre situation…', 'input.send': 'Envoyer',
     'panel.left.badge': 'SANS MCP', 'panel.left.title': 'Assistant IA généraliste', 'panel.left.sub': "Pas d'accès aux systèmes français", 'panel.left.tag': 'Générique',
     'panel.right.badge': 'AVEC MCP', 'panel.right.title': 'Assistant IA + Bayes MCP', 'panel.right.sub': 'Connecté à France Travail, Mes Aides, dispositifs régionaux', 'panel.right.tag': 'Contextualisé',
     'phaseTag.initial': '● Réponse générique · sans intégration', 'phaseTag.verified': '● Réponse contextualisée · Bayes MCP',
@@ -566,7 +583,7 @@ const T = {
     'controls.play': '▶ Iniciar la demostración', 'controls.reset': '↻ Reiniciar',
     'controls.hint': 'Misma pregunta, en ambos paneles al mismo tiempo.',
     'controls.playing': '● En curso…', 'controls.replay': '↻ Repetir este escenario',
-    'input.placeholder': 'Haz una pregunta…', 'input.send': 'Enviar',
+    'input.placeholder': 'Describe tu situación…', 'input.send': 'Enviar',
     'panel.left.badge': 'SIN MCP', 'panel.left.title': 'Asistente de IA generalista', 'panel.left.sub': 'Sin acceso a los sistemas públicos', 'panel.left.tag': 'Genérico',
     'panel.right.badge': 'CON MCP', 'panel.right.title': 'Asistente de IA + Bayes MCP', 'panel.right.sub': 'Conectado al SEPE, servicios autonómicos, ayudas sociales', 'panel.right.tag': 'Contextualizado',
     'phaseTag.initial': '● Respuesta genérica · sin integración', 'phaseTag.verified': '● Respuesta contextualizada · Bayes MCP',
@@ -591,7 +608,7 @@ const T = {
     'controls.play': '▶ Demo starten', 'controls.reset': '↻ Zurücksetzen',
     'controls.hint': 'Gleiche Frage, gleichzeitig in beiden Panels.',
     'controls.playing': '● Läuft…', 'controls.replay': '↻ Szenario wiederholen',
-    'input.placeholder': 'Frage stellen…', 'input.send': 'Senden',
+    'input.placeholder': 'Beschreiben Sie Ihre Situation…', 'input.send': 'Senden',
     'panel.left.badge': 'OHNE MCP', 'panel.left.title': 'Allgemeiner KI-Assistent', 'panel.left.sub': 'Kein Zugang zu staatlichen Systemen', 'panel.left.tag': 'Generisch',
     'panel.right.badge': 'MIT MCP', 'panel.right.title': 'KI-Assistent + Bayes MCP', 'panel.right.sub': 'Verbunden mit Arbeitsagentur, Jobcenter, Landesprogrammen', 'panel.right.tag': 'Kontextualisiert',
     'phaseTag.initial': '● Generische Antwort · ohne Integration', 'phaseTag.verified': '● Kontextualisierte Antwort · Bayes MCP',
@@ -616,7 +633,7 @@ const T = {
     'controls.play': '▶ Avvia la demo', 'controls.reset': '↻ Reimposta',
     'controls.hint': 'Stessa domanda, posta nello stesso momento nei due pannelli.',
     'controls.playing': '● In corso…', 'controls.replay': '↻ Riavvia lo scenario',
-    'input.placeholder': 'Fai una domanda…', 'input.send': 'Invia',
+    'input.placeholder': 'Descrivi la tua situazione…', 'input.send': 'Invia',
     'panel.left.badge': 'SENZA MCP', 'panel.left.title': 'Assistente IA generalista', 'panel.left.sub': 'Senza accesso ai sistemi pubblici', 'panel.left.tag': 'Generico',
     'panel.right.badge': 'CON MCP', 'panel.right.title': 'Assistente IA + Bayes MCP', 'panel.right.sub': "Collegato ad ANPAL, Centro per l'Impiego, programmi regionali", 'panel.right.tag': 'Contestualizzato',
     'phaseTag.initial': '● Risposta generica · senza integrazione', 'phaseTag.verified': '● Risposta contestualizzata · Bayes MCP',
@@ -641,7 +658,7 @@ const T = {
     'controls.play': '▶ Uruchom demo', 'controls.reset': '↻ Reset',
     'controls.hint': 'To samo pytanie, zadane jednocześnie w obu panelach.',
     'controls.playing': '● Trwa…', 'controls.replay': '↻ Powtórz scenariusz',
-    'input.placeholder': 'Zadaj pytanie…', 'input.send': 'Wyślij',
+    'input.placeholder': 'Opisz swoją sytuację…', 'input.send': 'Wyślij',
     'panel.left.badge': 'BEZ MCP', 'panel.left.title': 'Ogólny asystent AI', 'panel.left.sub': 'Brak dostępu do systemów publicznych', 'panel.left.tag': 'Ogólny',
     'panel.right.badge': 'Z MCP', 'panel.right.title': 'Asystent AI + Bayes MCP', 'panel.right.sub': 'Połączony z PUP, świadczeniami, programami', 'panel.right.tag': 'Skontekstualizowany',
     'phaseTag.initial': '● Ogólna odpowiedź · bez integracji', 'phaseTag.verified': '● Skontekstualizowana odpowiedź · Bayes MCP',
