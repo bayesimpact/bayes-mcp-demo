@@ -408,11 +408,11 @@
   .fake-input .caret { display: inline-block; width: 1px; height: 14px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; }
   .inputbar button { border: none; background: var(--ink); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
 
-  .footer-strip { max-width: 1400px; margin: 0 auto; padding: 24px 28px 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .fact { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 18px 20px; }
-  .fact-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 600; letter-spacing: 0.06em; }
-  .fact h4 { margin: 6px 0 6px; font-size: 14px; font-weight: 600; color: var(--ink); }
-  .fact p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .footer-strip { max-width: 920px; margin: 0 auto; padding: 32px 28px 60px; }
+  .osn { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 22px 26px; }
+  .osn-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 700; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .osn p { margin: 0; font-size: 14.5px; color: var(--ink); line-height: 1.65; }
+  .osn p em { font-style: normal; font-weight: 600; background: linear-gradient(180deg, transparent 60%, var(--gold-bg) 60%); padding: 0 2px; }
 
   @media (max-width: 1100px) { .stage { grid-template-columns: 1fr; } .vs { display: none; } .footer-strip { grid-template-columns: 1fr; } }
   @media (max-width: 900px) { .nav { padding: 0 16px; gap: 10px; } .nav-sep, .nav-back { display: none; } }
@@ -478,8 +478,12 @@
     <span id="lang-current">FR</span>
     <svg class="lang-chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <div class="lang-menu" id="lang-menu" role="menu">
-      <a data-lang="fr" class="active">Français</a>
       <a data-lang="en">English</a>
+      <a data-lang="fr" class="active">Français</a>
+      <a data-lang="es">Español</a>
+      <a data-lang="de">Deutsch</a>
+      <a data-lang="it">Italiano</a>
+      <a data-lang="pl">Polski</a>
     </div>
   </div>
 </nav>
@@ -547,38 +551,50 @@
 </section>
 
 <section class="footer-strip">
-  <div class="fact">
-    <div class="fact-num" data-i18n="footer.f1.num">01 · POURQUOI</div>
-    <h4 data-i18n="footer.f1.h">Les démarches sont mal saisies</h4>
-    <p data-i18n="footer.f1.p">Selon la Cour des comptes, plus de 30 % des demandes d'aides sociales sont incomplètes ou mal formulées. Pas par mauvaise volonté : par méconnaissance des règles, des formulaires et des pièces attendues.</p>
-  </div>
-  <div class="fact">
-    <div class="fact-num" data-i18n="footer.f2.num">02 · COMMENT</div>
-    <h4 data-i18n="footer.f2.h">Un agent qui sait lire les règles</h4>
-    <p data-i18n="footer.f2.p">Le serveur MCP Bayes connecte service-public.fr, les bases CERFA, l'ANTS et France Connect à n'importe quel assistant IA. Il sait quelles questions poser, quels formats accepter, quels documents vérifier.</p>
-  </div>
-  <div class="fact">
-    <div class="fact-num" data-i18n="footer.f3.num">03 · POUR QUI</div>
-    <h4 data-i18n="footer.f3.h">Pour le citoyen, et l'agent</h4>
-    <p data-i18n="footer.f3.p">Pour le citoyen, un dossier prêt en quelques minutes. Pour l'agent en mairie ou en préfecture, un dossier déjà complet à instruire. Pour l'État, moins de relances, plus de droits effectivement ouverts.</p>
+  <div class="osn">
+    <div class="osn-tag" data-i18n="osn.tag">OPEN SOURCE · MCP</div>
+    <p data-i18n="osn.body">Bayes MCP est un projet <em>open source</em>. Il s'intègre à n'importe quel assistant IA — Claude, ChatGPT, Gemini ou un agent maison. C'est une opportunité pour les pouvoirs publics : garantir que les IA déjà utilisées par les citoyens respectent les référentiels et procédures du pays, sans dépendre du bon vouloir d'un éditeur étranger.</p>
   </div>
 </section>
 
 <script>
 // ---------- LANGUAGE ----------
 const LANG_KEY = 'bayes-mcp-demo-lang';
+const VALID_LANGS = ['en','fr','es','de','it','pl'];
 let LANG = 'fr';
 try {
   const saved = localStorage.getItem(LANG_KEY);
-  if (saved === 'fr' || saved === 'en') LANG = saved;
+  if (VALID_LANGS.includes(saved)) LANG = saved;
 } catch (e) {}
 
 const T = {
+  en: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Health', 'topbar.toggle.employment': 'Employment', 'topbar.toggle.admin': 'Public services',
+    'dropdown.health': '<span>Health</span><span class="nd-sub">NICE &amp; MHRA compliance</span>',
+    'dropdown.health.sub': 'NICE &amp; MHRA compliance',
+    'dropdown.employment': '<span>Employment</span><span class="nd-sub">DWP, regional schemes</span>',
+    'dropdown.employment.sub': 'DWP, regional schemes',
+    'dropdown.admin': '<span>Public services</span><span class="nd-sub">Pre-fill a GOV.UK procedure</span>',
+    'dropdown.admin.sub': 'Pre-fill a GOV.UK procedure',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Pre-fill a public-service form <em>from a simple chat</em>.",
+    'hero.p': "An AI assistant answers with links and instructions. The Bayes MCP server identifies the right procedure on GOV.UK, extracts the information already provided, asks the remaining questions, validates formats and documents, and prepares a complete dossier ready to send to the relevant council or agency.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Pick a procedure',
+    'controls.play': '▶ Run the demo', 'controls.reset': '↻ Reset',
+    'controls.hint': 'Same question, generic assistant on the left, Bayes MCP admin agent on the right.',
+    'controls.playing': '● Running…', 'controls.replay': '↻ Replay this scenario',
+    'input.placeholder': 'Ask a question…', 'input.send': 'Send',
+    'panel.left.badge': 'WITHOUT MCP', 'panel.left.title': 'General-purpose AI assistant', 'panel.left.sub': 'No access to official forms', 'panel.left.tag': 'Generic',
+    'panel.right.badge': 'WITH MCP', 'panel.right.title': 'Admin agent + Bayes MCP', 'panel.right.sub': 'GOV.UK, councils, HMRC, GOV.UK Verify', 'panel.right.tag': 'Dossier ready',
+    'phaseTag.initial': '● Generic response · no integration', 'phaseTag.verified': '● Admin agent · Bayes MCP',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': 'Bayes MCP is <em>open source</em>. It plugs into any AI assistant — Claude, ChatGPT, Gemini or a custom in-house agent. An opportunity for the public sector: ensure that AI tools citizens already use comply with national guidelines and procedures, without depending on a foreign vendor.'
+  },
   fr: {
     'topbar.demo': 'MCP · DÉMO',
-    'topbar.toggle.health': 'Santé',
-    'topbar.toggle.employment': 'Emploi',
-    'topbar.toggle.admin': 'Administratif',
+    'topbar.toggle.health': 'Santé', 'topbar.toggle.employment': 'Emploi', 'topbar.toggle.admin': 'Administratif',
     'dropdown.health': '<span>Santé</span><span class="nd-sub">Conformité HAS &amp; ANSM</span>',
     'dropdown.health.sub': 'Conformité HAS &amp; ANSM',
     'dropdown.employment': '<span>Emploi</span><span class="nd-sub">France Travail, dispositifs régionaux</span>',
@@ -590,75 +606,111 @@ const T = {
     'hero.p': "Un assistant IA répond avec des liens et un mode d'emploi. Le serveur MCP Bayes identifie la bonne procédure sur service-public.fr, extrait les informations déjà fournies, pose les questions manquantes, vérifie le format et les pièces, et prépare un dossier prêt à transmettre à l'administration concernée.",
     'sources.cmd': 'bayes_mcp.list_connected_sources()',
     'scenarios.label': 'Choisir une démarche',
-    'controls.play': '▶ Lancer la démonstration',
-    'controls.reset': '↻ Réinitialiser',
+    'controls.play': '▶ Lancer la démonstration', 'controls.reset': '↻ Réinitialiser',
     'controls.hint': "Même question, à gauche un assistant générique, à droite l'agent administratif Bayes MCP.",
-    'controls.playing': '● En cours…',
-    'controls.replay': '↻ Rejouer ce scénario',
-    'input.placeholder': 'Posez une question…',
-    'input.send': 'Envoyer',
-    'panel.left.badge': 'SANS MCP',
-    'panel.left.title': 'Assistant IA généraliste',
-    'panel.left.sub': "Pas d'accès aux formulaires officiels",
-    'panel.left.tag': 'Générique',
-    'panel.right.badge': 'AVEC MCP',
-    'panel.right.title': 'Agent administratif + Bayes MCP',
-    'panel.right.sub': 'service-public.fr, CERFA, ANTS, France Connect',
-    'panel.right.tag': 'Dossier prêt',
-    'phaseTag.initial': '● Réponse générique · sans intégration',
-    'phaseTag.verified': '● Agent administratif · Bayes MCP',
-    'footer.f1.num': '01 · POURQUOI',
-    'footer.f1.h': 'Les démarches sont mal saisies',
-    'footer.f1.p': "Selon la Cour des comptes, plus de 30 % des demandes d'aides sociales sont incomplètes ou mal formulées. Pas par mauvaise volonté : par méconnaissance des règles, des formulaires et des pièces attendues.",
-    'footer.f2.num': '02 · COMMENT',
-    'footer.f2.h': 'Un agent qui sait lire les règles',
-    'footer.f2.p': "Le serveur MCP Bayes connecte service-public.fr, les bases CERFA, l'ANTS et France Connect à n'importe quel assistant IA. Il sait quelles questions poser, quels formats accepter, quels documents vérifier.",
-    'footer.f3.num': '03 · POUR QUI',
-    'footer.f3.h': 'Pour le citoyen, et l\'agent',
-    'footer.f3.p': "Pour le citoyen, un dossier prêt en quelques minutes. Pour l'agent en mairie ou en préfecture, un dossier déjà complet à instruire. Pour l'État, moins de relances, plus de droits effectivement ouverts."
+    'controls.playing': '● En cours…', 'controls.replay': '↻ Rejouer ce scénario',
+    'input.placeholder': 'Posez une question…', 'input.send': 'Envoyer',
+    'panel.left.badge': 'SANS MCP', 'panel.left.title': 'Assistant IA généraliste', 'panel.left.sub': "Pas d'accès aux formulaires officiels", 'panel.left.tag': 'Générique',
+    'panel.right.badge': 'AVEC MCP', 'panel.right.title': 'Agent administratif + Bayes MCP', 'panel.right.sub': 'service-public.fr, CERFA, ANTS, France Connect', 'panel.right.tag': 'Dossier prêt',
+    'phaseTag.initial': '● Réponse générique · sans intégration', 'phaseTag.verified': '● Agent administratif · Bayes MCP',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP est un projet <em>open source</em>. Il s'intègre à n'importe quel assistant IA — Claude, ChatGPT, Gemini ou un agent maison. C'est une opportunité pour les pouvoirs publics : garantir que les IA déjà utilisées par les citoyens respectent les référentiels et procédures du pays, sans dépendre du bon vouloir d'un éditeur étranger."
   },
-  en: {
+  es: {
     'topbar.demo': 'MCP · DEMO',
-    'topbar.toggle.health': 'Health',
-    'topbar.toggle.employment': 'Employment',
-    'topbar.toggle.admin': 'Public services',
-    'dropdown.health': '<span>Health</span><span class="nd-sub">HAS &amp; ANSM compliance</span>',
-    'dropdown.health.sub': 'HAS &amp; ANSM compliance',
-    'dropdown.employment': '<span>Employment</span><span class="nd-sub">France Travail, regional schemes</span>',
-    'dropdown.employment.sub': 'France Travail, regional schemes',
-    'dropdown.admin': '<span>Public services</span><span class="nd-sub">Pre-fill an online procedure</span>',
-    'dropdown.admin.sub': 'Pre-fill an online procedure',
+    'topbar.toggle.health': 'Salud', 'topbar.toggle.employment': 'Empleo', 'topbar.toggle.admin': 'Trámites',
+    'dropdown.health': '<span>Salud</span><span class="nd-sub">Cumplimiento AEMPS</span>',
+    'dropdown.health.sub': 'Cumplimiento AEMPS',
+    'dropdown.employment': '<span>Empleo</span><span class="nd-sub">SEPE, ayudas autonómicas</span>',
+    'dropdown.employment.sub': 'SEPE, ayudas autonómicas',
+    'dropdown.admin': '<span>Trámites</span><span class="nd-sub">Rellenar un trámite online</span>',
+    'dropdown.admin.sub': 'Rellenar un trámite online',
     'nav.back': 'bayesimpact.org',
-    'hero.h1': "Pre-fill a public-service form <em>from a simple chat</em>.",
-    'hero.p': "An AI assistant answers with links and instructions. The Bayes MCP server identifies the right procedure on service-public.fr, extracts the information already provided, asks the remaining questions, validates formats and documents, and prepares a complete dossier ready to send to the relevant administration.",
+    'hero.h1': "Rellenar un trámite público <em>desde una simple conversación</em>.",
+    'hero.p': "Un asistente de IA responde con enlaces e instrucciones. El servidor Bayes MCP identifica el trámite correcto en administracion.gob.es, extrae la información ya facilitada, formula las preguntas restantes, valida formatos y documentos, y prepara un expediente listo para enviar al organismo correspondiente.",
     'sources.cmd': 'bayes_mcp.list_connected_sources()',
-    'scenarios.label': 'Pick a procedure',
-    'controls.play': '▶ Run the demo',
-    'controls.reset': '↻ Reset',
-    'controls.hint': 'Same question, generic assistant on the left, Bayes MCP admin agent on the right.',
-    'controls.playing': '● Running…',
-    'controls.replay': '↻ Replay this scenario',
-    'input.placeholder': 'Ask a question…',
-    'input.send': 'Send',
-    'panel.left.badge': 'WITHOUT MCP',
-    'panel.left.title': 'General-purpose AI assistant',
-    'panel.left.sub': 'No access to official forms',
-    'panel.left.tag': 'Generic',
-    'panel.right.badge': 'WITH MCP',
-    'panel.right.title': 'Admin agent + Bayes MCP',
-    'panel.right.sub': 'service-public.fr, CERFA, ANTS, France Connect',
-    'panel.right.tag': 'Dossier ready',
-    'phaseTag.initial': '● Generic response · no integration',
-    'phaseTag.verified': '● Admin agent · Bayes MCP',
-    'footer.f1.num': '01 · WHY',
-    'footer.f1.h': 'Forms are filled badly',
-    'footer.f1.p': "According to France's Court of Auditors, more than 30 % of social-benefit applications are incomplete or badly drafted. Not out of bad faith: out of unfamiliarity with rules, forms and required documents.",
-    'footer.f2.num': '02 · HOW',
-    'footer.f2.h': 'An agent that reads the rules',
-    'footer.f2.p': "The Bayes MCP server connects service-public.fr, CERFA form databases, ANTS and France Connect to any AI assistant. It knows which questions to ask, which formats to accept, which documents to verify.",
-    'footer.f3.num': '03 · FOR WHOM',
-    'footer.f3.h': 'For citizens, and for civil servants',
-    'footer.f3.p': "For citizens, a complete dossier in minutes. For staff at town halls and prefectures, a dossier ready to process. For the State, fewer back-and-forths, more rights actually claimed."
+    'scenarios.label': 'Elige un trámite',
+    'controls.play': '▶ Iniciar la demostración', 'controls.reset': '↻ Reiniciar',
+    'controls.hint': 'Misma pregunta, asistente genérico a la izquierda, agente administrativo Bayes MCP a la derecha.',
+    'controls.playing': '● En curso…', 'controls.replay': '↻ Repetir este escenario',
+    'input.placeholder': 'Haz una pregunta…', 'input.send': 'Enviar',
+    'panel.left.badge': 'SIN MCP', 'panel.left.title': 'Asistente de IA generalista', 'panel.left.sub': 'Sin acceso a formularios oficiales', 'panel.left.tag': 'Genérico',
+    'panel.right.badge': 'CON MCP', 'panel.right.title': 'Agente administrativo + Bayes MCP', 'panel.right.sub': 'administracion.gob.es, Cl@ve, sede electrónica', 'panel.right.tag': 'Expediente listo',
+    'phaseTag.initial': '● Respuesta genérica · sin integración', 'phaseTag.verified': '● Agente administrativo · Bayes MCP',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP es <em>código abierto</em>. Se integra en cualquier asistente de IA — Claude, ChatGPT, Gemini o un agente propio. Una oportunidad para el sector público: garantizar que las IA que ya usan los ciudadanos respeten las normativas y procedimientos nacionales, sin depender de un proveedor extranjero."
+  },
+  de: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Gesundheit', 'topbar.toggle.employment': 'Beschäftigung', 'topbar.toggle.admin': 'Behörden',
+    'dropdown.health': '<span>Gesundheit</span><span class="nd-sub">G-BA &amp; BfArM Konformität</span>',
+    'dropdown.health.sub': 'G-BA &amp; BfArM Konformität',
+    'dropdown.employment': '<span>Beschäftigung</span><span class="nd-sub">Arbeitsagentur, Landesprogramme</span>',
+    'dropdown.employment.sub': 'Arbeitsagentur, Landesprogramme',
+    'dropdown.admin': '<span>Behörden</span><span class="nd-sub">Online-Antrag vorausfüllen</span>',
+    'dropdown.admin.sub': 'Online-Antrag vorausfüllen',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Behördenformulare <em>aus einem einfachen Gespräch</em> vorausfüllen.",
+    'hero.p': "Ein KI-Assistent antwortet mit Links und Anweisungen. Der Bayes-MCP-Server findet das richtige Verfahren auf bund.de, extrahiert bereits genannte Angaben, stellt die fehlenden Fragen, prüft Formate und Belege und stellt einen versandfertigen Antrag für die zuständige Behörde zusammen.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Verfahren wählen',
+    'controls.play': '▶ Demo starten', 'controls.reset': '↻ Zurücksetzen',
+    'controls.hint': 'Gleiche Frage, links allgemeiner Assistent, rechts der Behörden-Agent Bayes MCP.',
+    'controls.playing': '● Läuft…', 'controls.replay': '↻ Szenario wiederholen',
+    'input.placeholder': 'Frage stellen…', 'input.send': 'Senden',
+    'panel.left.badge': 'OHNE MCP', 'panel.left.title': 'Allgemeiner KI-Assistent', 'panel.left.sub': 'Kein Zugriff auf offizielle Formulare', 'panel.left.tag': 'Generisch',
+    'panel.right.badge': 'MIT MCP', 'panel.right.title': 'Behörden-Agent + Bayes MCP', 'panel.right.sub': 'bund.de, BundID, Verwaltungsportal', 'panel.right.tag': 'Antrag bereit',
+    'phaseTag.initial': '● Generische Antwort · ohne Integration', 'phaseTag.verified': '● Behörden-Agent · Bayes MCP',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP ist <em>Open Source</em>. Es lässt sich in jeden KI-Assistenten einbinden — Claude, ChatGPT, Gemini oder einen eigenen Agenten. Eine Chance für die öffentliche Hand: sicherstellen, dass die von Bürgerinnen und Bürgern genutzten KIs nationale Leitlinien und Verfahren respektieren, ohne von einem ausländischen Anbieter abhängig zu sein."
+  },
+  it: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Salute', 'topbar.toggle.employment': 'Lavoro', 'topbar.toggle.admin': 'Servizi pubblici',
+    'dropdown.health': '<span>Salute</span><span class="nd-sub">Conformità AIFA &amp; ISS</span>',
+    'dropdown.health.sub': 'Conformità AIFA &amp; ISS',
+    'dropdown.employment': '<span>Lavoro</span><span class="nd-sub">ANPAL, programmi regionali</span>',
+    'dropdown.employment.sub': 'ANPAL, programmi regionali',
+    'dropdown.admin': '<span>Servizi pubblici</span><span class="nd-sub">Compilare un modulo online</span>',
+    'dropdown.admin.sub': 'Compilare un modulo online',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Compila un modulo pubblico <em>da una semplice conversazione</em>.",
+    'hero.p': "Un assistente IA risponde con link e istruzioni. Il server Bayes MCP individua la procedura giusta su italia.gov.it, estrae le informazioni già fornite, pone le domande mancanti, valida formati e documenti, e prepara una pratica pronta da inviare all'amministrazione competente.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Scegli una procedura',
+    'controls.play': '▶ Avvia la demo', 'controls.reset': '↻ Reimposta',
+    'controls.hint': 'Stessa domanda, assistente generico a sinistra, agente amministrativo Bayes MCP a destra.',
+    'controls.playing': '● In corso…', 'controls.replay': '↻ Riavvia lo scenario',
+    'input.placeholder': 'Fai una domanda…', 'input.send': 'Invia',
+    'panel.left.badge': 'SENZA MCP', 'panel.left.title': 'Assistente IA generalista', 'panel.left.sub': 'Senza accesso ai moduli ufficiali', 'panel.left.tag': 'Generico',
+    'panel.right.badge': 'CON MCP', 'panel.right.title': 'Agente amministrativo + Bayes MCP', 'panel.right.sub': 'italia.gov.it, SPID, IO, PagoPA', 'panel.right.tag': 'Pratica pronta',
+    'phaseTag.initial': '● Risposta generica · senza integrazione', 'phaseTag.verified': '● Agente amministrativo · Bayes MCP',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP è <em>open source</em>. Si integra in qualsiasi assistente IA — Claude, ChatGPT, Gemini o un agente interno. Un'opportunità per la pubblica amministrazione: assicurare che le IA già usate dai cittadini rispettino le linee guida e le procedure nazionali, senza dipendere da un fornitore estero."
+  },
+  pl: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Zdrowie', 'topbar.toggle.employment': 'Praca', 'topbar.toggle.admin': 'Urzędy',
+    'dropdown.health': '<span>Zdrowie</span><span class="nd-sub">Zgodność URPL &amp; AOTMiT</span>',
+    'dropdown.health.sub': 'Zgodność URPL &amp; AOTMiT',
+    'dropdown.employment': '<span>Praca</span><span class="nd-sub">Urząd Pracy, programy regionalne</span>',
+    'dropdown.employment.sub': 'Urząd Pracy, programy regionalne',
+    'dropdown.admin': '<span>Urzędy</span><span class="nd-sub">Wypełnij formularz online</span>',
+    'dropdown.admin.sub': 'Wypełnij formularz online',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Wypełnij formularz urzędowy <em>z prostej rozmowy</em>.",
+    'hero.p': "Asystent AI odpowiada linkami i instrukcjami. Serwer Bayes MCP identyfikuje właściwą procedurę na gov.pl, wydobywa już podane informacje, zadaje brakujące pytania, weryfikuje formaty i dokumenty oraz przygotowuje wniosek gotowy do wysłania do właściwego urzędu.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Wybierz procedurę',
+    'controls.play': '▶ Uruchom demo', 'controls.reset': '↻ Reset',
+    'controls.hint': 'To samo pytanie, ogólny asystent po lewej, agent administracyjny Bayes MCP po prawej.',
+    'controls.playing': '● Trwa…', 'controls.replay': '↻ Powtórz scenariusz',
+    'input.placeholder': 'Zadaj pytanie…', 'input.send': 'Wyślij',
+    'panel.left.badge': 'BEZ MCP', 'panel.left.title': 'Ogólny asystent AI', 'panel.left.sub': 'Brak dostępu do formularzy urzędowych', 'panel.left.tag': 'Ogólny',
+    'panel.right.badge': 'Z MCP', 'panel.right.title': 'Agent administracyjny + Bayes MCP', 'panel.right.sub': 'gov.pl, mObywatel, ePUAP, Profil Zaufany', 'panel.right.tag': 'Wniosek gotowy',
+    'phaseTag.initial': '● Ogólna odpowiedź · bez integracji', 'phaseTag.verified': '● Agent administracyjny · Bayes MCP',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP jest <em>open source</em>. Integruje się z dowolnym asystentem AI — Claude, ChatGPT, Gemini lub własnym agentem. Szansa dla administracji publicznej: zapewnić, że AI używane przez obywateli respektuje krajowe wytyczne i procedury, bez zależności od zagranicznego dostawcy."
   }
 };
 

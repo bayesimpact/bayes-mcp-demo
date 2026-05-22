@@ -349,11 +349,11 @@
   .fake-input .caret { display: inline-block; width: 1px; height: 14px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; }
   .inputbar button { border: none; background: var(--ink); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
 
-  .footer-strip { max-width: 1400px; margin: 0 auto; padding: 24px 28px 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .fact { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 18px 20px; }
-  .fact-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 600; letter-spacing: 0.06em; }
-  .fact h4 { margin: 6px 0 6px; font-size: 14px; font-weight: 600; color: var(--ink); }
-  .fact p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .footer-strip { max-width: 920px; margin: 0 auto; padding: 32px 28px 60px; }
+  .osn { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 22px 26px; }
+  .osn-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 700; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .osn p { margin: 0; font-size: 14.5px; color: var(--ink); line-height: 1.65; }
+  .osn p em { font-style: normal; font-weight: 600; background: linear-gradient(180deg, transparent 60%, var(--gold-bg) 60%); padding: 0 2px; }
 
   @media (max-width: 1100px) { .stage { grid-template-columns: 1fr; } .vs { display: none; } .footer-strip { grid-template-columns: 1fr; } }
   @media (max-width: 900px) { .nav { padding: 0 16px; gap: 10px; } .nav-sep, .nav-back { display: none; } .scenarios-row { grid-template-columns: repeat(2, 1fr); } }
@@ -404,8 +404,12 @@
     <span id="lang-current">FR</span>
     <svg class="lang-chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <div class="lang-menu" id="lang-menu" role="menu">
-      <a data-lang="fr" class="active">Français</a>
       <a data-lang="en">English</a>
+      <a data-lang="fr" class="active">Français</a>
+      <a data-lang="es">Español</a>
+      <a data-lang="de">Deutsch</a>
+      <a data-lang="it">Italiano</a>
+      <a data-lang="pl">Polski</a>
     </div>
   </div>
 </nav>
@@ -473,38 +477,53 @@
 </section>
 
 <section class="footer-strip">
-  <div class="fact">
-    <div class="fact-num" data-i18n="footer.f1.num">01 · POURQUOI</div>
-    <h4 data-i18n="footer.f1.h">Entraînés à l'étranger</h4>
-    <p data-i18n="footer.f1.p">Les modèles commerciaux généralistes comme ChatGPT ne connaissent pas les recommandations et bonnes pratiques propres au territoire français. Quand la HAS ou l'ANSM divergent des standards anglo-saxons, ils répondent par défaut comme à San Francisco.</p>
-  </div>
-  <div class="fact">
-    <div class="fact-num" data-i18n="footer.f2.num">02 · COMMENT</div>
-    <h4 data-i18n="footer.f2.h">Une vérification ouverte</h4>
-    <p data-i18n="footer.f2.p">Le protocole MCP permet de brancher la HAS et l'ANSM sur n'importe quel assistant IA. Bayes opère cette passerelle, en open source.</p>
-  </div>
-  <div class="fact">
-    <div class="fact-num" data-i18n="footer.f3.num">03 · POUR QUI</div>
-    <h4 data-i18n="footer.f3.h">Souveraineté sanitaire</h4>
-    <p data-i18n="footer.f3.p">Hôpitaux, éditeurs de DPI, plateformes de téléconsultation : la France peut imposer ses référentiels sans attendre qu'un éditeur étranger les intègre.</p>
+  <div class="osn">
+    <div class="osn-tag" data-i18n="osn.tag">OPEN SOURCE · MCP</div>
+    <p data-i18n="osn.body">Bayes MCP est un projet <em>open source</em>. Il s'intègre à n'importe quel assistant IA — Claude, ChatGPT, Gemini ou un agent maison. C'est une opportunité pour les pouvoirs publics : garantir que les IA déjà utilisées par les citoyens respectent les référentiels et procédures du pays, sans dépendre du bon vouloir d'un éditeur étranger.</p>
   </div>
 </section>
 
 <script>
 // ---------- LANGUAGE ----------
 const LANG_KEY = 'bayes-mcp-demo-lang';
+const VALID_LANGS = ['en','fr','es','de','it','pl'];
 let LANG = 'fr';
 try {
   const saved = localStorage.getItem(LANG_KEY);
-  if (saved === 'fr' || saved === 'en') LANG = saved;
+  if (VALID_LANGS.includes(saved)) LANG = saved;
 } catch (e) {}
 
 const T = {
+  en: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Health', 'topbar.toggle.employment': 'Employment', 'topbar.toggle.admin': 'Public services',
+    'dropdown.health': '<span>Health</span><span class="nd-sub">NICE &amp; MHRA compliance</span>',
+    'dropdown.health.sub': 'NICE &amp; MHRA compliance',
+    'dropdown.employment': '<span>Employment</span><span class="nd-sub">DWP, regional schemes</span>',
+    'dropdown.employment.sub': 'DWP, regional schemes',
+    'dropdown.admin': '<span>Public services</span><span class="nd-sub">Pre-fill a GOV.UK procedure</span>',
+    'dropdown.admin.sub': 'Pre-fill a GOV.UK procedure',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': 'Check medical AI answers against <em>NICE and MHRA guidance</em>.',
+    'hero.p': "An AI assistant answers a clinical question. The Bayes MCP server automatically checks the response against NICE clinical guidelines and MHRA drug safety alerts, then corrects it if needed.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Pick a clinical scenario',
+    'controls.play': '▶ Run the demo', 'controls.reset': '↻ Reset',
+    'controls.hint': 'Same question, asked at the same moment in both panels.',
+    'controls.playing': '● Running…', 'controls.replay': '↻ Replay this scenario',
+    'input.placeholder': 'Ask a question…', 'input.send': 'Send',
+    'panel.left.badge': 'WITHOUT MCP', 'panel.left.title': 'General-purpose AI assistant', 'panel.left.sub': 'Standard commercial model', 'panel.left.tag': 'Unverified',
+    'panel.right.badge': 'WITH MCP', 'panel.right.title': 'AI assistant + Bayes MCP', 'panel.right.sub': 'Checked against NICE &amp; MHRA', 'panel.right.tag': 'Compliance checked',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Initial response · unverified',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Verified response · NICE &amp; MHRA',
+    'toolcall.running': 'RUNNING…', 'toolcall.done': 'DONE',
+    'verdict.openSource': 'Open the source document',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': 'Bayes MCP is <em>open source</em>. It plugs into any AI assistant — Claude, ChatGPT, Gemini or a custom in-house agent. An opportunity for the public sector: ensure that AI tools citizens already use comply with national guidelines and procedures, without depending on a foreign vendor.'
+  },
   fr: {
     'topbar.demo': 'MCP · DÉMO',
-    'topbar.toggle.health': 'Santé',
-    'topbar.toggle.employment': 'Emploi',
-    'topbar.toggle.admin': 'Administratif',
+    'topbar.toggle.health': 'Santé', 'topbar.toggle.employment': 'Emploi', 'topbar.toggle.admin': 'Administratif',
     'dropdown.health': '<span>Santé</span><span class="nd-sub">Conformité HAS &amp; ANSM</span>',
     'dropdown.health.sub': 'Conformité HAS &amp; ANSM',
     'dropdown.employment': '<span>Emploi</span><span class="nd-sub">France Travail, dispositifs régionaux</span>',
@@ -516,81 +535,126 @@ const T = {
     'hero.p': "Un assistant IA répond à une question clinique. Le serveur MCP Bayes vérifie automatiquement la réponse contre les recommandations de la HAS et les décisions de l'ANSM, puis la corrige si nécessaire.",
     'sources.cmd': 'bayes_mcp.list_connected_sources()',
     'scenarios.label': 'Choisir un scénario clinique',
-    'controls.play': '▶ Lancer la démonstration',
-    'controls.reset': '↻ Réinitialiser',
+    'controls.play': '▶ Lancer la démonstration', 'controls.reset': '↻ Réinitialiser',
     'controls.hint': 'Même question, posée au même moment dans les deux panneaux.',
-    'controls.playing': '● En cours…',
-    'controls.replay': '↻ Rejouer ce scénario',
-    'input.placeholder': 'Posez une question…',
-    'input.send': 'Envoyer',
-    'panel.left.badge': 'SANS MCP',
-    'panel.left.title': 'Assistant IA généraliste',
-    'panel.left.sub': 'Modèle commercial standard',
-    'panel.left.tag': 'Sans vérification',
-    'panel.right.badge': 'AVEC MCP',
-    'panel.right.title': 'Assistant IA + Bayes MCP',
-    'panel.right.sub': 'Vérifié contre HAS &amp; ANSM',
-    'panel.right.tag': 'Conformité contrôlée',
+    'controls.playing': '● En cours…', 'controls.replay': '↻ Rejouer ce scénario',
+    'input.placeholder': 'Posez une question…', 'input.send': 'Envoyer',
+    'panel.left.badge': 'SANS MCP', 'panel.left.title': 'Assistant IA généraliste', 'panel.left.sub': 'Modèle commercial standard', 'panel.left.tag': 'Sans vérification',
+    'panel.right.badge': 'AVEC MCP', 'panel.right.title': 'Assistant IA + Bayes MCP', 'panel.right.sub': 'Vérifié contre HAS &amp; ANSM', 'panel.right.tag': 'Conformité contrôlée',
     'phaseTag.initial': '<span class="pt-icon">●</span> Réponse initiale · sans vérification',
     'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Réponse vérifiée · HAS &amp; ANSM',
-    'toolcall.running': 'EN COURS…',
-    'toolcall.done': 'TERMINÉ',
+    'toolcall.running': 'EN COURS…', 'toolcall.done': 'TERMINÉ',
     'verdict.openSource': 'Ouvrir le document source',
-    'footer.f1.num': '01 · POURQUOI',
-    'footer.f1.h': "Entraînés à l'étranger",
-    'footer.f1.p': "Les modèles commerciaux généralistes comme ChatGPT ne connaissent pas les recommandations et bonnes pratiques propres au territoire français. Quand la HAS ou l'ANSM divergent des standards anglo-saxons, ils répondent par défaut comme à San Francisco.",
-    'footer.f2.num': '02 · COMMENT',
-    'footer.f2.h': 'Une vérification ouverte',
-    'footer.f2.p': "Le protocole MCP permet de brancher la HAS et l'ANSM sur n'importe quel assistant IA. Bayes opère cette passerelle, en open source.",
-    'footer.f3.num': '03 · POUR QUI',
-    'footer.f3.h': 'Souveraineté sanitaire',
-    'footer.f3.p': "Hôpitaux, éditeurs de DPI, plateformes de téléconsultation : la France peut imposer ses référentiels sans attendre qu'un éditeur étranger les intègre."
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP est un projet <em>open source</em>. Il s'intègre à n'importe quel assistant IA — Claude, ChatGPT, Gemini ou un agent maison. C'est une opportunité pour les pouvoirs publics : garantir que les IA déjà utilisées par les citoyens respectent les référentiels et procédures du pays, sans dépendre du bon vouloir d'un éditeur étranger."
   },
-  en: {
+  es: {
     'topbar.demo': 'MCP · DEMO',
-    'topbar.toggle.health': 'Health',
-    'topbar.toggle.employment': 'Employment',
-    'topbar.toggle.admin': 'Public services',
-    'dropdown.health': '<span>Health</span><span class="nd-sub">HAS &amp; ANSM compliance</span>',
-    'dropdown.health.sub': 'HAS &amp; ANSM compliance',
-    'dropdown.employment': '<span>Employment</span><span class="nd-sub">France Travail, regional schemes</span>',
-    'dropdown.employment.sub': 'France Travail, regional schemes',
-    'dropdown.admin': '<span>Public services</span><span class="nd-sub">Pre-fill an online procedure</span>',
-    'dropdown.admin.sub': 'Pre-fill an online procedure',
+    'topbar.toggle.health': 'Salud', 'topbar.toggle.employment': 'Empleo', 'topbar.toggle.admin': 'Trámites',
+    'dropdown.health': '<span>Salud</span><span class="nd-sub">Cumplimiento AEMPS</span>',
+    'dropdown.health.sub': 'Cumplimiento AEMPS',
+    'dropdown.employment': '<span>Empleo</span><span class="nd-sub">SEPE, ayudas autonómicas</span>',
+    'dropdown.employment.sub': 'SEPE, ayudas autonómicas',
+    'dropdown.admin': '<span>Trámites</span><span class="nd-sub">Rellenar un trámite online</span>',
+    'dropdown.admin.sub': 'Rellenar un trámite online',
     'nav.back': 'bayesimpact.org',
-    'hero.h1': "Check medical AI answers against <em>France's clinical guidelines</em>.",
-    'hero.p': "An AI assistant answers a clinical question. The Bayes MCP server automatically checks the response against HAS (France's Health Authority) and ANSM (Medicines Safety Agency) guidance, then corrects it if needed.",
+    'hero.h1': "Verificar las respuestas de IA médicas contra los <em>referentes españoles</em>.",
+    'hero.p': "Un asistente de IA responde a una consulta clínica. El servidor Bayes MCP verifica la respuesta contra las normativas de la AEMPS y las guías de práctica clínica españolas, y la corrige si hace falta.",
     'sources.cmd': 'bayes_mcp.list_connected_sources()',
-    'scenarios.label': 'Pick a clinical scenario',
-    'controls.play': '▶ Run the demo',
-    'controls.reset': '↻ Reset',
-    'controls.hint': 'Same question, asked at the same moment in both panels.',
-    'controls.playing': '● Running…',
-    'controls.replay': '↻ Replay this scenario',
-    'input.placeholder': 'Ask a question…',
-    'input.send': 'Send',
-    'panel.left.badge': 'WITHOUT MCP',
-    'panel.left.title': 'General-purpose AI assistant',
-    'panel.left.sub': 'Standard commercial model',
-    'panel.left.tag': 'Unverified',
-    'panel.right.badge': 'WITH MCP',
-    'panel.right.title': 'AI assistant + Bayes MCP',
-    'panel.right.sub': 'Checked against HAS &amp; ANSM',
-    'panel.right.tag': 'Compliance checked',
-    'phaseTag.initial': '<span class="pt-icon">●</span> Initial response · unverified',
-    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Verified response · HAS &amp; ANSM',
-    'toolcall.running': 'RUNNING…',
-    'toolcall.done': 'DONE',
-    'verdict.openSource': 'Open the source document',
-    'footer.f1.num': '01 · WHY',
-    'footer.f1.h': 'Trained elsewhere',
-    'footer.f1.p': "General-purpose commercial models like ChatGPT do not know the guidelines and best practices specific to France. When HAS or ANSM diverge from Anglo-Saxon standards, the models default to San Francisco answers.",
-    'footer.f2.num': '02 · HOW',
-    'footer.f2.h': 'An open verification layer',
-    'footer.f2.p': 'The MCP protocol lets you plug HAS and ANSM into any AI assistant. Bayes operates this gateway, open source.',
-    'footer.f3.num': '03 · FOR WHOM',
-    'footer.f3.h': 'Health sovereignty',
-    'footer.f3.p': "Hospitals, EHR vendors, telemedicine platforms: France can enforce its own guidelines without waiting for a foreign vendor to integrate them."
+    'scenarios.label': 'Elige un escenario clínico',
+    'controls.play': '▶ Iniciar la demostración', 'controls.reset': '↻ Reiniciar',
+    'controls.hint': 'Misma pregunta, en ambos paneles al mismo tiempo.',
+    'controls.playing': '● En curso…', 'controls.replay': '↻ Repetir este escenario',
+    'input.placeholder': 'Haz una pregunta…', 'input.send': 'Enviar',
+    'panel.left.badge': 'SIN MCP', 'panel.left.title': 'Asistente de IA generalista', 'panel.left.sub': 'Modelo comercial estándar', 'panel.left.tag': 'Sin verificar',
+    'panel.right.badge': 'CON MCP', 'panel.right.title': 'Asistente de IA + Bayes MCP', 'panel.right.sub': 'Verificado contra AEMPS &amp; SEMFYC', 'panel.right.tag': 'Conformidad verificada',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Respuesta inicial · sin verificar',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Respuesta verificada · AEMPS &amp; SEMFYC',
+    'toolcall.running': 'EN CURSO…', 'toolcall.done': 'TERMINADO',
+    'verdict.openSource': 'Abrir el documento fuente',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP es <em>código abierto</em>. Se integra en cualquier asistente de IA — Claude, ChatGPT, Gemini o un agente propio. Una oportunidad para el sector público: garantizar que las IA que ya usan los ciudadanos respeten las normativas y procedimientos nacionales, sin depender de un proveedor extranjero."
+  },
+  de: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Gesundheit', 'topbar.toggle.employment': 'Beschäftigung', 'topbar.toggle.admin': 'Behörden',
+    'dropdown.health': '<span>Gesundheit</span><span class="nd-sub">G-BA &amp; BfArM Konformität</span>',
+    'dropdown.health.sub': 'G-BA &amp; BfArM Konformität',
+    'dropdown.employment': '<span>Beschäftigung</span><span class="nd-sub">Arbeitsagentur, Landesprogramme</span>',
+    'dropdown.employment.sub': 'Arbeitsagentur, Landesprogramme',
+    'dropdown.admin': '<span>Behörden</span><span class="nd-sub">Online-Antrag vorausfüllen</span>',
+    'dropdown.admin.sub': 'Online-Antrag vorausfüllen',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "KI-Antworten in der Medizin gegen <em>deutsche Leitlinien</em> prüfen.",
+    'hero.p': "Ein KI-Assistent beantwortet eine klinische Frage. Der Bayes-MCP-Server prüft die Antwort automatisch gegen G-BA-Leitlinien und BfArM-Warnungen und korrigiert sie bei Bedarf.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Klinisches Szenario auswählen',
+    'controls.play': '▶ Demo starten', 'controls.reset': '↻ Zurücksetzen',
+    'controls.hint': 'Gleiche Frage, gleichzeitig in beiden Panels.',
+    'controls.playing': '● Läuft…', 'controls.replay': '↻ Szenario wiederholen',
+    'input.placeholder': 'Frage stellen…', 'input.send': 'Senden',
+    'panel.left.badge': 'OHNE MCP', 'panel.left.title': 'Allgemeiner KI-Assistent', 'panel.left.sub': 'Standardmodell', 'panel.left.tag': 'Ungeprüft',
+    'panel.right.badge': 'MIT MCP', 'panel.right.title': 'KI-Assistent + Bayes MCP', 'panel.right.sub': 'Gegen G-BA &amp; BfArM geprüft', 'panel.right.tag': 'Konformität geprüft',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Erste Antwort · ungeprüft',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Geprüfte Antwort · G-BA &amp; BfArM',
+    'toolcall.running': 'LÄUFT…', 'toolcall.done': 'FERTIG',
+    'verdict.openSource': 'Quelldokument öffnen',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP ist <em>Open Source</em>. Es lässt sich in jeden KI-Assistenten einbinden — Claude, ChatGPT, Gemini oder einen eigenen Agenten. Eine Chance für die öffentliche Hand: sicherstellen, dass die von Bürgerinnen und Bürgern genutzten KIs nationale Leitlinien und Verfahren respektieren, ohne von einem ausländischen Anbieter abhängig zu sein."
+  },
+  it: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Salute', 'topbar.toggle.employment': 'Lavoro', 'topbar.toggle.admin': 'Servizi pubblici',
+    'dropdown.health': '<span>Salute</span><span class="nd-sub">Conformità AIFA &amp; ISS</span>',
+    'dropdown.health.sub': 'Conformità AIFA &amp; ISS',
+    'dropdown.employment': '<span>Lavoro</span><span class="nd-sub">ANPAL, programmi regionali</span>',
+    'dropdown.employment.sub': 'ANPAL, programmi regionali',
+    'dropdown.admin': '<span>Servizi pubblici</span><span class="nd-sub">Compilare un modulo online</span>',
+    'dropdown.admin.sub': 'Compilare un modulo online',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Verificare le risposte delle IA mediche contro le <em>linee guida italiane</em>.",
+    'hero.p': "Un assistente IA risponde a una domanda clinica. Il server Bayes MCP verifica automaticamente la risposta contro le linee guida AIFA e ISS, e la corregge se necessario.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Scegli uno scenario clinico',
+    'controls.play': '▶ Avvia la demo', 'controls.reset': '↻ Reimposta',
+    'controls.hint': 'Stessa domanda, posta nello stesso momento nei due pannelli.',
+    'controls.playing': '● In corso…', 'controls.replay': '↻ Riavvia lo scenario',
+    'input.placeholder': 'Fai una domanda…', 'input.send': 'Invia',
+    'panel.left.badge': 'SENZA MCP', 'panel.left.title': 'Assistente IA generalista', 'panel.left.sub': 'Modello commerciale standard', 'panel.left.tag': 'Non verificato',
+    'panel.right.badge': 'CON MCP', 'panel.right.title': 'Assistente IA + Bayes MCP', 'panel.right.sub': 'Verificato contro AIFA &amp; ISS', 'panel.right.tag': 'Conformità verificata',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Risposta iniziale · non verificata',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Risposta verificata · AIFA &amp; ISS',
+    'toolcall.running': 'IN CORSO…', 'toolcall.done': 'COMPLETATO',
+    'verdict.openSource': 'Apri il documento sorgente',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP è <em>open source</em>. Si integra in qualsiasi assistente IA — Claude, ChatGPT, Gemini o un agente interno. Un'opportunità per la pubblica amministrazione: assicurare che le IA già usate dai cittadini rispettino le linee guida e le procedure nazionali, senza dipendere da un fornitore estero."
+  },
+  pl: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Zdrowie', 'topbar.toggle.employment': 'Praca', 'topbar.toggle.admin': 'Urzędy',
+    'dropdown.health': '<span>Zdrowie</span><span class="nd-sub">Zgodność URPL &amp; AOTMiT</span>',
+    'dropdown.health.sub': 'Zgodność URPL &amp; AOTMiT',
+    'dropdown.employment': '<span>Praca</span><span class="nd-sub">Urząd Pracy, programy regionalne</span>',
+    'dropdown.employment.sub': 'Urząd Pracy, programy regionalne',
+    'dropdown.admin': '<span>Urzędy</span><span class="nd-sub">Wypełnij formularz online</span>',
+    'dropdown.admin.sub': 'Wypełnij formularz online',
+    'nav.back': 'bayesimpact.org',
+    'hero.h1': "Sprawdzaj medyczne odpowiedzi AI względem <em>polskich wytycznych</em>.",
+    'hero.p': "Asystent AI odpowiada na pytanie kliniczne. Serwer Bayes MCP automatycznie weryfikuje odpowiedź względem wytycznych URPL i AOTMiT, a w razie potrzeby ją koryguje.",
+    'sources.cmd': 'bayes_mcp.list_connected_sources()',
+    'scenarios.label': 'Wybierz scenariusz kliniczny',
+    'controls.play': '▶ Uruchom demo', 'controls.reset': '↻ Reset',
+    'controls.hint': 'To samo pytanie, zadane jednocześnie w obu panelach.',
+    'controls.playing': '● Trwa…', 'controls.replay': '↻ Powtórz scenariusz',
+    'input.placeholder': 'Zadaj pytanie…', 'input.send': 'Wyślij',
+    'panel.left.badge': 'BEZ MCP', 'panel.left.title': 'Ogólny asystent AI', 'panel.left.sub': 'Standardowy model komercyjny', 'panel.left.tag': 'Niezweryfikowane',
+    'panel.right.badge': 'Z MCP', 'panel.right.title': 'Asystent AI + Bayes MCP', 'panel.right.sub': 'Zweryfikowane względem URPL &amp; AOTMiT', 'panel.right.tag': 'Zgodność sprawdzona',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Odpowiedź wstępna · niezweryfikowana',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Zweryfikowana odpowiedź · URPL &amp; AOTMiT',
+    'toolcall.running': 'TRWA…', 'toolcall.done': 'GOTOWE',
+    'verdict.openSource': 'Otwórz dokument źródłowy',
+    'osn.tag': 'OPEN SOURCE · MCP',
+    'osn.body': "Bayes MCP jest <em>open source</em>. Integruje się z dowolnym asystentem AI — Claude, ChatGPT, Gemini lub własnym agentem. Szansa dla administracji publicznej: zapewnić, że AI używane przez obywateli respektuje krajowe wytyczne i procedury, bez zależności od zagranicznego dostawcy."
   }
 };
 
