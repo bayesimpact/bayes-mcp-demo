@@ -312,9 +312,19 @@
     box-shadow: var(--shadow);
     overflow: hidden;
     display: flex; flex-direction: column;
-    min-height: 560px;
+    height: 640px;
   }
-  .chat { flex: 1; padding: 32px 28px 24px; display: flex; flex-direction: column; gap: 28px; }
+  .chat {
+    flex: 1 1 0; min-height: 0;
+    padding: 32px 28px 24px;
+    display: flex; flex-direction: column; gap: 28px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  .chat::-webkit-scrollbar { width: 8px; }
+  .chat::-webkit-scrollbar-track { background: transparent; }
+  .chat::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
+  .chat::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
   .msg.user {
     align-self: flex-end;
@@ -1077,6 +1087,10 @@ function renderScenarioButtons() {
 function wait(ms) { return new Promise(resolve => { const t = setTimeout(resolve, ms); timers.push(t); }); }
 function clearAllTimers() { timers.forEach(clearTimeout); timers = []; }
 function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function scrollChat() {
+  const c = document.getElementById('chat');
+  if (c) c.scrollTop = c.scrollHeight;
+}
 
 function resetStage() {
   clearAllTimers();
@@ -1103,6 +1117,7 @@ function appendUserMsg(text) {
   node.className = 'msg user';
   node.textContent = text;
   chat.appendChild(node);
+  scrollChat();
 }
 
 function buildAiMsg(phase) {
@@ -1122,6 +1137,7 @@ function buildAiMsg(phase) {
     </div>
   `;
   document.getElementById('chat').appendChild(node);
+  scrollChat();
   return node;
 }
 
@@ -1132,6 +1148,7 @@ async function streamAiAnswer(lines, phase, opts = {}) {
   textEl.innerHTML = '';
   for (let i = 0; i < lines.length; i++) {
     textEl.innerHTML = (i === 0 ? lines[i] : textEl.innerHTML + '<br/>' + lines[i]);
+    scrollChat();
     await wait(opts.linePause ?? 280);
   }
 }
@@ -1146,6 +1163,7 @@ function appendMcpBanner() {
     <span class="mcp-banner-sub">${tx('mcpBanner.sub')}</span>
   `;
   chat.appendChild(node);
+  scrollChat();
 }
 
 function appendToolCall(scn) {
@@ -1176,6 +1194,7 @@ function appendToolCall(scn) {
   const wrap = document.createElement('div');
   wrap.innerHTML = html;
   chat.appendChild(wrap.firstElementChild);
+  scrollChat();
 }
 
 async function runMcpSteps(scn) {
@@ -1197,6 +1216,7 @@ async function runMcpSteps(scn) {
     resEl.style.display = '';
     resEl.textContent = L(step.result);
     resEl.classList.add(step.tone === 'danger' ? 'danger' : step.tone === 'warn' ? 'warn' : 'ok');
+    scrollChat();
     await wait(220);
   }
   document.getElementById('tc-status').textContent = tx('toolcall.done');
@@ -1227,6 +1247,7 @@ function appendVerdict(verdict) {
     </div>
   `;
   tc.appendChild(node);
+  scrollChat();
 }
 
 async function play() {
