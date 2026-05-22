@@ -175,7 +175,7 @@
   /* STAGE */
   .stage { max-width: 1400px; margin: 0 auto; padding: 8px 28px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; align-items: start; }
   .vs { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); background: var(--bg); padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; z-index: 1; }
-  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); height: min(660px, calc(100vh - 120px)); }
+  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); height: calc(100vh - 120px); }
   .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex: 0 0 auto; }
   .panel-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14.5px; }
   .panel-title .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
@@ -1128,12 +1128,12 @@ function buildAiMsg(chatId, phase) {
 async function streamAiAnswer(chatId, lines, phase, opts = {}) {
   const node = buildAiMsg(chatId, phase);
   const textEl = node.querySelector('.ai-text');
-  await wait(opts.initialDelay ?? 700);
+  await wait(opts.initialDelay ?? 900);
   textEl.innerHTML = '';
   for (let i = 0; i < lines.length; i++) {
     textEl.innerHTML = (i === 0 ? lines[i] : textEl.innerHTML + '<br/>' + lines[i]);
     scrollChat(chatId);
-    await wait(opts.linePause ?? 220);
+    await wait(opts.linePause ?? 300);
   }
 }
 
@@ -1141,7 +1141,7 @@ async function streamAiAnswer(chatId, lines, phase, opts = {}) {
 async function streamAiOnce(chatId, html, opts = {}) {
   const node = buildAiMsg(chatId, 'verified');
   const textEl = node.querySelector('.ai-text');
-  await wait(opts.initialDelay ?? 600);
+  await wait(opts.initialDelay ?? 800);
   textEl.innerHTML = html;
   scrollChat(chatId);
 }
@@ -1177,12 +1177,12 @@ async function turnToolCall(turn) {
   for (let i = 0; i < turn.steps.length; i++) {
     const row = document.getElementById(`tc-row-${i}`);
     row.classList.add('active');
-    await wait(450 + Math.random() * 200);
+    await wait(620 + Math.random() * 240);
     row.classList.remove('active');
     row.classList.add('done');
     document.getElementById(`tc-ico-${i}`).innerHTML = '✓';
     scrollChat('chat-right');
-    await wait(100);
+    await wait(140);
   }
 
   if (turn.formLink) {
@@ -1288,7 +1288,7 @@ async function turnEmailInput(turn) {
   for (let i = 0; i < turn.typed.length; i++) {
     out.textContent = turn.typed.slice(0, i + 1);
     scrollChat('chat-right');
-    await wait(40);
+    await wait(60);
   }
 }
 
@@ -1319,42 +1319,42 @@ async function processTurns(turns) {
     switch (t.type) {
       case 'toolcall':
         await turnToolCall(t);
-        await wait(450);
+        await wait(650);
         break;
       case 'extracted':
         turnExtracted(t);
-        await wait(900);
+        await wait(1200);
         break;
       case 'ai':
-        await streamAiOnce('chat-right', L(t.content), { initialDelay: 600 });
-        await wait(500);
+        await streamAiOnce('chat-right', L(t.content), { initialDelay: 800 });
+        await wait(750);
         break;
       case 'user_typed':
-        await typeInto('input-right', L(t.content), 8);
-        await wait(200);
+        await typeInto('input-right', L(t.content), 12);
+        await wait(300);
         appendUserMsg('chat-right', L(t.content));
         document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
-        await wait(400);
+        await wait(550);
         break;
       case 'precision':
         turnPrecision(t);
-        await wait(700);
+        await wait(950);
         break;
       case 'upload_req':
         turnUploadReq(t);
-        await wait(600);
+        await wait(850);
         break;
       case 'upload_done':
         await turnUploadDone(t);
-        await wait(600);
+        await wait(850);
         break;
       case 'email_input':
         await turnEmailInput(t);
-        await wait(450);
+        await wait(650);
         break;
       case 'final':
         turnFinal(t);
-        await wait(400);
+        await wait(600);
         break;
     }
   }
@@ -1450,6 +1450,14 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 
 applyLang();
 window.addEventListener('load', () => setTimeout(play, 600));
+
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  if (resizeTimer) clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    document.querySelectorAll('.chat').forEach(c => { c.scrollTop = c.scrollHeight; });
+  }, 80);
+});
 </script>
 </body>
 </html>

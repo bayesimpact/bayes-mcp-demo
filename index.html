@@ -170,7 +170,7 @@
   /* SIDE-BY-SIDE STAGE */
   .stage { max-width: 1400px; margin: 0 auto; padding: 8px 28px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; }
   .vs { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); background: var(--bg); padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; z-index: 1; }
-  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); height: min(660px, calc(100vh - 120px)); }
+  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); height: calc(100vh - 120px); }
   .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex: 0 0 auto; }
   .panel-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14.5px; }
   .panel-title .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
@@ -985,12 +985,12 @@ function buildAiMsg(chatId, phase) {
 async function streamAiAnswer(chatId, lines, phase, opts = {}) {
   const node = buildAiMsg(chatId, phase);
   const textEl = node.querySelector('.ai-text');
-  await wait(opts.initialDelay ?? 800);
+  await wait(opts.initialDelay ?? 950);
   textEl.innerHTML = '';
   for (let i = 0; i < lines.length; i++) {
     textEl.innerHTML = (i === 0 ? lines[i] : textEl.innerHTML + '<br/>' + lines[i]);
     scrollChat(chatId);
-    await wait(opts.linePause ?? 280);
+    await wait(opts.linePause ?? 380);
   }
 }
 
@@ -1033,7 +1033,7 @@ async function runMcpSteps(scn) {
     const resEl = document.getElementById(`step-result-${i}`);
     stepEl.classList.add('active');
     icoEl.innerHTML = '';
-    await wait(720 + Math.random() * 220);
+    await wait(950 + Math.random() * 280);
 
     stepEl.classList.remove('active');
     stepEl.classList.add('done');
@@ -1045,7 +1045,7 @@ async function runMcpSteps(scn) {
     resEl.textContent = L(step.result);
     resEl.classList.add(step.tone === 'danger' ? 'danger' : step.tone === 'warn' ? 'warn' : 'ok');
     scrollChat('chat-right');
-    await wait(180);
+    await wait(250);
   }
   document.getElementById('tc-status').textContent = tx('toolcall.done');
   document.getElementById('tc-status').style.color = 'var(--ok)';
@@ -1103,16 +1103,16 @@ async function play() {
   await wait(400);
 
   // 2. left panel: stream the plain (unverified) answer
-  const leftStream = streamAiAnswer('chat-left', L(scn.plainAnswer), 'initial', { initialDelay: 700, linePause: 280 });
+  const leftStream = streamAiAnswer('chat-left', L(scn.plainAnswer), 'initial', { initialDelay: 850, linePause: 380 });
 
   // 3. right panel: MCP tool call → verdict → corrected answer
-  await wait(350);
+  await wait(450);
   appendToolCall('chat-right', scn);
-  await wait(350);
+  await wait(450);
   await runMcpSteps(scn);
   appendVerdict(scn.verdict);
-  await wait(600);
-  await streamAiAnswer('chat-right', L(scn.mcpAnswer), 'verified', { initialDelay: 500, linePause: 240 });
+  await wait(800);
+  await streamAiAnswer('chat-right', L(scn.mcpAnswer), 'verified', { initialDelay: 650, linePause: 320 });
 
   await leftStream;
 
@@ -1173,6 +1173,15 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 
 applyLang();
 window.addEventListener('load', () => setTimeout(play, 600));
+
+// Keep chat content visible when the window is resized
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  if (resizeTimer) clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    document.querySelectorAll('.chat').forEach(c => { c.scrollTop = c.scrollHeight; });
+  }, 80);
+});
 </script>
 </body>
 </html>

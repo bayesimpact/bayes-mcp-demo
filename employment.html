@@ -239,7 +239,7 @@
   /* SIDE-BY-SIDE STAGE */
   .stage { max-width: 1400px; margin: 0 auto; padding: 8px 28px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; }
   .vs { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); background: var(--bg); padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; z-index: 1; }
-  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); height: min(660px, calc(100vh - 120px)); }
+  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); height: calc(100vh - 120px); }
   .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex: 0 0 auto; }
   .panel-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14.5px; }
   .panel-title .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
@@ -1084,12 +1084,12 @@ function buildAiMsg(chatId, phase) {
 async function streamAiAnswer(chatId, lines, phase, opts = {}) {
   const node = buildAiMsg(chatId, phase);
   const textEl = node.querySelector('.ai-text');
-  await wait(opts.initialDelay ?? 800);
+  await wait(opts.initialDelay ?? 950);
   textEl.innerHTML = '';
   for (let i = 0; i < lines.length; i++) {
     textEl.innerHTML = (i === 0 ? lines[i] : textEl.innerHTML + '<br/>' + lines[i]);
     scrollChat(chatId);
-    await wait(opts.linePause ?? 260);
+    await wait(opts.linePause ?? 360);
   }
 }
 
@@ -1102,7 +1102,7 @@ function injectFinalResponse(chatId, html) {
     el.style.opacity = '0';
     el.style.transform = 'translateY(6px)';
     el.style.transition = 'opacity .35s ease, transform .35s ease';
-    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; scrollChat(chatId); }, 80 * i + 80);
+    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; scrollChat(chatId); }, 120 * i + 120);
   });
 }
 
@@ -1138,12 +1138,12 @@ async function runToolCalls(scn) {
   for (let i = 0; i < scn.toolCalls.length; i++) {
     const row = document.getElementById(`tc-row-${i}`);
     row.classList.add('active');
-    await wait(500 + Math.random() * 180);
+    await wait(700 + Math.random() * 220);
     row.classList.remove('active');
     row.classList.add('done');
     document.getElementById(`tc-ico-${i}`).innerHTML = '✓';
     scrollChat('chat-right');
-    await wait(110);
+    await wait(160);
   }
 }
 
@@ -1168,13 +1168,13 @@ async function play() {
   document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
   await wait(500);
 
-  const leftStream = streamAiAnswer('chat-left', L(scn.plainAnswer), 'initial', { initialDelay: 750, linePause: 280 });
+  const leftStream = streamAiAnswer('chat-left', L(scn.plainAnswer), 'initial', { initialDelay: 850, linePause: 360 });
 
-  await wait(400);
+  await wait(550);
   appendMcpTrace('chat-right', scn);
-  await wait(350);
+  await wait(450);
   await runToolCalls(scn);
-  await wait(500);
+  await wait(700);
   injectFinalResponse('chat-right', L(scn.finalResponse));
 
   await leftStream;
@@ -1237,6 +1237,14 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 
 applyLang();
 window.addEventListener('load', () => setTimeout(play, 600));
+
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  if (resizeTimer) clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    document.querySelectorAll('.chat').forEach(c => { c.scrollTop = c.scrollHeight; });
+  }, 80);
+});
 </script>
 </body>
 </html>
