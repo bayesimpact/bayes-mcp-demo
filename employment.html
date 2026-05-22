@@ -30,19 +30,14 @@
     --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.06);
     --radius: 14px;
   }
-
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
+    background: var(--bg); color: var(--ink);
     -webkit-font-smoothing: antialiased;
-    line-height: 1.5;
-    min-height: 100vh;
+    line-height: 1.5; min-height: 100vh;
   }
-
-  /* TOP BAR */
   .topbar {
     border-bottom: 1px solid var(--border-soft);
     background: var(--bg);
@@ -55,37 +50,39 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 24px;
   }
-  .brand { display: flex; align-items: center; gap: 14px; color: var(--ink); }
+  .brand { display: flex; align-items: center; gap: 14px; color: var(--ink); flex-wrap: wrap; }
   .brand-logo { height: 26px; width: auto; display: block; }
   .brand-sep {
     color: var(--muted);
-    font-size: 11.5px;
-    letter-spacing: 0.08em;
+    font-size: 11.5px; letter-spacing: 0.08em;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 600;
     border-left: 1px solid var(--border-soft);
     padding-left: 14px;
   }
-  .demo-toggle {
-    display: inline-flex;
-    background: #fff;
+  .demo-toggle, .lang-toggle {
+    display: inline-flex; background: #fff;
     border: 1px solid var(--border-soft);
-    border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
+    border-radius: 999px; padding: 3px; gap: 2px;
   }
   .dt-link {
-    padding: 5px 14px;
-    border-radius: 999px;
-    text-decoration: none;
-    color: var(--ink-soft);
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.15s ease;
-    font-family: inherit;
+    padding: 5px 14px; border-radius: 999px;
+    text-decoration: none; color: var(--ink-soft);
+    font-size: 13px; font-weight: 500;
+    transition: all 0.15s ease; font-family: inherit;
   }
   .dt-link:hover { color: var(--ink); }
   .dt-link.active { background: var(--ink); color: #fff; }
+  .lt-btn {
+    border: none; background: transparent;
+    padding: 5px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+    color: var(--ink-soft); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em; transition: all 0.15s ease;
+  }
+  .lt-btn:hover { color: var(--ink); }
+  .lt-btn.active { background: var(--ink); color: #fff; }
   .topbar-meta { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
   .pill {
     display: inline-flex; align-items: center; gap: 6px;
@@ -95,450 +92,127 @@
   }
   .pill .dot {
     width: 6px; height: 6px; border-radius: 50%;
-    background: var(--ok);
-    animation: pulse 2s infinite;
+    background: var(--ok); animation: pulse 2s infinite;
   }
   @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 
-  /* HERO */
   .hero { max-width: 1400px; margin: 0 auto; padding: 44px 28px 8px; }
-  .hero h1 {
-    font-size: 34px; line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin: 0 0 12px;
-    font-weight: 700;
-    max-width: 880px;
-  }
-  .hero h1 em {
-    font-style: normal;
-    background: linear-gradient(180deg, transparent 60%, var(--gold-bg) 60%);
-    padding: 0 2px;
-  }
+  .hero h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 700; max-width: 880px; }
+  .hero h1 em { font-style: normal; background: linear-gradient(180deg, transparent 60%, var(--gold-bg) 60%); padding: 0 2px; }
   .hero p { font-size: 16px; color: var(--ink-soft); max-width: 820px; margin: 0 0 22px; }
 
-  /* SCENARIO TABS (2 wide) */
   .scenarios { max-width: 1400px; margin: 0 auto; padding: 8px 28px 20px; }
-  .scenarios-label {
-    font-size: 12px; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--muted);
-    font-weight: 600; margin-bottom: 10px;
-  }
-  .scenarios-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  .scn-btn {
-    text-align: left;
-    background: var(--card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: all .18s ease;
-    font-family: inherit;
-    color: var(--ink);
-    display: flex; flex-direction: column; gap: 4px;
-  }
+  .scenarios-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  .scenarios-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .scn-btn { text-align: left; background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; transition: all .18s ease; font-family: inherit; color: var(--ink); display: flex; flex-direction: column; gap: 4px; }
   .scn-btn:hover { border-color: var(--ink); transform: translateY(-1px); }
   .scn-btn.active { border-color: var(--ink); background: var(--ink); color: #fff; }
   .scn-btn.active .scn-tag { color: var(--gold-bg); }
   .scn-btn.active .scn-sub { color: rgba(255,255,255,0.7); }
-  .scn-tag {
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--accent-orange);
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .scn-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent-orange); font-family: 'JetBrains Mono', monospace; }
   .scn-title { font-size: 14px; font-weight: 600; }
   .scn-sub { font-size: 12px; color: var(--muted); }
 
-  /* CONTROLS */
   .controls { max-width: 1400px; margin: 0 auto; padding: 0 28px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  .btn {
-    border: 1px solid var(--ink);
-    background: var(--ink); color: #fff;
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    display: inline-flex; align-items: center; gap: 8px;
-    transition: all .15s ease;
-  }
+  .btn { border: 1px solid var(--ink); background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; transition: all .15s ease; }
   .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
   .btn.ghost { background: transparent; color: var(--ink); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
   .controls-hint { font-size: 12.5px; color: var(--muted); margin-left: 6px; }
 
-  /* SIDE-BY-SIDE STAGE */
-  .stage {
-    max-width: 1400px; margin: 0 auto;
-    padding: 8px 28px 48px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    position: relative;
-  }
-  .vs {
-    position: absolute;
-    left: 50%; top: 38px;
-    transform: translateX(-50%);
-    background: var(--bg);
-    padding: 4px 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--muted);
-    letter-spacing: 0.08em;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .panel {
-    background: var(--card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    overflow: hidden;
-    display: flex; flex-direction: column;
-    box-shadow: var(--shadow);
-  }
-  .panel-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border-soft);
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 12px;
-  }
-  .panel-title {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 600; font-size: 14.5px;
-  }
-  .panel-title .badge {
-    font-size: 10px; padding: 3px 8px; border-radius: 4px;
-    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .stage { max-width: 1400px; margin: 0 auto; padding: 8px 28px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; }
+  .vs { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); background: var(--bg); padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; z-index: 1; }
+  .panel { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+  .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .panel-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14.5px; }
+  .panel-title .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
   .badge-plain { background: var(--cream); color: var(--ink-soft); border: 1px solid var(--border-soft); }
   .badge-mcp { background: var(--ink); color: var(--gold-bg); }
   .panel-sub { font-size: 12px; color: var(--muted); }
   .panel.left .panel-header { background: linear-gradient(180deg, var(--cream) 0%, #fff 100%); }
   .panel.right .panel-header { background: linear-gradient(180deg, #FBF7EE 0%, #fff 100%); }
 
-  /* CHAT (per panel) */
-  .chat {
-    flex: 1; padding: 24px 20px;
-    display: flex; flex-direction: column;
-    gap: 22px;
-  }
-
-  /* USER MESSAGE */
-  .msg.user {
-    align-self: flex-end;
-    max-width: 90%;
-    background: var(--ink);
-    color: #fff;
-    padding: 10px 14px;
-    border-radius: 14px;
-    border-bottom-right-radius: 5px;
-    font-size: 13.5px;
-    line-height: 1.5;
-    animation: fadeUp .3s ease;
-  }
-  /* AI MESSAGE (flat) */
-  .msg.ai {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 12px;
-    align-items: flex-start;
-    animation: fadeUp .35s ease;
-  }
-  .ai-avatar {
-    width: 28px; height: 28px;
-    border-radius: 7px;
-    display: grid; place-items: center;
-    background: var(--cream);
-    color: var(--ink-soft);
-    border: 1px solid var(--border-soft);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 700;
-  }
+  .chat { flex: 1; padding: 24px 20px; display: flex; flex-direction: column; gap: 22px; }
+  .msg.user { align-self: flex-end; max-width: 90%; background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 14px; border-bottom-right-radius: 5px; font-size: 13.5px; line-height: 1.5; animation: fadeUp .3s ease; }
+  .msg.ai { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: flex-start; animation: fadeUp .35s ease; }
+  .ai-avatar { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; background: var(--cream); color: var(--ink-soft); border: 1px solid var(--border-soft); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; }
   .msg.ai.verified .ai-avatar { background: var(--ink); color: #fff; border-color: var(--ink); }
   .ai-avatar svg { width: 16px; height: 16px; display: block; }
   .ai-body { min-width: 0; }
-
-  .phase-tag {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
+  .phase-tag { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
   .phase-tag.verified { color: var(--ok); }
-
   .ai-text { color: var(--ink); font-size: 13.5px; line-height: 1.6; }
   .ai-text strong { font-weight: 600; }
-
   .typing { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
-  .typing span {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--muted);
-    animation: blink 1.2s infinite ease-in-out;
-  }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite ease-in-out; }
   .typing span:nth-child(2) { animation-delay: .15s; }
   .typing span:nth-child(3) { animation-delay: .30s; }
-  @keyframes blink {
-    0%,80%,100% { transform: scale(0.7); opacity: 0.4; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes blink { 0%,80%,100%{transform:scale(0.7);opacity:0.4;} 40%{transform:scale(1);opacity:1;} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
 
-  /* MCP TOOL CALL TRACE */
-  .mcp-trace {
-    border: 1px solid var(--border-soft);
-    background: #FBF7EE;
-    border-radius: 10px;
-    padding: 12px 14px;
-    position: relative;
-    animation: fadeUp .35s ease;
-  }
-  .mcp-trace::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px; background: var(--ink);
-  }
-  .mcp-trace-head {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-soft);
-  }
+  .mcp-trace { border: 1px solid var(--border-soft); background: #FBF7EE; border-radius: 10px; padding: 12px 14px; position: relative; animation: fadeUp .35s ease; }
+  .mcp-trace::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--ink); }
+  .mcp-trace-head { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 600; color: var(--ink); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-soft); }
   .mcp-trace-head .ico { width: 16px; height: 16px; display: grid; place-items: center; color: var(--ink); }
   .mcp-trace-head .ico svg { width: 100%; height: 100%; }
   .mcp-trace-head .ttl { flex: 1; }
-  .mcp-trace-head .status {
-    font-size: 10px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--muted);
-  }
-  .tc-row {
-    display: grid;
-    grid-template-columns: 16px 1fr auto;
-    gap: 10px;
-    align-items: center;
-    padding: 7px 0;
-    border-bottom: 1px dashed rgba(0,0,0,0.06);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    opacity: 0.35;
-    transition: opacity .3s ease;
-  }
+  .mcp-trace-head .status { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .tc-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,0.06); font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.35; transition: opacity .3s ease; }
   .tc-row.active, .tc-row.done { opacity: 1; }
   .tc-row:last-child { border-bottom: none; }
-  .tc-ico {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 1.5px solid var(--muted);
-    display: grid; place-items: center;
-    font-size: 9px; color: var(--muted);
-  }
-  .tc-row.active .tc-ico {
-    border-color: var(--ink);
-    color: var(--ink);
-    animation: spin 0.9s linear infinite;
-    border-top-color: transparent;
-  }
+  .tc-ico { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--muted); display: grid; place-items: center; font-size: 9px; color: var(--muted); }
+  .tc-row.active .tc-ico { border-color: var(--ink); color: var(--ink); animation: spin 0.9s linear infinite; border-top-color: transparent; }
   .tc-row.done .tc-ico { background: var(--ok); border-color: var(--ok); color: #fff; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .tc-body { min-width: 0; overflow: hidden; }
   .tc-name { color: var(--ink); font-weight: 600; font-size: 11px; }
   .tc-args { color: var(--ink-soft); font-size: 10px; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tc-result {
-    font-size: 10px;
-    padding: 3px 7px;
-    border-radius: 4px;
-    background: var(--ok-soft);
-    color: var(--ok);
-    font-weight: 600;
-    white-space: nowrap;
-  }
+  .tc-result { font-size: 10px; padding: 3px 7px; border-radius: 4px; background: var(--ok-soft); color: var(--ok); font-weight: 600; white-space: nowrap; }
   .tc-row:not(.done) .tc-result { visibility: hidden; }
 
-  /* RICH RESPONSE: header + sections + cards */
-  .plan-header {
-    background: var(--ink); color: #fff;
-    padding: 12px 14px; border-radius: 10px;
-    margin-bottom: 4px;
-  }
+  .plan-header { background: var(--ink); color: #fff; padding: 12px 14px; border-radius: 10px; margin-bottom: 4px; }
   .plan-title { font-size: 14px; font-weight: 700; }
   .plan-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
-
   .plan-section { margin-top: 12px; }
-  .plan-section-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px; letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
+  .plan-section-title { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
   .plan-text { font-size: 13px; color: var(--ink); line-height: 1.55; }
-
-  .res-card {
-    display: grid;
-    grid-template-columns: 32px 1fr auto;
-    gap: 10px;
-    align-items: center;
-    padding: 10px 12px;
-    background: #fff;
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    margin-top: 6px;
-    transition: all 0.15s ease;
-  }
+  .res-card { display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; margin-top: 6px; transition: all 0.15s ease; }
   .res-card:hover { border-color: var(--ink); transform: translateX(2px); }
-  .card-ico {
-    width: 32px; height: 32px;
-    background: var(--cream);
-    border-radius: 7px;
-    display: grid; place-items: center;
-    color: var(--ink);
-  }
+  .card-ico { width: 32px; height: 32px; background: var(--cream); border-radius: 7px; display: grid; place-items: center; color: var(--ink); }
   .card-ico svg { width: 16px; height: 16px; }
   .card-body { min-width: 0; }
   .card-title { font-size: 12.5px; font-weight: 600; color: var(--ink); margin-bottom: 1px; line-height: 1.35; }
   .card-meta { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
-  .card-action {
-    font-size: 11.5px;
-    color: var(--accent-blue);
-    text-decoration: none;
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 6px;
-    background: rgba(16,103,254,0.08);
-    white-space: nowrap;
-  }
+  .card-action { font-size: 11.5px; color: var(--accent-blue); text-decoration: none; font-weight: 600; padding: 5px 10px; border-radius: 6px; background: rgba(16,103,254,0.08); white-space: nowrap; }
   .card-action:hover { background: rgba(16,103,254,0.15); }
-
   .check-list { list-style: none; padding: 0; margin: 0; }
-  .check-list li {
-    display: flex; align-items: center; gap: 8px;
-    padding: 4px 0; font-size: 12.5px; line-height: 1.4;
-  }
-  .check-list li::before {
-    content: ''; width: 14px; height: 14px; border-radius: 4px;
-    flex-shrink: 0;
-    display: grid; place-items: center;
-    font-size: 9px; font-weight: 800;
-  }
+  .check-list li { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12.5px; line-height: 1.4; }
+  .check-list li::before { content: ''; width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; display: grid; place-items: center; font-size: 9px; font-weight: 800; }
   .check-list li.done::before { content: '✓'; background: var(--ok); color: #fff; }
   .check-list li.todo::before { content: '✗'; background: var(--danger-soft); color: var(--danger); }
   .check-list li.done { color: var(--ink); }
   .check-list li.todo { color: var(--ink-soft); }
-
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .stat {
-    background: var(--cream);
-    border: 1px solid var(--border-soft);
-    border-radius: 8px;
-    padding: 10px 12px;
-    text-align: center;
-  }
+  .stat { background: var(--cream); border: 1px solid var(--border-soft); border-radius: 8px; padding: 10px 12px; text-align: center; }
   .stat-num { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
   .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
-
-  .warn-banner {
-    display: flex; align-items: flex-start; gap: 10px;
-    margin-top: 12px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: var(--warn-soft);
-    border: 1px solid rgba(154,74,4,0.18);
-    color: var(--ink);
-    font-size: 12.5px;
-    line-height: 1.45;
-  }
+  .warn-banner { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--warn-soft); border: 1px solid rgba(154,74,4,0.18); color: var(--ink); font-size: 12.5px; line-height: 1.45; }
   .warn-banner .wb-ico { color: var(--warn); font-weight: 800; flex-shrink: 0; }
-
-  .alert-banner {
-    display: flex; align-items: flex-start; gap: 10px;
-    margin-top: 12px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: var(--gold-bg);
-    color: var(--ink);
-    font-size: 12.5px;
-    line-height: 1.45;
-  }
+  .alert-banner { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--gold-bg); color: var(--ink); font-size: 12.5px; line-height: 1.45; }
   .alert-banner .ab-ico { flex-shrink: 0; font-size: 14px; }
 
-  /* generic answer card for "no integration" feel on left */
-  .generic-links {
-    list-style: none; padding: 0; margin: 8px 0 0;
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .generic-links li {
-    font-size: 12.5px; color: var(--accent-blue);
-    text-decoration: underline; text-decoration-color: rgba(16,103,254,0.3);
-  }
+  .generic-links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .generic-links li { font-size: 12.5px; color: var(--accent-blue); text-decoration: underline; text-decoration-color: rgba(16,103,254,0.3); }
 
-  /* INPUT BAR */
-  .inputbar {
-    border-top: 1px solid var(--border-soft);
-    background: #fff;
-    padding: 12px 16px;
-    display: flex; gap: 10px; align-items: center;
-  }
-  .fake-input {
-    flex: 1;
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--muted);
-    background: var(--cream);
-    min-height: 38px;
-    display: flex; align-items: center;
-    font-family: inherit;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .fake-input .caret {
-    display: inline-block; width: 1px; height: 14px;
-    background: var(--ink); margin-left: 1px;
-    animation: caret 1s infinite;
-  }
+  .inputbar { border-top: 1px solid var(--border-soft); background: #fff; padding: 12px 16px; display: flex; gap: 10px; align-items: center; }
+  .fake-input { flex: 1; border: 1px solid var(--border-soft); border-radius: 10px; padding: 9px 12px; font-size: 13px; color: var(--muted); background: var(--cream); min-height: 38px; display: flex; align-items: center; font-family: inherit; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .fake-input .caret { display: inline-block; width: 1px; height: 14px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; }
   @keyframes caret { 50% { opacity: 0; } }
-  .inputbar button {
-    border: none; background: var(--ink); color: #fff;
-    border-radius: 10px; padding: 9px 14px;
-    font-weight: 600; font-size: 12.5px; cursor: pointer;
-    font-family: inherit;
-  }
+  .inputbar button { border: none; background: var(--ink); color: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
 
-  /* FOOTER FACTS */
-  .footer-strip {
-    max-width: 1400px; margin: 0 auto;
-    padding: 24px 28px 60px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  .fact {
-    background: var(--card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-  }
-  .fact-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--accent-orange);
-    font-weight: 600; letter-spacing: 0.06em;
-  }
+  .footer-strip { max-width: 1400px; margin: 0 auto; padding: 24px 28px 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .fact { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 18px 20px; }
+  .fact-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 600; letter-spacing: 0.06em; }
   .fact h4 { margin: 6px 0 6px; font-size: 14px; font-weight: 600; color: var(--ink); }
   .fact p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
 
@@ -551,7 +225,6 @@
 </head>
 <body>
 
-<!-- BAYES STARBURST MARK (for avatars & tool icons) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="bi-mark" viewBox="0 0 415 410">
     <path d="M309.36,246h63.39a41.67,41.67,0,0,0,0-83.33H309.22L402,71.55a41.67,41.67,0,1,0-58.41-59.44L249,105V42.15a41.67,41.67,0,1,0-83.33,0v63l-94.86-93a41.67,41.67,0,0,0-58.35,59.5l92.88,91.08H41.67a41.67,41.67,0,1,0,0,83.33h63.56L12.52,336.72a41.67,41.67,0,0,0,58.29,59.55L165.7,303.4v63.1a41.67,41.67,0,0,0,83.33,0v-63l94.54,92.71a41.67,41.67,0,0,0,58.35-59.5Z" fill="currentColor"/>
@@ -565,7 +238,6 @@
     <circle cx="373.52" cy="41.34" r="41.34" fill="currentColor"/>
     <circle cx="207.57" cy="204.25" r="41.34" fill="currentColor"/>
   </symbol>
-  <!-- ICONS -->
   <symbol id="ic-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M9 7V4h6v3"/><path d="M2 13h20"/>
   </symbol>
@@ -586,133 +258,238 @@
   </symbol>
 </svg>
 
-<!-- TOP BAR -->
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
       <img class="brand-logo" src="bi-colors.svg" alt="Bayes Impact" />
-      <span class="brand-sep">MCP · DÉMO</span>
+      <span class="brand-sep" data-i18n="topbar.demo">MCP · DÉMO</span>
       <div class="demo-toggle">
-        <a href="./" class="dt-link">Santé</a>
-        <a href="employment.html" class="dt-link active">Emploi</a>
+        <a href="./" class="dt-link" data-i18n="topbar.toggle.health">Santé</a>
+        <a href="employment.html" class="dt-link active" data-i18n="topbar.toggle.employment">Emploi</a>
+      </div>
+      <div class="lang-toggle">
+        <button class="lt-btn" data-lang="fr">FR</button>
+        <button class="lt-btn" data-lang="en">EN</button>
       </div>
     </div>
     <div class="topbar-meta">
-      <span class="pill"><span class="dot"></span> France Travail · API live</span>
-      <span class="pill"><span class="dot"></span> Mes Aides · sync 5 min</span>
+      <span class="pill"><span class="dot"></span> <span data-i18n="topbar.pill.ft">France Travail · API live</span></span>
+      <span class="pill"><span class="dot"></span> <span data-i18n="topbar.pill.aides">Mes Aides · sync 5 min</span></span>
     </div>
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
-  <h1>Brancher l'IA sur les <em>systèmes de l'emploi</em>.</h1>
-  <p>Un assistant IA répond avec des conseils génériques et des liens vers Indeed. Le serveur MCP Bayes le connecte à France Travail, Mes Aides et aux dispositifs régionaux, pour qu'il propose des plans d'action précis, ancrés dans le territoire et la situation réelle de la personne.</p>
+  <h1 data-i18n="hero.h1">Brancher l'IA sur les <em>systèmes de l'emploi</em>.</h1>
+  <p data-i18n="hero.p">Un assistant IA répond avec des conseils génériques et des liens vers Indeed. Le serveur MCP Bayes le connecte à France Travail, Mes Aides et aux dispositifs régionaux, pour qu'il propose des plans d'action précis, ancrés dans le territoire et la situation réelle de la personne.</p>
 </section>
 
-<!-- SCENARIOS -->
 <section class="scenarios">
-  <div class="scenarios-label">Choisir un cas d'usage</div>
+  <div class="scenarios-label" data-i18n="scenarios.label">Choisir un cas d'usage</div>
   <div class="scenarios-row" id="scenarios-row"></div>
 </section>
 
-<!-- CONTROLS -->
 <section class="controls">
-  <button class="btn" id="play-btn">▶ Lancer la démonstration</button>
-  <button class="btn ghost" id="reset-btn">↻ Réinitialiser</button>
-  <span class="controls-hint">Même question, posée au même moment dans les deux panneaux.</span>
+  <button class="btn" id="play-btn" data-i18n="controls.play">▶ Lancer la démonstration</button>
+  <button class="btn ghost" id="reset-btn" data-i18n="controls.reset">↻ Réinitialiser</button>
+  <span class="controls-hint" data-i18n="controls.hint">Même question, posée au même moment dans les deux panneaux.</span>
 </section>
 
-<!-- SIDE-BY-SIDE STAGE -->
 <section class="stage">
   <span class="vs">vs.</span>
-  <!-- LEFT -->
   <div class="panel left">
     <div class="panel-header">
       <div>
         <div class="panel-title">
-          <span class="badge badge-plain">SANS MCP</span>
-          Assistant IA généraliste
+          <span class="badge badge-plain" data-i18n="panel.left.badge">SANS MCP</span>
+          <span data-i18n="panel.left.title">Assistant IA généraliste</span>
         </div>
-        <div class="panel-sub">Pas d'accès aux systèmes français</div>
+        <div class="panel-sub" data-i18n="panel.left.sub">Pas d'accès aux systèmes français</div>
       </div>
-      <span class="pill" style="background:var(--danger-soft);border-color:rgba(154,27,27,0.25);color:var(--danger);">Hors-sol</span>
+      <span class="pill" style="background:var(--danger-soft);border-color:rgba(154,27,27,0.25);color:var(--danger);" data-i18n="panel.left.tag">Générique</span>
     </div>
     <div class="chat" id="chat-left"></div>
     <div class="inputbar">
       <div class="fake-input" id="input-left">Posez une question…<span class="caret"></span></div>
-      <button disabled>Envoyer</button>
+      <button disabled data-i18n="input.send">Envoyer</button>
     </div>
   </div>
-  <!-- RIGHT -->
   <div class="panel right">
     <div class="panel-header">
       <div>
         <div class="panel-title">
-          <span class="badge badge-mcp">AVEC MCP</span>
-          Assistant IA + Bayes MCP
+          <span class="badge badge-mcp" data-i18n="panel.right.badge">AVEC MCP</span>
+          <span data-i18n="panel.right.title">Assistant IA + Bayes MCP</span>
         </div>
-        <div class="panel-sub">Connecté à France Travail, Mes Aides, dispositifs régionaux</div>
+        <div class="panel-sub" data-i18n="panel.right.sub">Connecté à France Travail, Mes Aides, dispositifs régionaux</div>
       </div>
-      <span class="pill" style="background:var(--ok-soft);border-color:rgba(31,122,63,0.25);color:var(--ok);">Contextualisé</span>
+      <span class="pill" style="background:var(--ok-soft);border-color:rgba(31,122,63,0.25);color:var(--ok);" data-i18n="panel.right.tag">Contextualisé</span>
     </div>
     <div class="chat" id="chat-right"></div>
     <div class="inputbar">
       <div class="fake-input" id="input-right">Posez une question…<span class="caret"></span></div>
-      <button disabled>Envoyer</button>
+      <button disabled data-i18n="input.send">Envoyer</button>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <section class="footer-strip">
   <div class="fact">
-    <div class="fact-num">01 · POURQUOI</div>
-    <h4>Une IA hors-sol</h4>
-    <p>Les modèles commerciaux ignorent la fiche du demandeur d'emploi, les offres locales, les dispositifs régionaux. Ils donnent de bons conseils, mais pour un marché de l'emploi américain.</p>
+    <div class="fact-num" data-i18n="footer.f1.num">01 · POURQUOI</div>
+    <h4 data-i18n="footer.f1.h">Une IA générique</h4>
+    <p data-i18n="footer.f1.p">Les modèles commerciaux ignorent la fiche du demandeur d'emploi, les offres locales, les dispositifs régionaux. Ils donnent de bons conseils, mais déconnectés de la situation réelle de la personne et de son territoire.</p>
   </div>
   <div class="fact">
-    <div class="fact-num">02 · COMMENT</div>
-    <h4>Une seule passerelle</h4>
-    <p>Le serveur MCP Bayes connecte France Travail, Mes Aides, France VAE, les opérateurs régionaux et les services périphériques (mobilité, garde d'enfant) à n'importe quel assistant IA, dans le respect du RGPD.</p>
+    <div class="fact-num" data-i18n="footer.f2.num">02 · COMMENT</div>
+    <h4 data-i18n="footer.f2.h">Une seule passerelle</h4>
+    <p data-i18n="footer.f2.p">Le serveur MCP Bayes connecte France Travail, Mes Aides, France VAE, les opérateurs régionaux et les services périphériques (mobilité, garde d'enfant) à n'importe quel assistant IA, dans le respect du RGPD.</p>
   </div>
   <div class="fact">
-    <div class="fact-num">03 · POUR QUI</div>
-    <h4>Conseillers et demandeurs</h4>
-    <p>Conseillers en agence, plateformes d'accompagnement, demandeurs en autonomie : tous bénéficient d'une IA qui connaît leur territoire et leur situation.</p>
+    <div class="fact-num" data-i18n="footer.f3.num">03 · POUR QUI</div>
+    <h4 data-i18n="footer.f3.h">Conseillers et demandeurs</h4>
+    <p data-i18n="footer.f3.p">Conseillers en agence, plateformes d'accompagnement, demandeurs en autonomie : tous bénéficient d'une IA qui connaît leur territoire et leur situation.</p>
   </div>
 </section>
 
 <script>
-// ---------- SCENARIOS ----------
+// ---------- LANGUAGE ----------
+const LANG_KEY = 'bayes-mcp-demo-lang';
+let LANG = 'fr';
+try {
+  const saved = localStorage.getItem(LANG_KEY);
+  if (saved === 'fr' || saved === 'en') LANG = saved;
+} catch (e) {}
+
+const T = {
+  fr: {
+    'topbar.demo': 'MCP · DÉMO',
+    'topbar.toggle.health': 'Santé',
+    'topbar.toggle.employment': 'Emploi',
+    'topbar.pill.ft': 'France Travail · API live',
+    'topbar.pill.aides': 'Mes Aides · sync 5 min',
+    'hero.h1': "Brancher l'IA sur les <em>systèmes de l'emploi</em>.",
+    'hero.p': "Un assistant IA répond avec des conseils génériques et des liens vers Indeed. Le serveur MCP Bayes le connecte à France Travail, Mes Aides et aux dispositifs régionaux, pour qu'il propose des plans d'action précis, ancrés dans le territoire et la situation réelle de la personne.",
+    'scenarios.label': "Choisir un cas d'usage",
+    'controls.play': '▶ Lancer la démonstration',
+    'controls.reset': '↻ Réinitialiser',
+    'controls.hint': 'Même question, posée au même moment dans les deux panneaux.',
+    'controls.playing': '● En cours…',
+    'controls.replay': '↻ Rejouer ce scénario',
+    'input.placeholder': 'Posez une question…',
+    'input.send': 'Envoyer',
+    'panel.left.badge': 'SANS MCP',
+    'panel.left.title': 'Assistant IA généraliste',
+    'panel.left.sub': "Pas d'accès aux systèmes français",
+    'panel.left.tag': 'Générique',
+    'panel.right.badge': 'AVEC MCP',
+    'panel.right.title': 'Assistant IA + Bayes MCP',
+    'panel.right.sub': 'Connecté à France Travail, Mes Aides, dispositifs régionaux',
+    'panel.right.tag': 'Contextualisé',
+    'phaseTag.initial': '● Réponse générique · sans intégration',
+    'phaseTag.verified': '● Réponse contextualisée · Bayes MCP',
+    'mcpTrace.title': "Bayes MCP · appels d'outils",
+    'mcpTrace.status': '{n} sources interrogées',
+    'footer.f1.num': '01 · POURQUOI',
+    'footer.f1.h': 'Une IA générique',
+    'footer.f1.p': "Les modèles commerciaux ignorent la fiche du demandeur d'emploi, les offres locales, les dispositifs régionaux. Ils donnent de bons conseils, mais déconnectés de la situation réelle de la personne et de son territoire.",
+    'footer.f2.num': '02 · COMMENT',
+    'footer.f2.h': 'Une seule passerelle',
+    'footer.f2.p': "Le serveur MCP Bayes connecte France Travail, Mes Aides, France VAE, les opérateurs régionaux et les services périphériques (mobilité, garde d'enfant) à n'importe quel assistant IA, dans le respect du RGPD.",
+    'footer.f3.num': '03 · POUR QUI',
+    'footer.f3.h': 'Conseillers et demandeurs',
+    'footer.f3.p': "Conseillers en agence, plateformes d'accompagnement, demandeurs en autonomie : tous bénéficient d'une IA qui connaît leur territoire et leur situation."
+  },
+  en: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Health',
+    'topbar.toggle.employment': 'Employment',
+    'topbar.pill.ft': 'France Travail · live API',
+    'topbar.pill.aides': 'Mes Aides · 5-min sync',
+    'hero.h1': 'Plug AI into the <em>public employment system</em>.',
+    'hero.p': "An AI assistant answers with generic advice and links to Indeed. The Bayes MCP server connects it to France Travail, Mes Aides and regional schemes, so it can produce precise action plans rooted in the person's actual situation and territory.",
+    'scenarios.label': 'Pick a use case',
+    'controls.play': '▶ Run the demo',
+    'controls.reset': '↻ Reset',
+    'controls.hint': 'Same question, asked at the same moment in both panels.',
+    'controls.playing': '● Running…',
+    'controls.replay': '↻ Replay this scenario',
+    'input.placeholder': 'Ask a question…',
+    'input.send': 'Send',
+    'panel.left.badge': 'WITHOUT MCP',
+    'panel.left.title': 'General-purpose AI assistant',
+    'panel.left.sub': 'No access to French systems',
+    'panel.left.tag': 'Generic',
+    'panel.right.badge': 'WITH MCP',
+    'panel.right.title': 'AI assistant + Bayes MCP',
+    'panel.right.sub': 'Connected to France Travail, Mes Aides, regional schemes',
+    'panel.right.tag': 'Contextualised',
+    'phaseTag.initial': '● Generic response · no integration',
+    'phaseTag.verified': '● Contextualised response · Bayes MCP',
+    'mcpTrace.title': 'Bayes MCP · tool calls',
+    'mcpTrace.status': '{n} sources queried',
+    'footer.f1.num': '01 · WHY',
+    'footer.f1.h': 'A generic AI',
+    'footer.f1.p': "Commercial models ignore the jobseeker's profile, the local job market and regional schemes. They give reasonable advice, but disconnected from the person's actual situation and territory.",
+    'footer.f2.num': '02 · HOW',
+    'footer.f2.h': 'One gateway',
+    'footer.f2.p': "The Bayes MCP server connects France Travail, Mes Aides, France VAE, regional operators and wraparound services (mobility, childcare) to any AI assistant, GDPR-compliant.",
+    'footer.f3.num': '03 · FOR WHOM',
+    'footer.f3.h': 'Counsellors and claimants',
+    'footer.f3.p': 'Agency counsellors, accompaniment platforms, autonomous jobseekers: all benefit from an AI that knows their territory and their situation.'
+  }
+};
+
+function tx(key) { return (T[LANG] && T[LANG][key]) || (T.fr && T.fr[key]) || key; }
+function L(field) {
+  if (field == null) return '';
+  if (typeof field === 'string') return field;
+  return field[LANG] ?? field.fr ?? '';
+}
+
+// ---------- SCENARIOS (bilingual) ----------
 const SCENARIOS = [
   {
     id: 'coach',
-    tag: 'COACH IA · DEMANDEUR',
-    title: 'Reprendre l\'emploi',
-    sub: 'Maman solo · Lille · ex-caissière',
-    question: "Bonjour, j'ai besoin d'aide pour reprendre le travail. Je suis maman solo avec une fille de 4 ans à Lille, j'ai perdu mon CDD de caissière il y a 4 mois et c'est compliqué. Je ne sais pas par où commencer.",
-    plainAnswer: [
-      "Voici quelques conseils pour reprendre votre recherche d'emploi :",
-      "• Mettez à jour votre CV avec vos compétences récentes",
-      "• Inscrivez-vous sur les principaux sites d'emploi",
-      "• Élargissez votre réseau professionnel",
-      "• Envisagez une formation si le secteur est saturé",
-      "<div class='generic-links'><li>indeed.fr</li><li>hellowork.com</li><li>linkedin.com</li><li>monster.fr</li></div>"
-    ],
+    tag: { fr: 'COACH IA · DEMANDEUR', en: 'AI COACH · CLAIMANT' },
+    title: { fr: "Reprendre l'emploi", en: 'Returning to work' },
+    sub: { fr: 'Maman solo · Lille · ex-caissière', en: 'Single mom · Lille · ex-cashier' },
+    question: {
+      fr: "Bonjour, j'ai besoin d'aide pour reprendre le travail. Je suis maman solo avec une fille de 4 ans à Lille, j'ai perdu mon CDD de caissière il y a 4 mois et c'est compliqué. Je ne sais pas par où commencer.",
+      en: "Hi, I need help getting back to work. I'm a single mom with a 4-year-old daughter in Lille, I lost my cashier contract 4 months ago and it's tough. I don't know where to start."
+    },
+    plainAnswer: {
+      fr: [
+        "Je comprends que la situation est difficile. Voici quelques pistes pour vous remettre en mouvement :",
+        "• <strong>Votre CV</strong> : mettez en avant votre expérience caisse, votre fiabilité et l'autonomie acquise. C'est ce que cherchent les recruteurs en grande distribution.",
+        "• <strong>La recherche d'offres</strong> : inscrivez-vous sur plusieurs sites d'emploi et activez les alertes sur les postes vente-caisse à temps partiel.",
+        "• <strong>La garde de votre fille</strong> : rapprochez-vous de la CAF, selon votre situation vous avez peut-être droit à des aides ou à une place prioritaire en crèche.",
+        "• <strong>Le budget</strong> : vérifiez votre éligibilité au RSA ou à la prime d'activité sur le simulateur officiel.",
+        "• <strong>La reconversion</strong> : si la grande distribution embauche peu près de chez vous, les services à la personne recrutent fortement en Hauts-de-France.",
+        "<ul class='generic-links'><li>indeed.fr</li><li>hellowork.com</li><li>monster.fr</li><li>caf.fr (simulateur de droits)</li></ul>"
+      ],
+      en: [
+        "I understand the situation is hard. Here are a few directions to get you moving again:",
+        "• <strong>Your CV</strong>: highlight your cashier experience, your reliability and the autonomy you've built. That's what large-retail recruiters look for.",
+        "• <strong>Job search</strong>: register on several job sites and set up alerts for part-time sales/cashier positions.",
+        "• <strong>Childcare</strong>: contact France's family-benefits office (CAF). Depending on your situation, you may be entitled to allowances or a priority crèche slot.",
+        "• <strong>Budget</strong>: check your eligibility for the RSA or the in-work supplement on the official simulator.",
+        "• <strong>Career change</strong>: if large retail isn't hiring near you, personal-care services are recruiting strongly in the Hauts-de-France region.",
+        "<ul class='generic-links'><li>indeed.fr</li><li>hellowork.com</li><li>monster.fr</li><li>caf.fr (eligibility tool)</li></ul>"
+      ]
+    },
     toolCalls: [
-      { tool: "france_travail.search_offers", args: '{ "zone":"Lille (59)", "domaine":"vente_caisse", "rayon_km":15, "compatibilite_garde":true }', result: '3 offres adaptées' },
-      { tool: "mes_aides.simulate", args: '{ "famille":{"enfants":1,"age":[4]}, "statut":"DE_4mois", "revenus":"ARE_900" }', result: '4 aides éligibles' },
-      { tool: "ateliers.search", args: '{ "zone":"Lille", "themes":["confiance","TRE"], "horizon":"30j" }', result: '3 ateliers ouverts' },
-      { tool: "salons_emploi.search", args: '{ "region":"Hauts-de-France", "horizon":"45j" }', result: '1 salon ciblé' },
-      { tool: "modes_garde.search", args: '{ "age":[4], "zone":"Lille", "rayon_km":3 }', result: '2 places disponibles' }
+      { tool: 'france_travail.search_offers', args: '{ "zone":"Lille (59)", "domaine":"vente_caisse", "rayon_km":15, "compatibilite_garde":true }', result: { fr: '3 offres adaptées', en: '3 matching offers' } },
+      { tool: 'mes_aides.simulate', args: '{ "famille":{"enfants":1,"age":[4]}, "statut":"DE_4mois", "revenus":"ARE_900" }', result: { fr: '4 aides éligibles', en: '4 benefits eligible' } },
+      { tool: 'ateliers.search', args: '{ "zone":"Lille", "themes":["confiance","TRE"], "horizon":"30j" }', result: { fr: '3 ateliers ouverts', en: '3 workshops open' } },
+      { tool: 'salons_emploi.search', args: '{ "region":"Hauts-de-France", "horizon":"45j" }', result: { fr: '1 salon ciblé', en: '1 targeted job fair' } },
+      { tool: 'modes_garde.search', args: '{ "age":[4], "zone":"Lille", "rayon_km":3 }', result: { fr: '2 places disponibles', en: '2 spots available' } }
     ],
-    finalResponse: `
+    finalResponse: {
+      fr: `
       <div class="plan-header">
         <div class="plan-title">Plan d'action personnalisé · Lille (59)</div>
         <div class="plan-sub">Sophie, 32 ans · 4 mois sans emploi · garde d'enfant à organiser</div>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">Cette semaine · priorité immédiate</div>
         <div class="res-card">
@@ -732,7 +509,6 @@ const SCENARIOS = [
           <a class="card-action" href="#">Réserver</a>
         </div>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">Sous 15 jours · candidatures ciblées</div>
         <div class="res-card">
@@ -752,7 +528,6 @@ const SCENARIOS = [
           <a class="card-action" href="#">Postuler</a>
         </div>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">Sous 30 jours · à programmer</div>
         <div class="res-card">
@@ -772,50 +547,142 @@ const SCENARIOS = [
           <a class="card-action" href="#">Voir</a>
         </div>
       </div>
-
       <div class="alert-banner">
         <span class="ab-ico">🔔</span>
         <div>
           <strong>Alertes activées :</strong> SMS hebdomadaire des nouvelles offres vente/caisse à moins de 20 min · rappel J-1 des rendez-vous · notification si une place se libère en crèche.
         </div>
       </div>
-    `
+      `,
+      en: `
+      <div class="plan-header">
+        <div class="plan-title">Personalised action plan · Lille (59)</div>
+        <div class="plan-sub">Sophie, 32 · 4 months unemployed · childcare to organise</div>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">This week · immediate priority</div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-wallet"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">AGEPI (childcare allowance for single parents)</div>
+            <div class="card-meta">You are eligible · estimate €520 · 5-day processing</div>
+          </div>
+          <a class="card-action" href="#">Apply</a>
+        </div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-shield"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">2 spots at municipal day-care · Wazemmes</div>
+            <div class="card-meta">7 min from home · free for jobseekers · available from May 27</div>
+          </div>
+          <a class="card-action" href="#">Book</a>
+        </div>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">Within 15 days · targeted applications</div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-briefcase"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">Permanent · Cashier · Carrefour Market Lille Centre</div>
+            <div class="card-meta">8 min by bus · €1,720/month · childcare-compatible hours · ref. FT-583921</div>
+          </div>
+          <a class="card-action" href="#">Apply</a>
+        </div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-briefcase"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">6-month contract · Sales · La Vie Claire Lille Vauban</div>
+            <div class="card-meta">Mornings part-time · €980/month · ref. FT-587410</div>
+          </div>
+          <a class="card-action" href="#">Apply</a>
+        </div>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">Within 30 days · to schedule</div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-grad"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">Workshop "Rebuilding confidence after a setback" · Cité des Talents Lille</div>
+            <div class="card-meta">Tuesday May 28 · 2-5 PM · 5 spots · free</div>
+          </div>
+          <a class="card-action" href="#">Register</a>
+        </div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-cal"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">Job fair · Lille Grand Palais</div>
+            <div class="card-meta">Tuesday June 4 · 9 AM-5 PM · 80 companies · profile pre-filled</div>
+          </div>
+          <a class="card-action" href="#">View</a>
+        </div>
+      </div>
+      <div class="alert-banner">
+        <span class="ab-ico">🔔</span>
+        <div>
+          <strong>Alerts enabled:</strong> weekly SMS of new sales/cashier offers within 20 min · day-before appointment reminders · notification if a day-care spot opens.
+        </div>
+      </div>
+      `
+    }
   },
   {
     id: 'counselor',
-    tag: 'ASSISTANT · CONSEILLER',
-    title: 'Préparer un RDV',
-    sub: 'M. Dubois · 14h · agence Lille',
-    question: "Bonjour, prépare-moi le rendez-vous de 14h avec @martin.dubois.1978. Je veux un brief en 2 minutes : où il en est, ce qu'on s'était dit la dernière fois, et où il y a un blocage.",
-    plainAnswer: [
-      "Voici un cadre général pour préparer un entretien avec un demandeur d'emploi :",
-      "1. Faire le point sur son parcours et ses candidatures récentes",
-      "2. Identifier ses freins (mobilité, formation, motivation)",
-      "3. Définir des objectifs SMART pour les prochaines semaines",
-      "4. Convenir d'un plan d'action concret avec échéances",
-      "5. Fixer le prochain rendez-vous",
-      "Pouvez-vous me transmettre le profil et l'historique de M. Dubois ? Je n'ai pas accès à votre système d'information."
-    ],
+    tag: { fr: 'ASSISTANT · CONSEILLER', en: 'ASSISTANT · COUNSELLOR' },
+    title: { fr: 'Préparer un RDV', en: 'Prep for a meeting' },
+    sub: { fr: 'M. Dubois · 14h · agence Lille', en: 'Mr. Dubois · 2pm · Lille agency' },
+    question: {
+      fr: "Bonjour, prépare-moi le rendez-vous de 14h avec @martin.dubois.1978. Je veux un brief en 2 minutes : où il en est, ce qu'on s'était dit la dernière fois, et où il y a un blocage.",
+      en: "Hi, prep me for the 2pm appointment with @martin.dubois.1978. I want a 2-minute briefing: where he stands, what we agreed last time, and where he's stuck."
+    },
+    plainAnswer: {
+      fr: [
+        "Voici une trame pour structurer ce rendez-vous. Pour aller plus loin il me faudrait son dossier.",
+        "<strong>Avant l'entretien</strong>",
+        "• Relire le compte-rendu du dernier rendez-vous et les engagements pris",
+        "• Vérifier l'avancement des candidatures et les démarches de formation engagées",
+        "• Repérer ce qui a bougé et ce qui n'a pas avancé",
+        "<strong>Pendant l'entretien</strong>",
+        "• Reprendre les engagements un par un, sans jugement",
+        "• Creuser les freins : mobilité, certifications, charge mentale, motivation",
+        "• Ajuster les objectifs sur ce qui est réellement faisable",
+        "• Convenir de deux ou trois actions concrètes avant le prochain rendez-vous",
+        "<strong>Outils utiles</strong> : Mon Compte Formation (CPF disponible), France Travail (offres ciblées), Mes Aides (sécurisation financière).",
+        "Pour un brief plus précis, transmettez-moi son dossier ou un résumé. Je n'ai pas accès à votre système d'information."
+      ],
+      en: [
+        "Here's a frame to structure this meeting. To go further I'd need his file.",
+        "<strong>Before the meeting</strong>",
+        "• Re-read the notes from the previous meeting and the commitments made",
+        "• Check progress on applications and any training steps started",
+        "• Spot what has moved and what hasn't",
+        "<strong>During the meeting</strong>",
+        "• Walk through commitments one by one, without judgment",
+        "• Probe blockers: mobility, certifications, mental load, motivation",
+        "• Adjust objectives to what is realistically doable",
+        "• Agree on two or three concrete actions before the next meeting",
+        "<strong>Useful tools</strong>: Mon Compte Formation (CPF balance), France Travail (matched offers), Mes Aides (financial safety net).",
+        "For a more precise briefing, share his file or a summary. I don't have access to your information system."
+      ]
+    },
     toolCalls: [
-      { tool: "france_travail.get_jobseeker", args: '{ "id":"@martin.dubois.1978" }', result: 'profil chargé' },
-      { tool: "rdv.last_meeting", args: '{ "id":"@martin.dubois.1978" }', result: 'CR du 24 avril' },
-      { tool: "candidatures.recent", args: '{ "id":"@martin.dubois.1978", "horizon":"60j" }', result: '12 envois · 1 entretien' },
-      { tool: "engagements.followup", args: '{ "id":"@martin.dubois.1978" }', result: '2 / 5 réalisées' },
-      { tool: "next_steps.suggest", args: '{ "id":"@martin.dubois.1978", "contexte":"frein_certification" }', result: '3 axes prioritaires' }
+      { tool: 'france_travail.get_jobseeker', args: '{ "id":"@martin.dubois.1978" }', result: { fr: 'profil chargé', en: 'profile loaded' } },
+      { tool: 'rdv.last_meeting', args: '{ "id":"@martin.dubois.1978" }', result: { fr: 'CR du 24 avril', en: 'notes from Apr 24' } },
+      { tool: 'candidatures.recent', args: '{ "id":"@martin.dubois.1978", "horizon":"60j" }', result: { fr: '12 envois · 1 entretien', en: '12 sent · 1 interview' } },
+      { tool: 'engagements.followup', args: '{ "id":"@martin.dubois.1978" }', result: { fr: '2 / 5 réalisées', en: '2 / 5 done' } },
+      { tool: 'next_steps.suggest', args: '{ "id":"@martin.dubois.1978", "contexte":"frein_certification" }', result: { fr: '3 axes prioritaires', en: '3 priority axes' } }
     ],
-    finalResponse: `
+    finalResponse: {
+      fr: `
       <div class="plan-header">
         <div class="plan-title">Briefing · M. Martin DUBOIS</div>
         <div class="plan-sub">47 ans · Lille (59) · 8 mois sans emploi · ARE jusqu'au 12 juillet</div>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">Profil</div>
         <div class="plan-text">
           Ancien technicien maintenance industrielle, 8 ans chez Lesaffre (CDI rompu pour fermeture de site). Bac Pro MEI. Permis B, véhicule personnel. ARE 1 280 €/mois. Mobilité bonne sur la métropole lilloise.
         </div>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">Suivi du précédent RDV (24 avril) · 2 / 5 réalisées</div>
         <ul class="check-list">
@@ -826,7 +693,6 @@ const SCENARIOS = [
           <li class="todo">Atelier « Valoriser son expérience »</li>
         </ul>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">Activité de recherche (60 j)</div>
         <div class="stats-row">
@@ -835,14 +701,12 @@ const SCENARIOS = [
           <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">OFFRE</div></div>
         </div>
       </div>
-
       <div class="warn-banner">
         <span class="wb-ico">⚠</span>
         <div>
           <strong>Frein identifié :</strong> certification CACES R489 expirée depuis 2024. 8 offres sur 10 dans son métier l'exigent à jour. C'est probablement la cause des refus.
         </div>
       </div>
-
       <div class="plan-section">
         <div class="plan-section-title">3 recommandations contextualisées</div>
         <div class="res-card">
@@ -870,14 +734,83 @@ const SCENARIOS = [
           <a class="card-action" href="#">Présenter</a>
         </div>
       </div>
-
       <div class="alert-banner">
         <span class="ab-ico">📋</span>
         <div>
           <strong>Points de discussion :</strong> demander pourquoi les actions du précédent RDV n'ont pas abouti · vérifier l'appétence pour la formation CACES · présenter le dispositif Industrie 4.0 comme cadre d'accompagnement.
         </div>
       </div>
-    `
+      `,
+      en: `
+      <div class="plan-header">
+        <div class="plan-title">Briefing · Mr. Martin DUBOIS</div>
+        <div class="plan-sub">47 · Lille (59) · 8 months unemployed · unemployment benefit until July 12</div>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">Profile</div>
+        <div class="plan-text">
+          Former industrial maintenance technician, 8 years at Lesaffre (permanent contract ended due to site closure). Vocational diploma (Bac Pro MEI). Driving licence, own car. Unemployment benefit €1,280/month. Good mobility across the Lille metro area.
+        </div>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">Follow-up from previous meeting (Apr 24) · 2 / 5 done</div>
+        <ul class="check-list">
+          <li class="done">CV update</li>
+          <li class="done">Registered on Indeed and HelloWork</li>
+          <li class="todo">Interview oral preparation</li>
+          <li class="todo">CACES R489 training enrolment</li>
+          <li class="todo">"Showcase your experience" workshop</li>
+        </ul>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">Search activity (60 days)</div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-num">12</div><div class="stat-lbl">APPLICATIONS</div></div>
+          <div class="stat"><div class="stat-num">1</div><div class="stat-lbl">INTERVIEW</div></div>
+          <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">OFFER</div></div>
+        </div>
+      </div>
+      <div class="warn-banner">
+        <span class="wb-ico">⚠</span>
+        <div>
+          <strong>Identified blocker:</strong> CACES R489 certification expired since 2024. 8 out of 10 offers in his field require it up-to-date. Likely the reason for rejections.
+        </div>
+      </div>
+      <div class="plan-section">
+        <div class="plan-section-title">3 contextualised recommendations</div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-grad"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">CACES R489 training · AFPA Lille centre</div>
+            <div class="card-meta">Week of June 3 · 35 h · 4 spots · CPF financing available</div>
+          </div>
+          <a class="card-action" href="#">Pre-register</a>
+        </div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-cal"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">"Industrial Trades" job fair · Roubaix</div>
+            <div class="card-meta">June 11 · 24 maintenance and production companies · profile match</div>
+          </div>
+          <a class="card-action" href="#">Invite</a>
+        </div>
+        <div class="res-card">
+          <div class="card-ico"><svg><use href="#ic-shield"/></svg></div>
+          <div class="card-body">
+            <div class="card-title">"Industry 4.0 Reskilling" scheme · Hauts-de-France region</div>
+            <div class="card-meta">Eligible profile · 6 months reinforced support · benefits maintained</div>
+          </div>
+          <a class="card-action" href="#">Present</a>
+        </div>
+      </div>
+      <div class="alert-banner">
+        <span class="ab-ico">📋</span>
+        <div>
+          <strong>Talking points:</strong> ask why actions from previous meeting weren't completed · check interest in CACES training · present the Industry 4.0 scheme as a support framework.
+        </div>
+      </div>
+      `
+    }
   }
 ];
 
@@ -891,9 +824,9 @@ const scnRow = document.getElementById('scenarios-row');
 function renderScenarioButtons() {
   scnRow.innerHTML = SCENARIOS.map((s) => `
     <button class="scn-btn ${s.id === currentScn.id ? 'active' : ''}" data-id="${s.id}">
-      <span class="scn-tag">${s.tag}</span>
-      <span class="scn-title">${s.title}</span>
-      <span class="scn-sub">${s.sub}</span>
+      <span class="scn-tag">${L(s.tag)}</span>
+      <span class="scn-title">${L(s.title)}</span>
+      <span class="scn-sub">${L(s.sub)}</span>
     </button>
   `).join('');
   scnRow.querySelectorAll('.scn-btn').forEach(b => {
@@ -906,30 +839,22 @@ function renderScenarioButtons() {
     });
   });
 }
-renderScenarioButtons();
 
 // ---------- HELPERS ----------
-function wait(ms) {
-  return new Promise(resolve => {
-    const t = setTimeout(resolve, ms);
-    timers.push(t);
-  });
-}
+function wait(ms) { return new Promise(resolve => { const t = setTimeout(resolve, ms); timers.push(t); }); }
 function clearAllTimers() { timers.forEach(clearTimeout); timers = []; }
-function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 function resetStage() {
   clearAllTimers();
   isPlaying = false;
   const btn = document.getElementById('play-btn');
   btn.disabled = false;
-  btn.textContent = '▶ Lancer la démonstration';
+  btn.innerHTML = tx('controls.play');
   document.getElementById('chat-left').innerHTML = '';
   document.getElementById('chat-right').innerHTML = '';
-  document.getElementById('input-left').innerHTML = 'Posez une question…<span class="caret"></span>';
-  document.getElementById('input-right').innerHTML = 'Posez une question…<span class="caret"></span>';
+  document.getElementById('input-left').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+  document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
 }
 
 async function typeInto(elId, text, perChar = 12) {
@@ -955,8 +880,8 @@ function buildAiMsg(chatId, phase) {
     ? '<svg viewBox="0 0 415 410" width="16" height="16"><use href="#bi-mark"/></svg>'
     : '<span>AI</span>';
   const tag = isVerified
-    ? '<span class="phase-tag verified">● Réponse contextualisée · Bayes MCP</span>'
-    : '<span class="phase-tag">● Réponse générique · sans intégration</span>';
+    ? `<span class="phase-tag verified">${tx('phaseTag.verified')}</span>`
+    : `<span class="phase-tag">${tx('phaseTag.initial')}</span>`;
   const node = document.createElement('div');
   node.className = `msg ai ${isVerified ? 'verified' : ''}`;
   node.innerHTML = `
@@ -985,7 +910,6 @@ function injectFinalResponse(chatId, html) {
   const node = buildAiMsg(chatId, 'verified');
   const textEl = node.querySelector('.ai-text');
   textEl.innerHTML = html;
-  // small entrance stagger for sections
   const sections = textEl.querySelectorAll('.plan-section, .plan-header, .warn-banner, .alert-banner');
   sections.forEach((el, i) => {
     el.style.opacity = '0';
@@ -995,15 +919,15 @@ function injectFinalResponse(chatId, html) {
   });
 }
 
-// ---------- MCP TRACE ----------
 function appendMcpTrace(chatId, scn) {
   const chat = document.getElementById(chatId);
+  const statusLbl = tx('mcpTrace.status').replace('{n}', scn.toolCalls.length);
   const html = `
     <div class="mcp-trace" id="mcp-trace">
       <div class="mcp-trace-head">
         <span class="ico"><svg viewBox="0 0 415 410"><use href="#bi-mark"/></svg></span>
-        <span class="ttl">Bayes MCP · appels d'outils</span>
-        <span class="status" id="trace-status">${scn.toolCalls.length} sources interrogées</span>
+        <span class="ttl">${tx('mcpTrace.title')}</span>
+        <span class="status" id="trace-status">${statusLbl}</span>
       </div>
       ${scn.toolCalls.map((t, i) => `
         <div class="tc-row" id="tc-row-${i}">
@@ -1012,7 +936,7 @@ function appendMcpTrace(chatId, scn) {
             <div class="tc-name">${t.tool}</div>
             <div class="tc-args">${escapeHtml(t.args)}</div>
           </div>
-          <span class="tc-result" id="tc-result-${i}">${t.result}</span>
+          <span class="tc-result" id="tc-result-${i}">${L(t.result)}</span>
         </div>
       `).join('')}
     </div>
@@ -1040,44 +964,66 @@ async function play() {
   isPlaying = true;
   const btn = document.getElementById('play-btn');
   btn.disabled = true;
-  btn.textContent = '● En cours…';
+  btn.innerHTML = tx('controls.playing');
 
   const scn = currentScn;
-
-  // 1. type question in both inputs
+  const q = L(scn.question);
   await Promise.all([
-    typeInto('input-left', scn.question, 10),
-    typeInto('input-right', scn.question, 10)
+    typeInto('input-left', q, 10),
+    typeInto('input-right', q, 10)
   ]);
   await wait(300);
 
-  // 2. user msg in both panels
-  appendUserMsg('chat-left', scn.question);
-  appendUserMsg('chat-right', scn.question);
-  document.getElementById('input-left').innerHTML = 'Posez une question…<span class="caret"></span>';
-  document.getElementById('input-right').innerHTML = 'Posez une question…<span class="caret"></span>';
+  appendUserMsg('chat-left', q);
+  appendUserMsg('chat-right', q);
+  document.getElementById('input-left').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
+  document.getElementById('input-right').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
   await wait(500);
 
-  // 3. left panel: stream generic answer
-  const leftStream = streamAiAnswer('chat-left', scn.plainAnswer, 'initial', { initialDelay: 750, linePause: 280 });
+  const leftStream = streamAiAnswer('chat-left', L(scn.plainAnswer), 'initial', { initialDelay: 750, linePause: 280 });
 
-  // 4. right panel: MCP trace + tool calls + final response
   await wait(400);
   appendMcpTrace('chat-right', scn);
   await wait(350);
   await runToolCalls(scn);
   await wait(500);
-  injectFinalResponse('chat-right', scn.finalResponse);
+  injectFinalResponse('chat-right', L(scn.finalResponse));
 
   await leftStream;
 
   isPlaying = false;
   btn.disabled = false;
-  btn.textContent = '↻ Rejouer ce scénario';
+  btn.innerHTML = tx('controls.replay');
 }
+
+// ---------- LANG APPLICATION ----------
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[LANG] && T[LANG][key] != null) el.innerHTML = T[LANG][key];
+  });
+  document.querySelectorAll('.lt-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === LANG);
+  });
+  renderScenarioButtons();
+}
+
+document.querySelectorAll('.lt-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.dataset.lang === LANG) return;
+    LANG = b.dataset.lang;
+    try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+    applyLang();
+    resetStage();
+    setTimeout(play, 400);
+  });
+});
 
 document.getElementById('play-btn').addEventListener('click', () => { if (!isPlaying) play(); });
 document.getElementById('reset-btn').addEventListener('click', resetStage);
+
+applyLang();
 window.addEventListener('load', () => setTimeout(play, 600));
 </script>
 </body>

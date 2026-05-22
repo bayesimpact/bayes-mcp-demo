@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Bayes Impact brand palette */
     --bg: #F2EFE9;
     --ink: #000000;
     --ink-soft: rgba(0,0,0,0.8);
@@ -22,14 +21,12 @@
     --accent-blue: #1067FE;
     --border-soft: #DBCCAF;
     --border: #EAECF0;
-
     --ok: #1F7A3F;
     --ok-soft: #DDEBDF;
     --warn: #9A4A04;
     --warn-soft: #FCE6CC;
     --danger: #9A1B1B;
     --danger-soft: #F6D9D9;
-
     --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.06);
     --radius: 14px;
   }
@@ -45,7 +42,6 @@
     min-height: 100vh;
   }
 
-  /* ---------- TOP BAR ---------- */
   .topbar {
     border-bottom: 1px solid var(--border-soft);
     background: var(--bg);
@@ -58,10 +54,7 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 24px;
   }
-  .brand {
-    display: flex; align-items: center; gap: 14px;
-    color: var(--ink);
-  }
+  .brand { display: flex; align-items: center; gap: 14px; color: var(--ink); flex-wrap: wrap; }
   .brand-logo { height: 26px; width: auto; display: block; }
   .brand-sep {
     color: var(--muted);
@@ -84,18 +77,37 @@
     padding: 5px 14px;
     border-radius: 999px;
     text-decoration: none;
+    font-size: 12.5px; font-weight: 600;
     color: var(--ink-soft);
-    font-size: 13px;
-    font-weight: 500;
     transition: all 0.15s ease;
     font-family: inherit;
   }
   .dt-link:hover { color: var(--ink); }
   .dt-link.active { background: var(--ink); color: #fff; }
-  .topbar-meta {
-    display: flex; gap: 10px; align-items: center;
-    font-size: 13px; color: var(--muted);
+
+  .lang-toggle {
+    display: inline-flex;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
   }
+  .lt-btn {
+    border: none; background: transparent;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+    transition: all 0.15s ease;
+  }
+  .lt-btn:hover { color: var(--ink); }
+  .lt-btn.active { background: var(--ink); color: #fff; }
+
+  .topbar-meta { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
   .pill {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 4px 10px; border-radius: 999px;
@@ -109,7 +121,6 @@
   }
   @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 
-  /* ---------- HERO ---------- */
   .hero {
     max-width: 1100px; margin: 0 auto;
     padding: 44px 28px 8px;
@@ -132,21 +143,13 @@
     margin: 0 0 22px;
   }
 
-  /* ---------- SCENARIOS ---------- */
-  .scenarios {
-    max-width: 1100px; margin: 0 auto;
-    padding: 8px 28px 20px;
-  }
+  .scenarios { max-width: 1100px; margin: 0 auto; padding: 8px 28px 20px; }
   .scenarios-label {
     font-size: 12px; text-transform: uppercase;
     letter-spacing: 0.08em; color: var(--muted);
     font-weight: 600; margin-bottom: 10px;
   }
-  .scenarios-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
+  .scenarios-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .scn-btn {
     text-align: left;
     background: var(--card);
@@ -172,7 +175,6 @@
   .scn-title { font-size: 14px; font-weight: 600; }
   .scn-sub { font-size: 12px; color: var(--muted); }
 
-  /* ---------- CONTROLS ---------- */
   .controls {
     max-width: 1100px; margin: 0 auto;
     padding: 0 28px 24px;
@@ -195,11 +197,7 @@
   .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
   .controls-hint { font-size: 12.5px; color: var(--muted); margin-left: 6px; }
 
-  /* ---------- CHAT STAGE (SINGLE COLUMN) ---------- */
-  .stage {
-    max-width: 820px; margin: 0 auto;
-    padding: 8px 24px 48px;
-  }
+  .stage { max-width: 820px; margin: 0 auto; padding: 8px 24px 48px; }
   .chat-shell {
     background: var(--card);
     border: 1px solid var(--border-soft);
@@ -209,14 +207,8 @@
     display: flex; flex-direction: column;
     min-height: 560px;
   }
-  .chat {
-    flex: 1;
-    padding: 32px 28px 24px;
-    display: flex; flex-direction: column;
-    gap: 28px;
-  }
+  .chat { flex: 1; padding: 32px 28px 24px; display: flex; flex-direction: column; gap: 28px; }
 
-  /* USER MESSAGE — right-aligned subtle bubble */
   .msg.user {
     align-self: flex-end;
     max-width: 78%;
@@ -229,8 +221,6 @@
     line-height: 1.5;
     animation: fadeUp .3s ease;
   }
-
-  /* AI MESSAGE — flat, avatar + body grid */
   .msg.ai {
     display: grid;
     grid-template-columns: 32px 1fr;
@@ -249,14 +239,9 @@
     font-size: 11px; font-weight: 700;
     flex-shrink: 0;
   }
-  .msg.ai.verified .ai-avatar {
-    background: var(--ink);
-    color: #fff;
-    border-color: var(--ink);
-  }
+  .msg.ai.verified .ai-avatar { background: var(--ink); color: #fff; border-color: var(--ink); }
   .ai-avatar svg { width: 18px; height: 18px; display: block; }
   .ai-body { min-width: 0; }
-
   .phase-tag {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: 'JetBrains Mono', monospace;
@@ -266,21 +251,12 @@
     font-weight: 600;
     margin-bottom: 6px;
   }
-  .phase-tag .pt-icon {
-    display: inline-flex; width: 12px; height: 12px;
-    align-items: center; justify-content: center;
-  }
+  .phase-tag .pt-icon { display: inline-flex; width: 12px; height: 12px; align-items: center; justify-content: center; }
   .phase-tag.verified { color: var(--ok); }
   .phase-tag.verified .pt-icon { color: var(--ok); }
-
-  .ai-text {
-    color: var(--ink);
-    font-size: 14.5px;
-    line-height: 1.65;
-  }
+  .ai-text { color: var(--ink); font-size: 14.5px; line-height: 1.65; }
   .ai-text strong { font-weight: 600; }
 
-  /* TYPING INDICATOR */
   .typing { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
   .typing span {
     width: 6px; height: 6px; border-radius: 50%;
@@ -289,16 +265,9 @@
   }
   .typing span:nth-child(2) { animation-delay: .15s; }
   .typing span:nth-child(3) { animation-delay: .30s; }
-  @keyframes blink {
-    0%,80%,100% { transform: scale(0.7); opacity: 0.4; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes blink { 0%,80%,100%{transform:scale(0.7);opacity:0.4;} 40%{transform:scale(1);opacity:1;} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
 
-  /* MCP INTERVENTION BANNER — narrative beat */
   .mcp-banner {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px;
@@ -308,20 +277,12 @@
     align-self: stretch;
     animation: slideIn .4s ease;
   }
-  .mcp-banner .mcp-banner-icon {
-    width: 22px; height: 22px;
-    display: grid; place-items: center;
-    color: var(--gold-bg);
-  }
+  .mcp-banner .mcp-banner-icon { width: 22px; height: 22px; display: grid; place-items: center; color: var(--gold-bg); }
   .mcp-banner .mcp-banner-icon svg { width: 100%; height: 100%; }
   .mcp-banner-title { font-weight: 600; }
   .mcp-banner-sub { color: rgba(255,255,255,0.65); font-size: 12.5px; margin-left: 4px; }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(-4px);} to{opacity:1;transform:translateY(0);} }
 
-  /* MCP TOOL CALL CARD */
   .toolcall {
     align-self: stretch;
     border: 1px solid var(--border-soft);
@@ -334,28 +295,12 @@
     overflow: hidden;
     animation: fadeUp .35s ease;
   }
-  .toolcall::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px; background: var(--ink);
-  }
-  .toolcall-head {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .toolcall-name {
-    display: flex; align-items: center; gap: 8px;
-    font-weight: 600; color: var(--ink); font-size: 12px;
-  }
-  .toolcall-name .ico {
-    width: 20px; height: 20px;
-    display: grid; place-items: center;
-    color: var(--ink);
-  }
+  .toolcall::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--ink); }
+  .toolcall-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .toolcall-name { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); font-size: 12px; }
+  .toolcall-name .ico { width: 20px; height: 20px; display: grid; place-items: center; color: var(--ink); }
   .toolcall-name .ico svg { width: 100%; height: 100%; display: block; }
-  .toolcall-status {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--muted); font-weight: 600;
-  }
+  .toolcall-status { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
   .toolcall-arg {
     color: var(--ink-soft);
     background: #fff;
@@ -401,34 +346,17 @@
   .step.done.warn .step-ico { background: var(--warn); border-color: var(--warn); }
   .step.done.danger .step-ico { background: var(--danger); border-color: var(--danger); }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .step-name { flex: 1; font-family: 'Inter', sans-serif; font-weight: 500; }
-  .step-result {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
+  .step-result { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 2px 6px; border-radius: 4px; }
   .step-result.ok { background: var(--ok-soft); color: var(--ok); }
   .step-result.warn { background: var(--warn-soft); color: var(--warn); }
   .step-result.danger { background: var(--danger-soft); color: var(--danger); }
 
-  /* VERDICT */
-  .verdict {
-    margin-top: 10px;
-    border-radius: 10px;
-    padding: 12px 14px;
-    border: 1px solid var(--border-soft);
-    font-family: 'Inter', sans-serif;
-  }
+  .verdict { margin-top: 10px; border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border-soft); font-family: 'Inter', sans-serif; }
   .verdict.ok { background: var(--ok-soft); border-color: rgba(31,122,63,0.25); }
   .verdict.warn { background: var(--warn-soft); border-color: rgba(154,74,4,0.25); }
   .verdict.danger { background: var(--danger-soft); border-color: rgba(154,27,27,0.25); }
-  .verdict-title {
-    display: flex; align-items: center; gap: 8px;
-    font-weight: 700; font-size: 13px;
-    margin-bottom: 6px;
-  }
+  .verdict-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
   .verdict.ok .verdict-title { color: var(--ok); }
   .verdict.warn .verdict-title { color: var(--warn); }
   .verdict.danger .verdict-title { color: var(--danger); }
@@ -450,12 +378,7 @@
   .verdict.danger .verdict-excerpt { color: var(--danger); }
   .verdict-excerpt span { color: var(--ink); font-style: normal; font-weight: 600; }
 
-  .verdict-source {
-    display: flex; align-items: center; gap: 8px;
-    border-top: 1px solid rgba(0,0,0,0.08);
-    padding-top: 8px;
-    flex-wrap: wrap;
-  }
+  .verdict-source { display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 8px; flex-wrap: wrap; }
   .verdict-source-link {
     flex: 1; min-width: 0;
     display: inline-flex; align-items: center; gap: 8px;
@@ -469,49 +392,15 @@
     border-radius: 6px;
     transition: all 0.15s ease;
   }
-  .verdict-source-link:hover {
-    background: #fff; border-color: var(--ink);
-    transform: translateY(-1px);
-  }
-  .verdict-source-link .src-doc {
-    flex: 1; min-width: 0;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .verdict-source-link .src-arrow {
-    flex-shrink: 0; width: 14px; height: 14px;
-    display: grid; place-items: center;
-    color: var(--accent-blue);
-  }
-  .src-page {
-    flex-shrink: 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    padding: 3px 7px;
-    background: rgba(0,0,0,0.06);
-    border-radius: 4px;
-    color: var(--ink-soft);
-    font-weight: 600;
-  }
+  .verdict-source-link:hover { background: #fff; border-color: var(--ink); transform: translateY(-1px); }
+  .verdict-source-link .src-doc { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .verdict-source-link .src-arrow { flex-shrink: 0; width: 14px; height: 14px; display: grid; place-items: center; color: var(--accent-blue); }
+  .src-page { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 3px 7px; background: rgba(0,0,0,0.06); border-radius: 4px; color: var(--ink-soft); font-weight: 600; }
 
-  /* HIGHLIGHTS in initial response */
-  mark.bad {
-    background: var(--danger-soft);
-    color: var(--danger);
-    padding: 0 3px; border-radius: 3px; font-weight: 600;
-  }
-  mark.warn {
-    background: var(--warn-soft);
-    color: var(--warn);
-    padding: 0 3px; border-radius: 3px; font-weight: 600;
-  }
+  mark.bad { background: var(--danger-soft); color: var(--danger); padding: 0 3px; border-radius: 3px; font-weight: 600; }
+  mark.warn { background: var(--warn-soft); color: var(--warn); padding: 0 3px; border-radius: 3px; font-weight: 600; }
 
-  /* INPUT BAR */
-  .inputbar {
-    border-top: 1px solid var(--border-soft);
-    background: #fff;
-    padding: 14px 20px;
-    display: flex; gap: 10px; align-items: center;
-  }
+  .inputbar { border-top: 1px solid var(--border-soft); background: #fff; padding: 14px 20px; display: flex; gap: 10px; align-items: center; }
   .fake-input {
     flex: 1;
     border: 1px solid var(--border-soft);
@@ -524,20 +413,10 @@
     display: flex; align-items: center;
     font-family: inherit;
   }
-  .fake-input .caret {
-    display: inline-block; width: 1px; height: 14px;
-    background: var(--ink); margin-left: 1px;
-    animation: caret 1s infinite;
-  }
+  .fake-input .caret { display: inline-block; width: 1px; height: 14px; background: var(--ink); margin-left: 1px; animation: caret 1s infinite; }
   @keyframes caret { 50% { opacity: 0; } }
-  .inputbar button {
-    border: none; background: var(--ink); color: #fff;
-    border-radius: 12px; padding: 10px 16px;
-    font-weight: 600; font-size: 13px; cursor: pointer;
-    font-family: inherit;
-  }
+  .inputbar button { border: none; background: var(--ink); color: #fff; border-radius: 12px; padding: 10px 16px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: inherit; }
 
-  /* ---------- FOOTER FACTS ---------- */
   .footer-strip {
     max-width: 1100px; margin: 0 auto;
     padding: 24px 28px 60px;
@@ -545,17 +424,8 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
-  .fact {
-    background: var(--card);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-  }
-  .fact-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--accent-orange);
-    font-weight: 600; letter-spacing: 0.06em;
-  }
+  .fact { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 18px 20px; }
+  .fact-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-orange); font-weight: 600; letter-spacing: 0.06em; }
   .fact h4 { margin: 6px 0 6px; font-size: 14px; font-weight: 600; color: var(--ink); }
   .fact p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
 
@@ -568,7 +438,6 @@
 </head>
 <body>
 
-<!-- BAYES IMPACT LOGO (sprite) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="bi-mark" viewBox="0 0 415 410">
     <path d="M309.36,246h63.39a41.67,41.67,0,0,0,0-83.33H309.22L402,71.55a41.67,41.67,0,1,0-58.41-59.44L249,105V42.15a41.67,41.67,0,1,0-83.33,0v63l-94.86-93a41.67,41.67,0,0,0-58.35,59.5l92.88,91.08H41.67a41.67,41.67,0,1,0,0,83.33h63.56L12.52,336.72a41.67,41.67,0,0,0,58.29,59.55L165.7,303.4v63.1a41.67,41.67,0,0,0,83.33,0v-63l94.54,92.71a41.67,41.67,0,0,0,58.35-59.5Z" fill="currentColor"/>
@@ -584,227 +453,451 @@
   </symbol>
 </svg>
 
-<!-- TOP BAR -->
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
       <img class="brand-logo" src="bi-colors.svg" alt="Bayes Impact" />
-      <span class="brand-sep">MCP · DÉMO</span>
+      <span class="brand-sep" data-i18n="topbar.demo">MCP · DÉMO</span>
       <div class="demo-toggle">
-        <a href="./" class="dt-link active">Santé</a>
-        <a href="employment.html" class="dt-link">Emploi</a>
+        <a href="./" class="dt-link active" data-i18n="topbar.toggle.health">Santé</a>
+        <a href="employment.html" class="dt-link" data-i18n="topbar.toggle.employment">Emploi</a>
+      </div>
+      <div class="lang-toggle">
+        <button class="lt-btn" data-lang="fr">FR</button>
+        <button class="lt-btn" data-lang="en">EN</button>
       </div>
     </div>
     <div class="topbar-meta">
-      <span class="pill"><span class="dot"></span> HAS · base à jour 2026.05.12</span>
-      <span class="pill"><span class="dot"></span> ANSM · base à jour 2026.05.15</span>
+      <span class="pill"><span class="dot"></span> <span data-i18n="topbar.pill.has">HAS · base à jour 2026.05.12</span></span>
+      <span class="pill"><span class="dot"></span> <span data-i18n="topbar.pill.ansm">ANSM · base à jour 2026.05.15</span></span>
     </div>
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
-  <h1>Vérifier les réponses des IA médicales contre les <em>référentiels français</em>.</h1>
-  <p>Un assistant IA répond à une question clinique. Le serveur MCP Bayes vérifie automatiquement la réponse contre les recommandations de la HAS et les décisions de l'ANSM, puis la corrige si nécessaire.</p>
+  <h1 data-i18n="hero.h1">Vérifier les réponses des IA médicales contre les <em>référentiels français</em>.</h1>
+  <p data-i18n="hero.p">Un assistant IA répond à une question clinique. Le serveur MCP Bayes vérifie automatiquement la réponse contre les recommandations de la HAS et les décisions de l'ANSM, puis la corrige si nécessaire.</p>
 </section>
 
-<!-- SCENARIOS -->
 <section class="scenarios">
-  <div class="scenarios-label">Choisir un scénario clinique</div>
+  <div class="scenarios-label" data-i18n="scenarios.label">Choisir un scénario clinique</div>
   <div class="scenarios-row" id="scenarios-row"></div>
 </section>
 
-<!-- CONTROLS -->
 <section class="controls">
-  <button class="btn" id="play-btn">▶ Lancer la démonstration</button>
-  <button class="btn ghost" id="reset-btn">↻ Réinitialiser</button>
-  <span class="controls-hint">L'assistant répond. Le MCP vérifie. La réponse finale est conforme.</span>
+  <button class="btn" id="play-btn" data-i18n="controls.play">▶ Lancer la démonstration</button>
+  <button class="btn ghost" id="reset-btn" data-i18n="controls.reset">↻ Réinitialiser</button>
+  <span class="controls-hint" data-i18n="controls.hint">L'assistant répond. Le MCP vérifie. La réponse finale est conforme.</span>
 </section>
 
-<!-- CHAT STAGE -->
 <section class="stage">
   <div class="chat-shell">
     <div class="chat" id="chat"></div>
     <div class="inputbar">
       <div class="fake-input" id="chat-input">Posez une question…<span class="caret"></span></div>
-      <button disabled>Envoyer</button>
+      <button disabled data-i18n="input.send">Envoyer</button>
     </div>
   </div>
 </section>
 
-<!-- FOOTER FACTS -->
 <section class="footer-strip">
   <div class="fact">
-    <div class="fact-num">01 · POURQUOI</div>
-    <h4>Entraînés à l'étranger</h4>
-    <p>Les modèles d'OpenAI, d'Anthropic et de Google connaissent mieux la FDA que la HAS. Sur les sujets où les recommandations diffèrent, ils répondent par défaut comme à San Francisco.</p>
+    <div class="fact-num" data-i18n="footer.f1.num">01 · POURQUOI</div>
+    <h4 data-i18n="footer.f1.h">Entraînés à l'étranger</h4>
+    <p data-i18n="footer.f1.p">Les modèles commerciaux généralistes comme ChatGPT ne connaissent pas les recommandations et bonnes pratiques propres au territoire français. Quand la HAS ou l'ANSM divergent des standards anglo-saxons, ils répondent par défaut comme à San Francisco.</p>
   </div>
   <div class="fact">
-    <div class="fact-num">02 · COMMENT</div>
-    <h4>Une vérification ouverte</h4>
-    <p>Le protocole MCP permet de brancher la HAS et l'ANSM sur n'importe quel assistant IA. Bayes opère cette passerelle, en open source.</p>
+    <div class="fact-num" data-i18n="footer.f2.num">02 · COMMENT</div>
+    <h4 data-i18n="footer.f2.h">Une vérification ouverte</h4>
+    <p data-i18n="footer.f2.p">Le protocole MCP permet de brancher la HAS et l'ANSM sur n'importe quel assistant IA. Bayes opère cette passerelle, en open source.</p>
   </div>
   <div class="fact">
-    <div class="fact-num">03 · POUR QUI</div>
-    <h4>Souveraineté sanitaire</h4>
-    <p>Hôpitaux, éditeurs de DPI, plateformes de téléconsultation : la France peut imposer ses référentiels sans attendre qu'un éditeur étranger les intègre.</p>
+    <div class="fact-num" data-i18n="footer.f3.num">03 · POUR QUI</div>
+    <h4 data-i18n="footer.f3.h">Souveraineté sanitaire</h4>
+    <p data-i18n="footer.f3.p">Hôpitaux, éditeurs de DPI, plateformes de téléconsultation : la France peut imposer ses référentiels sans attendre qu'un éditeur étranger les intègre.</p>
   </div>
 </section>
 
 <script>
-// ---------- SCENARIOS ----------
+// ---------- LANGUAGE ----------
+const LANG_KEY = 'bayes-mcp-demo-lang';
+let LANG = 'fr';
+try {
+  const saved = localStorage.getItem(LANG_KEY);
+  if (saved === 'fr' || saved === 'en') LANG = saved;
+} catch (e) {}
+
+// ---------- TRANSLATIONS ----------
+const T = {
+  fr: {
+    'topbar.demo': 'MCP · DÉMO',
+    'topbar.toggle.health': 'Santé',
+    'topbar.toggle.employment': 'Emploi',
+    'topbar.pill.has': 'HAS · base à jour 2026.05.12',
+    'topbar.pill.ansm': 'ANSM · base à jour 2026.05.15',
+    'hero.h1': 'Vérifier les réponses des IA médicales contre les <em>référentiels français</em>.',
+    'hero.p': "Un assistant IA répond à une question clinique. Le serveur MCP Bayes vérifie automatiquement la réponse contre les recommandations de la HAS et les décisions de l'ANSM, puis la corrige si nécessaire.",
+    'scenarios.label': 'Choisir un scénario clinique',
+    'controls.play': '▶ Lancer la démonstration',
+    'controls.reset': '↻ Réinitialiser',
+    'controls.hint': "L'assistant répond. Le MCP vérifie. La réponse finale est conforme.",
+    'controls.playing': '● En cours…',
+    'controls.replay': '↻ Rejouer ce scénario',
+    'input.placeholder': 'Posez une question…',
+    'input.send': 'Envoyer',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Réponse initiale · sans vérification',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Réponse vérifiée · HAS &amp; ANSM',
+    'mcpBanner.title': 'Bayes MCP intervient',
+    'mcpBanner.sub': 'vérification automatique HAS &amp; ANSM',
+    'toolcall.running': 'EN COURS…',
+    'toolcall.done': 'TERMINÉ',
+    'verdict.openSource': 'Ouvrir le document source',
+    'footer.f1.num': '01 · POURQUOI',
+    'footer.f1.h': "Entraînés à l'étranger",
+    'footer.f1.p': "Les modèles commerciaux généralistes comme ChatGPT ne connaissent pas les recommandations et bonnes pratiques propres au territoire français. Quand la HAS ou l'ANSM divergent des standards anglo-saxons, ils répondent par défaut comme à San Francisco.",
+    'footer.f2.num': '02 · COMMENT',
+    'footer.f2.h': 'Une vérification ouverte',
+    'footer.f2.p': "Le protocole MCP permet de brancher la HAS et l'ANSM sur n'importe quel assistant IA. Bayes opère cette passerelle, en open source.",
+    'footer.f3.num': '03 · POUR QUI',
+    'footer.f3.h': 'Souveraineté sanitaire',
+    'footer.f3.p': "Hôpitaux, éditeurs de DPI, plateformes de téléconsultation : la France peut imposer ses référentiels sans attendre qu'un éditeur étranger les intègre."
+  },
+  en: {
+    'topbar.demo': 'MCP · DEMO',
+    'topbar.toggle.health': 'Health',
+    'topbar.toggle.employment': 'Employment',
+    'topbar.pill.has': 'HAS · updated 2026-05-12',
+    'topbar.pill.ansm': 'ANSM · updated 2026-05-15',
+    'hero.h1': "Check medical AI answers against <em>France's clinical guidelines</em>.",
+    'hero.p': "An AI assistant answers a clinical question. The Bayes MCP server automatically checks the response against HAS (France's Health Authority) and ANSM (Medicines Safety Agency) guidance, then corrects it if needed.",
+    'scenarios.label': 'Pick a clinical scenario',
+    'controls.play': '▶ Run the demo',
+    'controls.reset': '↻ Reset',
+    'controls.hint': 'The assistant answers. The MCP checks. The final response is compliant.',
+    'controls.playing': '● Running…',
+    'controls.replay': '↻ Replay this scenario',
+    'input.placeholder': 'Ask a question…',
+    'input.send': 'Send',
+    'phaseTag.initial': '<span class="pt-icon">●</span> Initial response · unverified',
+    'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Verified response · HAS &amp; ANSM',
+    'mcpBanner.title': 'Bayes MCP steps in',
+    'mcpBanner.sub': 'automated HAS &amp; ANSM compliance check',
+    'toolcall.running': 'RUNNING…',
+    'toolcall.done': 'DONE',
+    'verdict.openSource': 'Open the source document',
+    'footer.f1.num': '01 · WHY',
+    'footer.f1.h': 'Trained elsewhere',
+    'footer.f1.p': "General-purpose commercial models like ChatGPT do not know the guidelines and best practices specific to France. When HAS or ANSM diverge from Anglo-Saxon standards, the models default to San Francisco answers.",
+    'footer.f2.num': '02 · HOW',
+    'footer.f2.h': 'An open verification layer',
+    'footer.f2.p': 'The MCP protocol lets you plug HAS and ANSM into any AI assistant. Bayes operates this gateway, open source.',
+    'footer.f3.num': '03 · FOR WHOM',
+    'footer.f3.h': 'Health sovereignty',
+    'footer.f3.p': "Hospitals, EHR vendors, telemedicine platforms: France can enforce its own guidelines without waiting for a foreign vendor to integrate them."
+  }
+};
+
+function tx(key) { return (T[LANG] && T[LANG][key]) || (T.fr && T.fr[key]) || key; }
+function L(field) {
+  if (field == null) return '';
+  if (typeof field === 'string') return field;
+  return field[LANG] ?? field.fr ?? '';
+}
+
+// ---------- SCENARIOS (bilingual) ----------
 const SCENARIOS = [
   {
     id: 'bronchio',
-    tag: 'PÉDIATRIE',
-    title: 'Bronchiolite du nourrisson',
-    sub: 'Kinésithérapie respiratoire ?',
-    question: "Bonjour, j'ai en consultation un nourrisson de 4 mois avec une bronchiolite aiguë non sévère. Quelle prise en charge me recommandez-vous ?",
-    plainAnswer: [
-      "Pour une bronchiolite aiguë du nourrisson sans signe de gravité, la prise en charge habituelle comprend :",
-      "• Désobstruction rhino-pharyngée au sérum physiologique avant repas et coucher",
-      "• <mark class='warn'>Kinésithérapie respiratoire</mark> par accélération du flux expiratoire, à raison d'1 à 2 séances par jour",
-      "• Hydratation, fractionnement des repas",
-      "• Surveillance de la fréquence respiratoire et de la prise alimentaire",
-      "• Reconsultation si aggravation"
-    ],
-    mcpAnswer: [
-      "Pour une bronchiolite aiguë du nourrisson sans signe de gravité :",
-      "• Désobstruction rhino-pharyngée pluriquotidienne",
-      "• <strong>Pas de kinésithérapie respiratoire systématique</strong> (HAS, recommandations 2019)",
-      "• Hydratation, fractionnement des repas, position proclive",
-      "• Surveillance étroite : fréquence respiratoire, signes de lutte, prise alimentaire (&lt; 50 % = critère d'hospitalisation)",
-      "• Reconsultation à 48 h ou avant si aggravation"
-    ],
-    toolArg: '{ "query": "bronchiolite nourrisson <12 mois", "context": "kinésithérapie respiratoire" }',
+    tag: { fr: 'PÉDIATRIE', en: 'PEDIATRICS' },
+    title: { fr: 'Bronchiolite du nourrisson', en: 'Infant bronchiolitis' },
+    sub: { fr: 'Kinésithérapie respiratoire ?', en: 'Respiratory physiotherapy?' },
+    question: {
+      fr: "Bonjour, j'ai en consultation un nourrisson de 4 mois avec une bronchiolite aiguë non sévère. Quelle prise en charge me recommandez-vous ?",
+      en: "Hi, I'm seeing a 4-month-old with mild acute bronchiolitis. What care plan would you recommend?"
+    },
+    plainAnswer: {
+      fr: [
+        "Pour une bronchiolite aiguë du nourrisson sans signe de gravité, la prise en charge habituelle comprend :",
+        "• Désobstruction rhino-pharyngée au sérum physiologique avant repas et coucher",
+        "• <mark class='warn'>Kinésithérapie respiratoire</mark> par accélération du flux expiratoire, à raison d'1 à 2 séances par jour",
+        "• Hydratation, fractionnement des repas",
+        "• Surveillance de la fréquence respiratoire et de la prise alimentaire",
+        "• Reconsultation si aggravation"
+      ],
+      en: [
+        "For mild acute bronchiolitis in an infant, standard care typically includes:",
+        "• Nasal saline irrigation before feeds and bedtime",
+        "• <mark class='warn'>Respiratory physiotherapy</mark> via expiratory flow acceleration, 1 to 2 sessions per day",
+        "• Hydration, smaller and more frequent feeds",
+        "• Monitor respiratory rate and feeding",
+        "• Return visit if worsening"
+      ]
+    },
+    mcpAnswer: {
+      fr: [
+        "Pour une bronchiolite aiguë du nourrisson sans signe de gravité :",
+        "• Désobstruction rhino-pharyngée pluriquotidienne",
+        "• <strong>Pas de kinésithérapie respiratoire systématique</strong> (HAS, recommandations 2019)",
+        "• Hydratation, fractionnement des repas, position proclive",
+        "• Surveillance étroite : fréquence respiratoire, signes de lutte, prise alimentaire (&lt; 50 % = critère d'hospitalisation)",
+        "• Reconsultation à 48 h ou avant si aggravation"
+      ],
+      en: [
+        "For mild acute bronchiolitis in an infant:",
+        "• Multiple-times-daily nasal saline irrigation",
+        "• <strong>No systematic respiratory physiotherapy</strong> (HAS guidelines, 2019)",
+        "• Hydration, smaller feeds, semi-upright position",
+        "• Close monitoring: respiratory rate, signs of distress, feeding intake (&lt; 50 % = hospital admission criterion)",
+        "• Return at 48 h or sooner if worsening"
+      ]
+    },
+    toolArg: {
+      fr: '{ "query": "bronchiolite nourrisson <12 mois", "context": "kinésithérapie respiratoire" }',
+      en: '{ "query": "infant bronchiolitis <12mo", "context": "respiratory physiotherapy" }'
+    },
     steps: [
-      { name: 'Extraction des actes et molécules cités', result: 'kinésithérapie respiratoire AFE', tone: 'neutral' },
-      { name: 'Croisement avec base HAS', result: 'reco HAS-3160826 trouvée', tone: 'neutral' },
-      { name: 'Vérification ANSM (médicaments)', result: 'aucun médicament', tone: 'ok' },
-      { name: 'Analyse de divergence', result: 'CONTRADICTION', tone: 'warn' }
+      {
+        name: { fr: 'Extraction des actes et molécules cités', en: 'Extract procedures and drugs cited' },
+        result: { fr: 'kinésithérapie respiratoire AFE', en: 'expiratory flow physio (AFE)' },
+        tone: 'neutral'
+      },
+      {
+        name: { fr: 'Croisement avec base HAS', en: 'Cross-check with HAS database' },
+        result: { fr: 'reco HAS-3160826 trouvée', en: 'guideline HAS-3160826 found' },
+        tone: 'neutral'
+      },
+      {
+        name: { fr: 'Vérification ANSM (médicaments)', en: 'ANSM check (drugs)' },
+        result: { fr: 'aucun médicament', en: 'no drugs' },
+        tone: 'ok'
+      },
+      {
+        name: { fr: 'Analyse de divergence', en: 'Divergence analysis' },
+        result: { fr: 'CONTRADICTION', en: 'CONTRADICTION' },
+        tone: 'warn'
+      }
     ],
     verdict: {
       level: 'warn',
-      title: 'Recommandation non conforme HAS',
-      body: "La réponse initiale propose la kinésithérapie respiratoire en routine. Depuis ses recommandations de novembre 2019, la HAS ne recommande <strong>plus</strong> la kinésithérapie respiratoire chez le nourrisson hospitalisé ou ambulatoire dans la bronchiolite aiguë non sévère (grade B). La pratique reste fréquente en France malgré cette mise à jour.",
-      excerpt: "Il est recommandé de <span>ne pas pratiquer de kinésithérapie respiratoire</span> par techniques d'augmentation du flux expiratoire (AFE) chez le nourrisson hospitalisé ou en ambulatoire dans la bronchiolite aiguë.",
+      title: { fr: 'Recommandation non conforme HAS', en: 'Not aligned with HAS guidance' },
+      body: {
+        fr: "La réponse initiale propose la kinésithérapie respiratoire en routine. Depuis ses recommandations de novembre 2019, la HAS ne recommande <strong>plus</strong> la kinésithérapie respiratoire chez le nourrisson hospitalisé ou ambulatoire dans la bronchiolite aiguë non sévère (grade B). La pratique reste fréquente en France malgré cette mise à jour.",
+        en: "The initial response suggests routine respiratory physiotherapy. Since its November 2019 guidelines, France's HAS no longer recommends respiratory physiotherapy as routine care for hospitalised or ambulatory infants with non-severe acute bronchiolitis (grade B). The practice remains common in France despite this update."
+      },
+      excerpt: {
+        fr: "Il est recommandé de <span>ne pas pratiquer de kinésithérapie respiratoire</span> par techniques d'augmentation du flux expiratoire (AFE) chez le nourrisson hospitalisé ou en ambulatoire dans la bronchiolite aiguë.",
+        en: "It is recommended <span>not to perform respiratory physiotherapy</span> via expiratory flow acceleration (AFE) techniques in hospitalised or ambulatory infants with acute bronchiolitis."
+      },
       cite: 'HAS · « Prise en charge du 1er épisode de bronchiolite aiguë chez le nourrisson de moins de 12 mois » · 14 nov. 2019',
       sourceUrl: 'https://www.has-sante.fr/jcms/c_2971517/fr/prise-en-charge-du-1er-episode-de-bronchiolite-aigue-chez-le-nourrisson-de-moins-de-12-mois',
-      sourcePage: 'reco · p. 14'
+      sourcePage: { fr: 'reco · p. 14', en: 'guideline · p. 14' }
     }
   },
   {
     id: 'codeine',
-    tag: 'ANALGÉSIE PÉDIATRIQUE',
-    title: "Codéine chez l'enfant",
-    sub: 'Douleur dentaire, 8 ans',
-    question: "Quelle posologie de codéine puis-je prescrire à un enfant de 8 ans, 25 kg, pour une douleur dentaire aiguë après extraction ?",
-    plainAnswer: [
-      "Pour un enfant de 25 kg, la codéine peut être prescrite en association au paracétamol :",
-      "• <mark class='bad'>Codéine : 0,5 à 1 mg/kg/prise, soit 12,5 à 25 mg toutes les 6 heures</mark>",
-      "• Paracétamol : 15 mg/kg toutes les 6 heures",
-      "• Durée limitée à 48 à 72 heures",
-      "Surveiller la somnolence et la dépression respiratoire."
-    ],
-    mcpAnswer: [
-      "<strong>La codéine est contre-indiquée chez l'enfant de moins de 12 ans</strong> (ANSM, 2013).",
-      "Alternative recommandée pour une douleur post-extraction modérée à sévère :",
-      "• Paracétamol 15 mg/kg toutes les 6 h (max 60 mg/kg/j)",
-      "• Ibuprofène 10 mg/kg toutes les 8 h en l'absence de contre-indication",
-      "• Si insuffisant : <strong>tramadol pédiatrique</strong> en gouttes (à partir de 3 ans, hors AMM mais utilisé) ou avis spécialisé",
-      "• Bloc loco-régional par le chirurgien-dentiste si pertinent"
-    ],
-    toolArg: '{ "molecule": "codéine", "patient": { "age": 8, "weight_kg": 25 } }',
+    tag: { fr: 'ANALGÉSIE PÉDIATRIQUE', en: 'PEDIATRIC ANALGESIA' },
+    title: { fr: "Codéine chez l'enfant", en: 'Codeine in children' },
+    sub: { fr: 'Douleur dentaire, 8 ans', en: 'Dental pain, age 8' },
+    question: {
+      fr: "Quelle posologie de codéine puis-je prescrire à un enfant de 8 ans, 25 kg, pour une douleur dentaire aiguë après extraction ?",
+      en: "What codeine dose can I prescribe for an 8-year-old, 25 kg, for acute dental pain following extraction?"
+    },
+    plainAnswer: {
+      fr: [
+        "Pour un enfant de 25 kg, la codéine peut être prescrite en association au paracétamol :",
+        "• <mark class='bad'>Codéine : 0,5 à 1 mg/kg/prise, soit 12,5 à 25 mg toutes les 6 heures</mark>",
+        "• Paracétamol : 15 mg/kg toutes les 6 heures",
+        "• Durée limitée à 48 à 72 heures",
+        "Surveiller la somnolence et la dépression respiratoire."
+      ],
+      en: [
+        "For a 25 kg child, codeine can be prescribed alongside paracetamol:",
+        "• <mark class='bad'>Codeine: 0.5 to 1 mg/kg per dose, i.e. 12.5 to 25 mg every 6 hours</mark>",
+        "• Paracetamol: 15 mg/kg every 6 hours",
+        "• Duration limited to 48 to 72 hours",
+        "Monitor for somnolence and respiratory depression."
+      ]
+    },
+    mcpAnswer: {
+      fr: [
+        "<strong>La codéine est contre-indiquée chez l'enfant de moins de 12 ans</strong> (ANSM, 2013).",
+        "Alternative recommandée pour une douleur post-extraction modérée à sévère :",
+        "• Paracétamol 15 mg/kg toutes les 6 h (max 60 mg/kg/j)",
+        "• Ibuprofène 10 mg/kg toutes les 8 h en l'absence de contre-indication",
+        "• Si insuffisant : <strong>tramadol pédiatrique</strong> en gouttes (à partir de 3 ans, hors AMM mais utilisé) ou avis spécialisé",
+        "• Bloc loco-régional par le chirurgien-dentiste si pertinent"
+      ],
+      en: [
+        "<strong>Codeine is contraindicated in children under 12</strong> (ANSM, 2013).",
+        "Recommended alternatives for moderate to severe post-extraction pain:",
+        "• Paracetamol 15 mg/kg every 6 h (max 60 mg/kg/day)",
+        "• Ibuprofen 10 mg/kg every 8 h if no contraindication",
+        "• If insufficient: <strong>pediatric tramadol</strong> in drops (from age 3, off-label but used) or specialist advice",
+        "• Local anaesthetic block by the dentist if appropriate"
+      ]
+    },
+    toolArg: {
+      fr: '{ "molecule": "codéine", "patient": { "age": 8, "weight_kg": 25 } }',
+      en: '{ "drug": "codeine", "patient": { "age": 8, "weight_kg": 25 } }'
+    },
     steps: [
-      { name: 'Extraction des molécules prescrites', result: 'codéine + paracétamol', tone: 'neutral' },
-      { name: 'Croisement avec base ANSM', result: 'alerte ANSM-2013-CODEINE', tone: 'neutral' },
-      { name: 'Vérification âge et contre-indication', result: 'AGE < 12 ANS', tone: 'danger' },
-      { name: "Recherche d'alternatives HAS", result: 'paliers I et II disponibles', tone: 'ok' }
+      { name: { fr: 'Extraction des molécules prescrites', en: 'Extract prescribed drugs' }, result: { fr: 'codéine + paracétamol', en: 'codeine + paracetamol' }, tone: 'neutral' },
+      { name: { fr: 'Croisement avec base ANSM', en: 'Cross-check with ANSM database' }, result: { fr: 'alerte ANSM-2013-CODEINE', en: 'alert ANSM-2013-CODEINE' }, tone: 'neutral' },
+      { name: { fr: 'Vérification âge et contre-indication', en: 'Age and contraindication check' }, result: { fr: 'AGE < 12 ANS', en: 'AGE < 12' }, tone: 'danger' },
+      { name: { fr: "Recherche d'alternatives HAS", en: 'Search HAS alternatives' }, result: { fr: 'paliers I et II disponibles', en: 'tier I and II available' }, tone: 'ok' }
     ],
     verdict: {
       level: 'danger',
-      title: 'Contre-indication ANSM, danger',
-      body: "La codéine est <strong>contre-indiquée chez l'enfant de moins de 12 ans</strong> en raison du risque de dépression respiratoire fatale chez les métaboliseurs ultra-rapides du CYP2D6. Décision européenne CMDh, transposée par l'ANSM en 2013. Plusieurs décès pédiatriques ont été rapportés après amygdalectomie.",
-      excerpt: "L'utilisation de la codéine pour le traitement de la douleur est <span>désormais contre-indiquée chez les enfants de moins de 12 ans</span>, en raison du risque accru d'effets indésirables graves voire fatals.",
+      title: { fr: 'Contre-indication ANSM, danger', en: 'ANSM contraindication, danger' },
+      body: {
+        fr: "La codéine est <strong>contre-indiquée chez l'enfant de moins de 12 ans</strong> en raison du risque de dépression respiratoire fatale chez les métaboliseurs ultra-rapides du CYP2D6. Décision européenne CMDh, transposée par l'ANSM en 2013. Plusieurs décès pédiatriques ont été rapportés après amygdalectomie.",
+        en: "Codeine is <strong>contraindicated in children under 12</strong> due to the risk of fatal respiratory depression in CYP2D6 ultra-rapid metabolisers. European CMDh decision, transposed by France's ANSM in 2013. Several paediatric deaths have been reported after tonsillectomy."
+      },
+      excerpt: {
+        fr: "L'utilisation de la codéine pour le traitement de la douleur est <span>désormais contre-indiquée chez les enfants de moins de 12 ans</span>, en raison du risque accru d'effets indésirables graves voire fatals.",
+        en: "Codeine for pain treatment is <span>now contraindicated in children under 12</span> due to an increased risk of serious or fatal adverse effects."
+      },
       cite: "ANSM · Lettre aux professionnels de santé · « Restriction d'utilisation de la codéine chez l'enfant » · 12 juil. 2013",
       sourceUrl: 'https://ansm.sante.fr/informations-de-securite/codeine-utilisation-restreinte-chez-l-enfant-de-moins-de-12-ans',
-      sourcePage: 'DHPC · §2'
+      sourcePage: { fr: 'DHPC · §2', en: 'DHPC · §2' }
     }
   },
   {
     id: 'rhino',
-    tag: 'INFECTIOLOGIE',
-    title: 'Rhinopharyngite aiguë',
-    sub: 'Antibiothérapie de 1ʳᵉ intention ?',
-    question: "Adulte de 35 ans, rhinopharyngite aiguë depuis 4 jours avec rhinorrhée purulente et fébricule à 38,2 °C. Quelle antibiothérapie de première intention ?",
-    plainAnswer: [
-      "Devant une rhinopharyngite aiguë avec rhinorrhée purulente persistante, une couverture antibiotique de première intention peut se justifier :",
-      "• <mark class='bad'>Amoxicilline 1 g x 3 par jour pendant 7 jours</mark>",
-      "• Ou, en cas d'allergie : azithromycine 500 mg J1 puis 250 mg J2 à J5",
-      "• Associer du paracétamol pour le confort",
-      "• Lavages de nez au sérum physiologique"
-    ],
-    mcpAnswer: [
-      "<strong>Aucune antibiothérapie n'est indiquée.</strong> La rhinopharyngite aiguë est une affection <strong>virale</strong> dans la quasi-totalité des cas, y compris en présence de rhinorrhée purulente (qui ne signe pas une surinfection bactérienne).",
-      "Prise en charge recommandée :",
-      "• Paracétamol si fièvre ou inconfort",
-      "• Désobstruction rhino-pharyngée au sérum physiologique",
-      "• Information du patient sur l'évolution spontanée (7 à 10 jours)",
-      "• Reconsultation si fièvre supérieure à 3 j, douleur faciale unilatérale, otalgie"
-    ],
-    toolArg: '{ "diagnostic": "rhinopharyngite aiguë", "prescription": "amoxicilline" }',
+    tag: { fr: 'INFECTIOLOGIE', en: 'INFECTIOUS DISEASE' },
+    title: { fr: 'Rhinopharyngite aiguë', en: 'Acute nasopharyngitis' },
+    sub: { fr: 'Antibiothérapie de 1ʳᵉ intention ?', en: 'First-line antibiotic?' },
+    question: {
+      fr: "Adulte de 35 ans, rhinopharyngite aiguë depuis 4 jours avec rhinorrhée purulente et fébricule à 38,2 °C. Quelle antibiothérapie de première intention ?",
+      en: "35-year-old adult, acute nasopharyngitis for 4 days with purulent rhinorrhea and low-grade fever 38.2 °C. First-line antibiotic?"
+    },
+    plainAnswer: {
+      fr: [
+        "Devant une rhinopharyngite aiguë avec rhinorrhée purulente persistante, une couverture antibiotique de première intention peut se justifier :",
+        "• <mark class='bad'>Amoxicilline 1 g x 3 par jour pendant 7 jours</mark>",
+        "• Ou, en cas d'allergie : azithromycine 500 mg J1 puis 250 mg J2 à J5",
+        "• Associer du paracétamol pour le confort",
+        "• Lavages de nez au sérum physiologique"
+      ],
+      en: [
+        "For acute nasopharyngitis with persistent purulent discharge, first-line antibiotic coverage may be justified:",
+        "• <mark class='bad'>Amoxicillin 1 g three times a day for 7 days</mark>",
+        "• If allergic: azithromycin 500 mg day 1 then 250 mg days 2 to 5",
+        "• Add paracetamol for comfort",
+        "• Saline nasal irrigation"
+      ]
+    },
+    mcpAnswer: {
+      fr: [
+        "<strong>Aucune antibiothérapie n'est indiquée.</strong> La rhinopharyngite aiguë est une affection <strong>virale</strong> dans la quasi-totalité des cas, y compris en présence de rhinorrhée purulente (qui ne signe pas une surinfection bactérienne).",
+        "Prise en charge recommandée :",
+        "• Paracétamol si fièvre ou inconfort",
+        "• Désobstruction rhino-pharyngée au sérum physiologique",
+        "• Information du patient sur l'évolution spontanée (7 à 10 jours)",
+        "• Reconsultation si fièvre supérieure à 3 j, douleur faciale unilatérale, otalgie"
+      ],
+      en: [
+        "<strong>No antibiotic is indicated.</strong> Acute nasopharyngitis is <strong>viral</strong> in nearly all cases, even with purulent discharge (which does not indicate bacterial superinfection).",
+        "Recommended management:",
+        "• Paracetamol for fever or discomfort",
+        "• Saline nasal irrigation",
+        "• Inform the patient about spontaneous resolution (7 to 10 days)",
+        "• Return if fever lasts beyond 3 days, unilateral facial pain, or ear pain"
+      ]
+    },
+    toolArg: {
+      fr: '{ "diagnostic": "rhinopharyngite aiguë", "prescription": "amoxicilline" }',
+      en: '{ "diagnosis": "acute nasopharyngitis", "prescription": "amoxicillin" }'
+    },
     steps: [
-      { name: 'Extraction du diagnostic et de la prescription', result: 'amoxicilline 3 g/j', tone: 'neutral' },
-      { name: 'Croisement avec base HAS', result: 'fiche HAS antibiothérapie ORL', tone: 'neutral' },
-      { name: "Vérification de l'indication", result: 'NON INDIQUÉ', tone: 'warn' },
-      { name: 'Plan national antibiorésistance', result: 'PROPRIAS 2022-2025', tone: 'warn' }
+      { name: { fr: 'Extraction du diagnostic et de la prescription', en: 'Extract diagnosis and prescription' }, result: { fr: 'amoxicilline 3 g/j', en: 'amoxicillin 3 g/day' }, tone: 'neutral' },
+      { name: { fr: 'Croisement avec base HAS', en: 'Cross-check with HAS database' }, result: { fr: 'fiche HAS antibiothérapie ORL', en: 'HAS ENT antibiotherapy sheet' }, tone: 'neutral' },
+      { name: { fr: "Vérification de l'indication", en: 'Check indication' }, result: { fr: 'NON INDIQUÉ', en: 'NOT INDICATED' }, tone: 'warn' },
+      { name: { fr: 'Plan national antibiorésistance', en: 'National antimicrobial resistance plan' }, result: { fr: 'PROPRIAS 2022-2025', en: 'PROPRIAS 2022-2025' }, tone: 'warn' }
     ],
     verdict: {
       level: 'warn',
-      title: 'Antibiothérapie non recommandée',
-      body: "La HAS et la SPILF rappellent que la rhinopharyngite aiguë est une infection virale et que <strong>l'antibiothérapie n'est pas indiquée</strong>, quelle que soit la couleur de la rhinorrhée. Prescrire un antibiotique dans cette situation alimente l'antibiorésistance, un enjeu majeur de santé publique en France.",
-      excerpt: "Rhinopharyngite aiguë de l'adulte et de l'enfant : <span>pas d'antibiothérapie</span>. L'aspect purulent de la rhinorrhée ne signe pas une surinfection bactérienne.",
+      title: { fr: 'Antibiothérapie non recommandée', en: 'Antibiotherapy not recommended' },
+      body: {
+        fr: "La HAS et la SPILF rappellent que la rhinopharyngite aiguë est une infection virale et que <strong>l'antibiothérapie n'est pas indiquée</strong>, quelle que soit la couleur de la rhinorrhée. Prescrire un antibiotique dans cette situation alimente l'antibiorésistance, un enjeu majeur de santé publique en France.",
+        en: "HAS and SPILF state that acute nasopharyngitis is a viral infection and that <strong>antibiotherapy is not indicated</strong>, regardless of the colour of the discharge. Prescribing antibiotics in this situation fuels antimicrobial resistance, a major public health concern in France."
+      },
+      excerpt: {
+        fr: "Rhinopharyngite aiguë de l'adulte et de l'enfant : <span>pas d'antibiothérapie</span>. L'aspect purulent de la rhinorrhée ne signe pas une surinfection bactérienne.",
+        en: "Acute nasopharyngitis in adults and children: <span>no antibiotherapy</span>. Purulent discharge does not indicate a bacterial superinfection."
+      },
       cite: "HAS et SPILF · « Choix et durées d'antibiothérapies privilégiées dans les infections bactériennes courantes » · maj. mai 2021",
       sourceUrl: 'https://www.has-sante.fr/jcms/p_3278764/fr/choix-et-durees-d-antibiotherapies-privilegiees-dans-les-infections-bacteriennes-courantes',
-      sourcePage: 'fiche ORL · p. 3'
+      sourcePage: { fr: 'fiche ORL · p. 3', en: 'ENT sheet · p. 3' }
     }
   },
   {
     id: 'domperidone',
-    tag: 'GASTRO-ENTÉROLOGIE',
-    title: 'Dompéridone',
-    sub: "Posologie et durée chez l'adulte",
-    question: "Pour des nausées chroniques post-prandiales chez une patiente de 62 ans, je souhaite prescrire de la dompéridone. Quelle posologie et quelle durée me conseillez-vous ?",
-    plainAnswer: [
-      "La dompéridone est efficace sur les nausées d'origine gastrique :",
-      "• <mark class='bad'>20 mg 3 à 4 fois par jour avant les repas</mark>",
-      "• <mark class='warn'>Durée : selon évolution clinique, généralement 2 à 4 semaines renouvelables</mark>",
-      "• À prendre 15 à 30 minutes avant les repas",
-      "• Surveiller les effets extrapyramidaux"
-    ],
-    mcpAnswer: [
-      "<strong>Restrictions ANSM applicables :</strong> la dompéridone augmente le risque d'allongement du QT et de mort subite d'origine cardiaque.",
-      "Posologie autorisée chez l'adulte :",
-      "• <strong>10 mg, jusqu'à 3 fois par jour</strong> (dose totale maximale 30 mg/j)",
-      "• <strong>Durée maximale : 7 jours</strong>",
-      "• Contre-indications : QT long, insuffisance hépatique modérée à sévère, association à inhibiteurs puissants du CYP3A4 (kétoconazole, érythromycine, etc.)",
-      "• À 62 ans : ECG préalable recommandé. Privilégier la métopimazine ou un IPP selon l'étiologie."
-    ],
-    toolArg: '{ "molecule": "dompéridone", "dose_mg": 20, "frequency": 4, "duration_days": 28 }',
+    tag: { fr: 'GASTRO-ENTÉROLOGIE', en: 'GASTROENTEROLOGY' },
+    title: { fr: 'Dompéridone', en: 'Domperidone' },
+    sub: { fr: "Posologie et durée chez l'adulte", en: 'Adult dose and duration' },
+    question: {
+      fr: "Pour des nausées chroniques post-prandiales chez une patiente de 62 ans, je souhaite prescrire de la dompéridone. Quelle posologie et quelle durée me conseillez-vous ?",
+      en: "For chronic post-meal nausea in a 62-year-old female patient, I'd like to prescribe domperidone. What dose and duration would you recommend?"
+    },
+    plainAnswer: {
+      fr: [
+        "La dompéridone est efficace sur les nausées d'origine gastrique :",
+        "• <mark class='bad'>20 mg 3 à 4 fois par jour avant les repas</mark>",
+        "• <mark class='warn'>Durée : selon évolution clinique, généralement 2 à 4 semaines renouvelables</mark>",
+        "• À prendre 15 à 30 minutes avant les repas",
+        "• Surveiller les effets extrapyramidaux"
+      ],
+      en: [
+        "Domperidone is effective for nausea of gastric origin:",
+        "• <mark class='bad'>20 mg three to four times a day before meals</mark>",
+        "• <mark class='warn'>Duration: based on clinical course, typically 2 to 4 weeks, renewable</mark>",
+        "• Take 15 to 30 minutes before meals",
+        "• Monitor for extrapyramidal effects"
+      ]
+    },
+    mcpAnswer: {
+      fr: [
+        "<strong>Restrictions ANSM applicables :</strong> la dompéridone augmente le risque d'allongement du QT et de mort subite d'origine cardiaque.",
+        "Posologie autorisée chez l'adulte :",
+        "• <strong>10 mg, jusqu'à 3 fois par jour</strong> (dose totale maximale 30 mg/j)",
+        "• <strong>Durée maximale : 7 jours</strong>",
+        "• Contre-indications : QT long, insuffisance hépatique modérée à sévère, association à inhibiteurs puissants du CYP3A4 (kétoconazole, érythromycine, etc.)",
+        "• À 62 ans : ECG préalable recommandé. Privilégier la métopimazine ou un IPP selon l'étiologie."
+      ],
+      en: [
+        "<strong>ANSM restrictions apply:</strong> domperidone increases the risk of QT prolongation and sudden cardiac death.",
+        "Authorised adult dosing:",
+        "• <strong>10 mg, up to 3 times a day</strong> (total maximum 30 mg/day)",
+        "• <strong>Maximum duration: 7 days</strong>",
+        "• Contraindications: long QT, moderate-to-severe hepatic impairment, concurrent strong CYP3A4 inhibitors (ketoconazole, erythromycin, etc.)",
+        "• At 62: prior ECG recommended. Prefer metopimazine or a PPI depending on aetiology."
+      ]
+    },
+    toolArg: {
+      fr: '{ "molecule": "dompéridone", "dose_mg": 20, "frequency": 4, "duration_days": 28 }',
+      en: '{ "drug": "domperidone", "dose_mg": 20, "frequency": 4, "duration_days": 28 }'
+    },
     steps: [
-      { name: 'Extraction posologie et durée', result: '80 mg/j · 4 sem.', tone: 'neutral' },
-      { name: 'Croisement avec base ANSM', result: 'alerte ANSM-2014-DOMPE', tone: 'neutral' },
-      { name: 'Vérification dose journalière', result: '80 mg vs max 30 mg', tone: 'danger' },
-      { name: 'Vérification durée traitement', result: '28 j vs max 7 j', tone: 'danger' }
+      { name: { fr: 'Extraction posologie et durée', en: 'Extract dose and duration' }, result: { fr: '80 mg/j · 4 sem.', en: '80 mg/day · 4 weeks' }, tone: 'neutral' },
+      { name: { fr: 'Croisement avec base ANSM', en: 'Cross-check with ANSM database' }, result: { fr: 'alerte ANSM-2014-DOMPE', en: 'alert ANSM-2014-DOMPE' }, tone: 'neutral' },
+      { name: { fr: 'Vérification dose journalière', en: 'Daily dose check' }, result: { fr: '80 mg vs max 30 mg', en: '80 mg vs max 30 mg' }, tone: 'danger' },
+      { name: { fr: 'Vérification durée traitement', en: 'Treatment duration check' }, result: { fr: '28 j vs max 7 j', en: '28 d vs max 7 d' }, tone: 'danger' }
     ],
     verdict: {
       level: 'danger',
-      title: 'Posologie et durée hors AMM, risque cardiaque',
-      body: "La dose proposée (80 mg/j, 4 semaines) dépasse très largement les restrictions imposées par l'ANSM en 2014 : 30 mg/j maximum, 7 jours maximum. Ces restrictions font suite à plusieurs études (Johannes 2010, van Noord 2010) montrant un risque accru d'arythmie ventriculaire et de mort subite, en particulier après 60 ans.",
-      excerpt: "Chez l'adulte, la dose journalière maximale recommandée est de <span>30 mg</span>. La durée du traitement <span>ne doit pas dépasser une semaine</span>.",
+      title: { fr: 'Posologie et durée hors AMM, risque cardiaque', en: 'Dose and duration outside MA, cardiac risk' },
+      body: {
+        fr: "La dose proposée (80 mg/j, 4 semaines) dépasse très largement les restrictions imposées par l'ANSM en 2014 : 30 mg/j maximum, 7 jours maximum. Ces restrictions font suite à plusieurs études (Johannes 2010, van Noord 2010) montrant un risque accru d'arythmie ventriculaire et de mort subite, en particulier après 60 ans.",
+        en: "The proposed dose (80 mg/day, 4 weeks) far exceeds the restrictions imposed by ANSM in 2014: 30 mg/day maximum, 7 days maximum. These restrictions followed several studies (Johannes 2010, van Noord 2010) showing an increased risk of ventricular arrhythmia and sudden death, particularly after age 60."
+      },
+      excerpt: {
+        fr: "Chez l'adulte, la dose journalière maximale recommandée est de <span>30 mg</span>. La durée du traitement <span>ne doit pas dépasser une semaine</span>.",
+        en: "In adults, the maximum recommended daily dose is <span>30 mg</span>. Treatment duration <span>should not exceed one week</span>."
+      },
       cite: "ANSM · « Dompéridone : restriction des indications, de la posologie et de la durée d'utilisation » · 1ᵉʳ sept. 2014",
       sourceUrl: 'https://ansm.sante.fr/actualites/domperidone-restriction-des-indications-de-la-posologie-et-de-la-duree-d-utilisation',
-      sourcePage: 'RCP §4.2'
+      sourcePage: { fr: 'RCP §4.2', en: 'SmPC §4.2' }
     }
   }
 ];
@@ -819,9 +912,9 @@ const scnRow = document.getElementById('scenarios-row');
 function renderScenarioButtons() {
   scnRow.innerHTML = SCENARIOS.map((s) => `
     <button class="scn-btn ${s.id === currentScn.id ? 'active' : ''}" data-id="${s.id}">
-      <span class="scn-tag">${s.tag}</span>
-      <span class="scn-title">${s.title}</span>
-      <span class="scn-sub">${s.sub}</span>
+      <span class="scn-tag">${L(s.tag)}</span>
+      <span class="scn-title">${L(s.title)}</span>
+      <span class="scn-sub">${L(s.sub)}</span>
     </button>
   `).join('');
   scnRow.querySelectorAll('.scn-btn').forEach(b => {
@@ -834,20 +927,12 @@ function renderScenarioButtons() {
     });
   });
 }
-renderScenarioButtons();
 
 // ---------- HELPERS ----------
-function wait(ms) {
-  return new Promise(resolve => {
-    const t = setTimeout(resolve, ms);
-    timers.push(t);
-  });
-}
+function wait(ms) { return new Promise(resolve => { const t = setTimeout(resolve, ms); timers.push(t); }); }
 function clearAllTimers() { timers.forEach(clearTimeout); timers = []; }
-function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-function scrollChat() { /* autoscroll disabled — the user controls scroll */ }
+function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function scrollChat() { /* autoscroll disabled */ }
 
 // ---------- RESET ----------
 function resetStage() {
@@ -855,12 +940,11 @@ function resetStage() {
   isPlaying = false;
   const btn = document.getElementById('play-btn');
   btn.disabled = false;
-  btn.textContent = '▶ Lancer la démonstration';
+  btn.innerHTML = tx('controls.play');
   document.getElementById('chat').innerHTML = '';
-  document.getElementById('chat-input').innerHTML = 'Posez une question…<span class="caret"></span>';
+  document.getElementById('chat-input').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
 }
 
-// ---------- TYPE INTO INPUT ----------
 async function typeInto(text, perChar = 14) {
   const el = document.getElementById('chat-input');
   el.innerHTML = '<span class="caret"></span>';
@@ -870,25 +954,20 @@ async function typeInto(text, perChar = 14) {
   }
 }
 
-// ---------- USER MESSAGE ----------
 function appendUserMsg(text) {
   const chat = document.getElementById('chat');
   const node = document.createElement('div');
   node.className = 'msg user';
   node.textContent = text;
   chat.appendChild(node);
-  scrollChat();
 }
 
-// ---------- AI MESSAGE (with phase tag) ----------
 function buildAiMsg(phase) {
   const isVerified = phase === 'verified';
   const avatar = isVerified
     ? '<svg viewBox="0 0 415 410" width="18" height="18"><use href="#bi-mark"/></svg>'
     : '<span>AI</span>';
-  const tagLabel = isVerified
-    ? `<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Réponse vérifiée · HAS &amp; ANSM`
-    : `<span class="pt-icon">●</span> Réponse initiale · sans vérification`;
+  const tagLabel = isVerified ? tx('phaseTag.verified') : tx('phaseTag.initial');
 
   const node = document.createElement('div');
   node.className = `msg ai ${isVerified ? 'verified' : 'initial'}`;
@@ -900,7 +979,6 @@ function buildAiMsg(phase) {
     </div>
   `;
   document.getElementById('chat').appendChild(node);
-  scrollChat();
   return node;
 }
 
@@ -911,26 +989,22 @@ async function streamAiAnswer(lines, phase, opts = {}) {
   textEl.innerHTML = '';
   for (let i = 0; i < lines.length; i++) {
     textEl.innerHTML = (i === 0 ? lines[i] : textEl.innerHTML + '<br/>' + lines[i]);
-    scrollChat();
     await wait(opts.linePause ?? 280);
   }
 }
 
-// ---------- MCP BANNER ----------
 function appendMcpBanner() {
   const chat = document.getElementById('chat');
   const node = document.createElement('div');
   node.className = 'mcp-banner';
   node.innerHTML = `
     <span class="mcp-banner-icon"><svg viewBox="0 0 415 410"><use href="#bi-mark"/></svg></span>
-    <span class="mcp-banner-title">Bayes MCP intervient</span>
-    <span class="mcp-banner-sub">vérification automatique HAS &amp; ANSM</span>
+    <span class="mcp-banner-title">${tx('mcpBanner.title')}</span>
+    <span class="mcp-banner-sub">${tx('mcpBanner.sub')}</span>
   `;
   chat.appendChild(node);
-  scrollChat();
 }
 
-// ---------- MCP TOOL CALL ----------
 function appendToolCall(scn) {
   const chat = document.getElementById('chat');
   const html = `
@@ -940,16 +1014,16 @@ function appendToolCall(scn) {
           <span class="ico"><svg viewBox="0 0 415 410"><use href="#bi-mark"/></svg></span>
           bayes_mcp.check_compliance()
         </div>
-        <div class="toolcall-status" id="tc-status">EN COURS…</div>
+        <div class="toolcall-status" id="tc-status">${tx('toolcall.running')}</div>
       </div>
       <div class="toolcall-arg">
-        <span class="k">arguments</span>: ${escapeHtml(scn.toolArg)}
+        <span class="k">arguments</span>: ${escapeHtml(L(scn.toolArg))}
       </div>
       <div class="analyzer" id="analyzer">
         ${scn.steps.map((s, i) => `
           <div class="step" id="step-${i}">
             <div class="step-ico" id="step-ico-${i}">${i+1}</div>
-            <div class="step-name">${s.name}</div>
+            <div class="step-name">${L(s.name)}</div>
             <div class="step-result" id="step-result-${i}" style="display:none"></div>
           </div>
         `).join('')}
@@ -959,7 +1033,6 @@ function appendToolCall(scn) {
   const wrap = document.createElement('div');
   wrap.innerHTML = html;
   chat.appendChild(wrap.firstElementChild);
-  scrollChat();
 }
 
 async function runMcpSteps(scn) {
@@ -979,12 +1052,11 @@ async function runMcpSteps(scn) {
     icoEl.innerHTML = step.tone === 'danger' ? '✕' : (step.tone === 'warn' ? '!' : '✓');
 
     resEl.style.display = '';
-    resEl.textContent = step.result;
+    resEl.textContent = L(step.result);
     resEl.classList.add(step.tone === 'danger' ? 'danger' : step.tone === 'warn' ? 'warn' : 'ok');
-    scrollChat();
     await wait(220);
   }
-  document.getElementById('tc-status').textContent = 'TERMINÉ';
+  document.getElementById('tc-status').textContent = tx('toolcall.done');
   document.getElementById('tc-status').style.color = 'var(--ok)';
 }
 
@@ -993,13 +1065,14 @@ function appendVerdict(verdict) {
   const node = document.createElement('div');
   node.className = `verdict ${verdict.level}`;
   const icon = verdict.level === 'danger' ? '⛔' : verdict.level === 'warn' ? '⚠' : '✓';
-  const pageBadge = verdict.sourcePage ? `<span class="src-page">${verdict.sourcePage}</span>` : '';
+  const page = L(verdict.sourcePage);
+  const pageBadge = page ? `<span class="src-page">${page}</span>` : '';
   node.innerHTML = `
-    <div class="verdict-title">${icon} ${verdict.title}</div>
-    <div class="verdict-body">${verdict.body}</div>
-    ${verdict.excerpt ? `<div class="verdict-excerpt">« ${verdict.excerpt} »</div>` : ''}
+    <div class="verdict-title">${icon} ${L(verdict.title)}</div>
+    <div class="verdict-body">${L(verdict.body)}</div>
+    ${verdict.excerpt ? `<div class="verdict-excerpt">« ${L(verdict.excerpt)} »</div>` : ''}
     <div class="verdict-source">
-      <a class="verdict-source-link" href="${verdict.sourceUrl}" target="_blank" rel="noopener noreferrer" title="Ouvrir le document source">
+      <a class="verdict-source-link" href="${verdict.sourceUrl}" target="_blank" rel="noopener noreferrer" title="${tx('verdict.openSource')}">
         <span class="src-doc">${verdict.cite}</span>
         ${pageBadge}
         <span class="src-arrow" aria-hidden="true">
@@ -1011,7 +1084,6 @@ function appendVerdict(verdict) {
     </div>
   `;
   tc.appendChild(node);
-  scrollChat();
 }
 
 // ---------- MAIN PLAY ----------
@@ -1020,48 +1092,63 @@ async function play() {
   isPlaying = true;
   const btn = document.getElementById('play-btn');
   btn.disabled = true;
-  btn.textContent = '● En cours…';
+  btn.innerHTML = tx('controls.playing');
 
   const scn = currentScn;
-
-  // 1. type question
-  await typeInto(scn.question);
+  await typeInto(L(scn.question));
   await wait(300);
 
-  // 2. submit user msg
-  appendUserMsg(scn.question);
-  document.getElementById('chat-input').innerHTML = 'Posez une question…<span class="caret"></span>';
+  appendUserMsg(L(scn.question));
+  document.getElementById('chat-input').innerHTML = tx('input.placeholder') + '<span class="caret"></span>';
   await wait(500);
 
-  // 3. initial AI response (with phase tag)
-  await streamAiAnswer(scn.plainAnswer, 'initial', { initialDelay: 800, linePause: 320 });
+  await streamAiAnswer(L(scn.plainAnswer), 'initial', { initialDelay: 800, linePause: 320 });
   await wait(900);
 
-  // 4. MCP banner
   appendMcpBanner();
   await wait(600);
 
-  // 5. tool call card + steps + verdict
   appendToolCall(scn);
   await wait(400);
   await runMcpSteps(scn);
   appendVerdict(scn.verdict);
   await wait(900);
 
-  // 6. verified AI response (Bayes avatar)
-  await streamAiAnswer(scn.mcpAnswer, 'verified', { initialDelay: 700, linePause: 280 });
+  await streamAiAnswer(L(scn.mcpAnswer), 'verified', { initialDelay: 700, linePause: 280 });
 
   isPlaying = false;
   btn.disabled = false;
-  btn.textContent = '↻ Rejouer ce scénario';
+  btn.innerHTML = tx('controls.replay');
 }
 
-document.getElementById('play-btn').addEventListener('click', () => {
-  if (isPlaying) return;
-  play();
+// ---------- LANG APPLICATION ----------
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[LANG] && T[LANG][key] != null) el.innerHTML = T[LANG][key];
+  });
+  document.querySelectorAll('.lt-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === LANG);
+  });
+  renderScenarioButtons();
+}
+
+document.querySelectorAll('.lt-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.dataset.lang === LANG) return;
+    LANG = b.dataset.lang;
+    try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+    applyLang();
+    resetStage();
+    setTimeout(play, 400);
+  });
 });
+
+document.getElementById('play-btn').addEventListener('click', () => { if (!isPlaying) play(); });
 document.getElementById('reset-btn').addEventListener('click', resetStage);
 
+applyLang();
 window.addEventListener('load', () => setTimeout(play, 600));
 </script>
 </body>
