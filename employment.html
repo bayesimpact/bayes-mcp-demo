@@ -250,6 +250,7 @@
   .panel.right .panel-header { background: linear-gradient(180deg, #FBF7EE 0%, #fff 100%); }
 
   .chat { flex: 1 1 0; min-height: 0; padding: 24px 20px; display: flex; flex-direction: column; gap: 22px; overflow-y: auto; scroll-behavior: smooth; }
+  .chat > * { flex-shrink: 0; }
   .chat::-webkit-scrollbar { width: 8px; }
   .chat::-webkit-scrollbar-track { background: transparent; }
   .chat::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
@@ -1026,7 +1027,8 @@ function clearAllTimers() { timers.forEach(clearTimeout); timers = []; }
 function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function scrollChat(chatId) {
   const c = document.getElementById(chatId);
-  if (c) c.scrollTop = c.scrollHeight;
+  if (!c) return;
+  requestAnimationFrame(() => { c.scrollTop = c.scrollHeight; });
 }
 
 function resetStage() {
