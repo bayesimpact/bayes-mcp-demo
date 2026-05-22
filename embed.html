@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bayes MCP — embed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F2EFE9;
+    --ink: #000000;
+    --ink-soft: rgba(0,0,0,0.8);
+    --muted: #657180;
+    --cream: #F7F7F2;
+    --card: #FFFFFF;
+    --gold: #9A6F24;
+    --gold-bg: #EBE092;
+    --accent-orange: #FF8400;
+    --accent-blue: #1067FE;
+    --border-soft: #DBCCAF;
+    --ok: #1F7A3F;
+    --ok-soft: #DDEBDF;
+    --warn: #9A4A04;
+    --warn-soft: #FCE6CC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- STAGE ---------- */
+  .embed-stage {
+    display: grid;
+    grid-template-columns: minmax(440px, 46%) 1fr;
+    width: 100vw; height: 100vh;
+  }
+
+  /* ---------- LEFT (dark) ---------- */
+  .embed-left {
+    background: var(--ink);
+    color: #fff;
+    padding: 32px 48px 24px;
+    display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .embed-tabs {
+    display: inline-flex;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 2px;
+    align-self: flex-start;
+  }
+  .emb-tab {
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    padding: 9px 18px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    letter-spacing: -0.005em;
+  }
+  .emb-tab:hover { color: #fff; }
+  .emb-tab.active { background: #fff; color: var(--ink); }
+
+  .embed-content {
+    flex: 1;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 24px 0;
+    max-width: 540px;
+  }
+  .info-domain {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    margin-bottom: 22px;
+    animation: fadeUp .35s ease;
+  }
+  .info-title {
+    font-size: clamp(40px, 5.4vw, 86px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+    animation: fadeUp .4s ease;
+  }
+  .info-desc {
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.55;
+    margin-bottom: 0;
+    animation: fadeUp .45s ease;
+  }
+  .info-divider {
+    height: 1px;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    margin: 32px 0 22px;
+  }
+  .info-demo-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .info-demo-desc {
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.55;
+    margin-bottom: 24px;
+  }
+  .info-scenarios {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .info-scn {
+    padding: 7px 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    letter-spacing: -0.005em;
+  }
+  .info-scn:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+  .info-scn.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: #fff; }
+
+  .embed-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 16px;
+  }
+  .embed-home {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.5);
+    transition: color .15s ease;
+  }
+  .embed-home:hover { color: #fff; }
+  .embed-home img { height: 20px; width: auto; opacity: 0.85; filter: invert(1) brightness(2); }
+  .embed-home-arrow { opacity: 0.6; }
+
+  .embed-lang-mini {
+    display: inline-flex; gap: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+  }
+  .embed-lang-btn {
+    padding: 5px 8px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.15s ease;
+  }
+  .embed-lang-btn:hover { color: #fff; }
+  .embed-lang-btn.active { background: rgba(255,255,255,0.12); color: #fff; }
+
+  /* ---------- RIGHT (cream) ---------- */
+  .embed-right {
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+
+  .embed-mode {
+    position: absolute;
+    top: 24px; right: 28px;
+    display: flex;
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 100px;
+    padding: 3px;
+    z-index: 10;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .mode-btn {
+    padding: 7px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--muted);
+    transition: all 0.15s ease;
+    letter-spacing: -0.005em;
+  }
+  .mode-btn:hover { color: var(--ink); }
+  .mode-btn.active { background: var(--ink); color: #fff; }
+
+  .embed-chat {
+    flex: 1;
+    padding: 92px 64px 56px;
+    overflow-y: auto;
+    display: flex; flex-direction: column;
+    gap: 22px;
+    font-size: 16px;
+    color: var(--ink);
+    scroll-behavior: smooth;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .embed-chat > * { flex-shrink: 0; }
+  .embed-chat::-webkit-scrollbar { width: 8px; }
+  .embed-chat::-webkit-scrollbar-track { background: transparent; }
+  .embed-chat::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
+
+  /* Greeting + user msg */
+  .greet {
+    font-size: 17px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    animation: fadeUp .35s ease;
+  }
+  .greet .wave {
+    display: inline-block;
+    animation: wave 1.8s ease-in-out infinite;
+    transform-origin: 70% 70%;
+  }
+  @keyframes wave {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    10% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(14deg); }
+    40% { transform: rotate(-4deg); }
+    50% { transform: rotate(10deg); }
+  }
+
+  .umsg {
+    align-self: flex-end;
+    background: var(--ink);
+    color: #fff;
+    padding: 11px 16px;
+    border-radius: 18px;
+    border-bottom-right-radius: 6px;
+    font-size: 15px;
+    line-height: 1.45;
+    max-width: 78%;
+    animation: fadeUp .35s ease;
+  }
+
+  /* Tool call badge */
+  .toolbadge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 14px 8px 9px;
+    background: var(--gold-bg);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    align-self: flex-start;
+    animation: fadeUp .35s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .tb-icons {
+    display: inline-flex;
+    align-items: center;
+  }
+  .tb-icon {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    border: 2px solid var(--gold-bg);
+    margin-right: -7px;
+    letter-spacing: -0.02em;
+  }
+  .tb-icon:last-child { margin-right: 0; }
+  .tb-icon svg { width: 12px; height: 12px; }
+  .tb-icon.brand { background: var(--ink); color: var(--gold-bg); }
+  .tb-icon.warn { background: var(--warn); color: #fff; }
+  .tb-icon.blue { background: var(--accent-blue); color: #fff; }
+  .tb-label { padding-left: 2px; letter-spacing: -0.005em; }
+
+  /* AI response */
+  .amsg {
+    font-size: 16px;
+    line-height: 1.62;
+    animation: fadeUp .35s ease;
+  }
+  .amsg .lead {
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .amsg .lead strong { font-weight: 700; }
+  .amsg h3 {
+    font-size: 15.5px;
+    font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+    margin: 22px 0 10px;
+    color: var(--ink);
+  }
+  .amsg h3 .h-ico {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .amsg h3 .h-ico svg { width: 18px; height: 18px; }
+  .amsg h3.ok .h-ico { color: var(--ok); }
+  .amsg h3.imp .h-ico { color: var(--gold); }
+  .amsg h3.warn .h-ico { color: var(--warn); }
+  .amsg h3.info .h-ico { color: var(--accent-blue); }
+  .amsg ul {
+    list-style: none; padding: 0;
+    margin: 0 0 4px 32px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .amsg ul li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .amsg ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0; top: -1px;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .amsg p { color: var(--ink); margin: 8px 0 4px; }
+  .amsg .src-cite {
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .amsg .src-cite-arrow { color: var(--accent-blue); }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .typing {
+    display: inline-flex; gap: 5px;
+    padding: 6px 0;
+  }
+  .typing span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.30s; }
+  @keyframes blink {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 900px) {
+    html, body { overflow: auto; height: auto; }
+    .embed-stage {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .embed-left {
+      padding: 24px 24px 32px;
+      min-height: auto;
+    }
+    .embed-content {
+      flex: 0 0 auto;
+      padding: 28px 0 8px;
+      max-width: none;
+    }
+    .info-title {
+      font-size: clamp(40px, 9vw, 56px);
+      letter-spacing: -0.025em;
+    }
+    .info-desc { font-size: 16px; }
+    .info-demo-desc { font-size: 14px; }
+    .embed-foot { margin-top: 24px; }
+    .embed-right {
+      min-height: 90vh;
+      display: flex;
+    }
+    .embed-chat {
+      padding: 72px 22px 40px;
+      max-width: none;
+    }
+    .embed-mode { top: 16px; right: 16px; }
+  }
+
+  @media (max-width: 600px) {
+    .embed-left { padding: 20px 20px 28px; }
+    .info-title { font-size: 38px; }
+    .emb-tab { padding: 7px 14px; font-size: 12.5px; }
+    .embed-mode { top: 14px; right: 14px; }
+    .mode-btn { padding: 6px 12px; font-size: 12px; }
+    .embed-chat { padding: 64px 18px 32px; gap: 18px; }
+    .umsg { font-size: 14.5px; padding: 10px 14px; }
+    .amsg { font-size: 15px; }
+    .amsg ul li, .amsg h3, .amsg p { font-size: 14.5px; }
+    .greet { font-size: 16px; }
+    .toolbadge { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bi-mark" viewBox="0 0 415 410">
+    <path d="M309.36,246h63.39a41.67,41.67,0,0,0,0-83.33H309.22L402,71.55a41.67,41.67,0,1,0-58.41-59.44L249,105V42.15a41.67,41.67,0,1,0-83.33,0v63l-94.86-93a41.67,41.67,0,0,0-58.35,59.5l92.88,91.08H41.67a41.67,41.67,0,1,0,0,83.33h63.56L12.52,336.72a41.67,41.67,0,0,0,58.29,59.55L165.7,303.4v63.1a41.67,41.67,0,0,0,83.33,0v-63l94.54,92.71a41.67,41.67,0,0,0,58.35-59.5Z" fill="currentColor"/>
+    <circle cx="207.59" cy="41.49" r="41.34" fill="currentColor"/>
+    <circle cx="207.59" cy="367.01" r="41.34" fill="currentColor"/>
+    <circle cx="41.37" cy="204.4" r="41.34" fill="currentColor"/>
+    <circle cx="373.76" cy="204.4" r="41.34" fill="currentColor"/>
+    <circle cx="373.52" cy="366.86" r="41.34" fill="currentColor"/>
+    <circle cx="41.34" cy="366.86" r="41.34" fill="currentColor"/>
+    <circle cx="41.34" cy="41.34" r="41.34" fill="currentColor"/>
+    <circle cx="373.52" cy="41.34" r="41.34" fill="currentColor"/>
+    <circle cx="207.57" cy="204.25" r="41.34" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></symbol>
+  <symbol id="ic-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14l7-7 7 7"/><path d="M12 7v13"/></symbol>
+  <symbol id="ic-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.7 2.5 18a1.5 1.5 0 0 0 1.3 2.25h16.4a1.5 1.5 0 0 0 1.3-2.25L13.7 3.7a2 2 0 0 0-3.4 0Z"/></symbol>
+  <symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></symbol>
+  <symbol id="ic-ext" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></symbol>
+</svg>
+
+<main class="embed-stage">
+  <!-- LEFT -->
+  <aside class="embed-left">
+    <nav class="embed-tabs" id="embed-tabs"></nav>
+
+    <div class="embed-content" id="embed-content">
+      <div class="info-domain" id="info-domain"></div>
+      <h1 class="info-title" id="info-title"></h1>
+      <p class="info-desc" id="info-desc"></p>
+      <hr class="info-divider" />
+      <div class="info-demo-tag" id="info-demo-tag">DEMO</div>
+      <p class="info-demo-desc" id="info-demo-desc"></p>
+      <div class="info-scenarios" id="info-scenarios"></div>
+    </div>
+
+    <div class="embed-foot">
+      <a class="embed-home" href="https://www.bayesimpact.org" target="_blank" rel="noopener">
+        <img src="bi-colors.svg" alt="Bayes Impact" />
+        <span>bayesimpact.org</span>
+        <span class="embed-home-arrow"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span>
+      </a>
+      <div class="embed-lang-mini" id="lang-mini"></div>
+    </div>
+  </aside>
+
+  <!-- RIGHT -->
+  <section class="embed-right">
+    <div class="embed-mode" id="mode-toggle">
+      <button class="mode-btn" data-mode="without">Sans MCP</button>
+      <button class="mode-btn active" data-mode="with">Avec MCP</button>
+    </div>
+    <div class="embed-chat" id="chat"></div>
+  </section>
+</main>
+
+<script>
+// ---------- LANG ----------
+const LANG_KEY = 'bayes-mcp-demo-lang';
+const LANGS = [
+  { code: 'en', label: 'EN' },
+  { code: 'fr', label: 'FR' },
+  { code: 'es', label: 'ES' },
+  { code: 'de', label: 'DE' },
+  { code: 'it', label: 'IT' },
+  { code: 'pl', label: 'PL' }
+];
+const VALID_LANGS = LANGS.map(l => l.code);
+let LANG = 'fr';
+try {
+  const saved = localStorage.getItem(LANG_KEY);
+  if (VALID_LANGS.includes(saved)) LANG = saved;
+} catch (e) {}
+
+function L(field) {
+  if (field == null) return '';
+  if (typeof field === 'string') return field;
+  return field[LANG] ?? field.fr ?? field.en ?? '';
+}
+
+// ---------- COMMON UI STRINGS ----------
+const UI = {
+  modeWith:    { en: 'With MCP',    fr: 'Avec MCP',  es: 'Con MCP',   de: 'Mit MCP',    it: 'Con MCP',  pl: 'Z MCP' },
+  modeWithout: { en: 'Without MCP', fr: 'Sans MCP',  es: 'Sin MCP',   de: 'Ohne MCP',   it: 'Senza MCP',pl: 'Bez MCP' },
+  demoTag:     { en: 'DEMO',        fr: 'DÉMO',      es: 'DEMO',      de: 'DEMO',       it: 'DEMO',     pl: 'DEMO' },
+  greet:       { en: 'Hello there <span class="wave">👋</span> How can I help you today?',
+                 fr: 'Bonjour <span class="wave">👋</span> Comment puis-je vous aider ?',
+                 es: 'Hola <span class="wave">👋</span> ¿En qué puedo ayudarte?',
+                 de: 'Hallo <span class="wave">👋</span> Wie kann ich helfen?',
+                 it: 'Ciao <span class="wave">👋</span> Come posso aiutarti?',
+                 pl: 'Cześć <span class="wave">👋</span> Jak mogę pomóc?' },
+  openSource:  { en: 'View source document',
+                 fr: 'Voir le document source',
+                 es: 'Ver el documento fuente',
+                 de: 'Quelldokument ansehen',
+                 it: 'Apri il documento fonte',
+                 pl: 'Zobacz dokument źródłowy' }
+};
+
+// ---------- DEMOS ----------
+const DEMOS = [
+  // 0: HEALTHCARE
+  {
+    id: 'health',
+    tab:    { en: 'Healthcare',     fr: 'Santé',           es: 'Salud',         de: 'Gesundheit',     it: 'Salute',         pl: 'Zdrowie' },
+    domain: { en: 'NICE · MHRA',    fr: 'HAS · ANSM',      es: 'AEMPS',         de: 'G-BA · BfArM',   it: 'AIFA · ISS',     pl: 'URPL · AOTMiT' },
+    title:  { en: 'Health<br>compliance',
+              fr: 'Conformité<br>santé',
+              es: 'Cumplimiento<br>sanitario',
+              de: 'Gesundheits-<br>konformität',
+              it: 'Conformità<br>sanitaria',
+              pl: 'Zgodność<br>medyczna' },
+    desc:   { en: 'AI assistants that verify every medical recommendation against national clinical guidelines and drug safety alerts, before it ever reaches the patient.',
+              fr: "Des assistants IA qui vérifient chaque recommandation médicale contre les recommandations nationales et les alertes de sécurité, avant qu'elle n'arrive au patient.",
+              es: 'Asistentes de IA que verifican cada recomendación médica contra las guías clínicas y alertas de seguridad nacionales, antes de que llegue al paciente.',
+              de: 'KI-Assistenten, die jede medizinische Empfehlung gegen nationale klinische Leitlinien und Sicherheitswarnungen prüfen, bevor sie den Patienten erreicht.',
+              it: 'Assistenti IA che verificano ogni raccomandazione medica contro linee guida cliniche e allerte di sicurezza nazionali, prima che raggiunga il paziente.',
+              pl: 'Asystenci AI weryfikujący każdą rekomendację medyczną względem krajowych wytycznych klinicznych i ostrzeżeń bezpieczeństwa, zanim dotrze do pacjenta.' },
+    demoDesc: { en: 'Medical agent that cross-checks recommendations against the local health authority and the medicines regulator, and surfaces non-compliance with the source document.',
+                fr: "Agent médical qui croise chaque recommandation avec l'autorité de santé locale et l'agence du médicament, et signale toute non-conformité avec son document source.",
+                es: 'Agente médico que coteja recomendaciones con la autoridad sanitaria local y el regulador del medicamento, y señala el incumplimiento con el documento fuente.',
+                de: 'Medizinischer Agent, der Empfehlungen gegen die nationale Gesundheitsbehörde und den Arzneimittelregulator prüft und Nicht-Konformität mit Quellangabe meldet.',
+                it: "Agente medico che incrocia ogni raccomandazione con l'autorità sanitaria locale e l'agenzia del farmaco, segnalando la non conformità con il documento sorgente.",
+                pl: 'Asystent medyczny porównujący rekomendacje z lokalnym organem ds. zdrowia i regulatorem leków, sygnalizujący niezgodności z dokumentem źródłowym.' },
+    sources: {
+      en: [ { code: 'N', cls: 'brand' }, { code: 'M', cls: 'warn' } ],
+      fr: [ { code: 'H', cls: 'brand' }, { code: 'A', cls: 'warn' } ],
+      es: [ { code: 'AE', cls: 'brand' }, { code: 'MS', cls: 'warn' } ],
+      de: [ { code: 'G', cls: 'brand' }, { code: 'Bf', cls: 'warn' } ],
+      it: [ { code: 'AI', cls: 'brand' }, { code: 'IS', cls: 'warn' } ],
+      pl: [ { code: 'U', cls: 'brand' }, { code: 'AO', cls: 'warn' } ]
+    },
+    sourceLabel: { en: 'NICE · MHRA guidance',
+                   fr: 'HAS · ANSM',
+                   es: 'AEMPS · guías SEMFYC',
+                   de: 'G-BA · BfArM',
+                   it: 'AIFA · ISS',
+                   pl: 'URPL · AOTMiT' },
+    scenarios: [
+      // codeine pediatric
+      {
+        label: { en: 'Pediatric codeine', fr: 'Codéine pédiatrique', es: 'Codeína pediátrica', de: 'Codein bei Kindern', it: 'Codeina pediatrica', pl: 'Kodeina u dzieci' },
+        question: { en: 'My 8-year-old (25 kg) has severe pain after a dental extraction. What dose of codeine can I give?',
+                    fr: 'Mon enfant de 8 ans (25 kg) a très mal après une extraction dentaire. Quelle dose de codéine ?',
+                    es: 'Mi hijo de 8 años (25 kg) tiene mucho dolor tras una extracción dental. ¿Qué dosis de codeína?',
+                    de: 'Mein 8-jähriges Kind (25 kg) hat nach einer Zahnextraktion starke Schmerzen. Welche Codein-Dosis?',
+                    it: 'Mio figlio di 8 anni (25 kg) ha forte dolore dopo un\'estrazione dentale. Che dose di codeina?',
+                    pl: 'Moje 8-letnie dziecko (25 kg) ma silny ból po ekstrakcji zęba. Jaka dawka kodeiny?' },
+        without: {
+          en: `<p class="lead">For a 25 kg child, codeine can be combined with paracetamol:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Dosing</h3>
+               <ul>
+                 <li>Codeine: 0.5 to 1 mg/kg every 6 hours (12.5–25 mg per dose)</li>
+                 <li>Paracetamol: 15 mg/kg every 6 hours</li>
+                 <li>Limit to 48–72 hours</li>
+                 <li>Monitor for drowsiness and respiratory depression</li>
+               </ul>`,
+          fr: `<p class="lead">Pour un enfant de 25 kg, la codéine peut être prescrite avec du paracétamol :</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Posologie</h3>
+               <ul>
+                 <li>Codéine : 0,5 à 1 mg/kg toutes les 6 heures (12,5–25 mg par prise)</li>
+                 <li>Paracétamol : 15 mg/kg toutes les 6 heures</li>
+                 <li>Durée limitée à 48–72 heures</li>
+                 <li>Surveiller la somnolence et la dépression respiratoire</li>
+               </ul>`,
+          es: `<p class="lead">Para un niño de 25 kg, la codeína puede combinarse con paracetamol:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Posología</h3>
+               <ul>
+                 <li>Codeína: 0,5 a 1 mg/kg cada 6 horas (12,5–25 mg por toma)</li>
+                 <li>Paracetamol: 15 mg/kg cada 6 horas</li>
+                 <li>Duración limitada a 48–72 horas</li>
+                 <li>Vigilar somnolencia y depresión respiratoria</li>
+               </ul>`,
+          de: `<p class="lead">Für ein 25 kg schweres Kind kann Codein mit Paracetamol kombiniert werden:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Dosierung</h3>
+               <ul>
+                 <li>Codein: 0,5 bis 1 mg/kg alle 6 Stunden (12,5–25 mg pro Dosis)</li>
+                 <li>Paracetamol: 15 mg/kg alle 6 Stunden</li>
+                 <li>Maximal 48–72 Stunden</li>
+                 <li>Schläfrigkeit und Atemdepression überwachen</li>
+               </ul>`,
+          it: `<p class="lead">Per un bambino di 25 kg, la codeina può essere associata al paracetamolo:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Posologia</h3>
+               <ul>
+                 <li>Codeina: 0,5 a 1 mg/kg ogni 6 ore (12,5–25 mg per dose)</li>
+                 <li>Paracetamolo: 15 mg/kg ogni 6 ore</li>
+                 <li>Durata limitata a 48–72 ore</li>
+                 <li>Monitorare sonnolenza e depressione respiratoria</li>
+               </ul>`,
+          pl: `<p class="lead">Dla dziecka o wadze 25 kg, kodeinę można łączyć z paracetamolem:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Dawkowanie</h3>
+               <ul>
+                 <li>Kodeina: 0,5 do 1 mg/kg co 6 godzin (12,5–25 mg na dawkę)</li>
+                 <li>Paracetamol: 15 mg/kg co 6 godzin</li>
+                 <li>Maksymalnie 48–72 godziny</li>
+                 <li>Monitorować senność i depresję oddechową</li>
+               </ul>`
+        },
+        with: {
+          en: `<p class="lead"><strong>Codeine is contraindicated in children under 12.</strong></p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Why</h3>
+               <ul>
+                 <li>Risk of fatal respiratory depression in CYP2D6 ultra-rapid metabolisers</li>
+                 <li>European CMDh decision, enforced in the UK by the MHRA since 2013</li>
+                 <li>Several paediatric deaths reported, particularly post-tonsillectomy</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Recommended alternatives</h3>
+               <ul>
+                 <li>Paracetamol 15 mg/kg every 6 h (max 60 mg/kg/day)</li>
+                 <li>Ibuprofen 10 mg/kg every 8 h if no contraindication</li>
+                 <li>If insufficient: dental local anaesthetic block, or specialist advice</li>
+               </ul>
+               <div class="src-cite"><span>MHRA · Drug Safety Update · Codeine in children · Jun 2013</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          fr: `<p class="lead"><strong>La codéine est contre-indiquée chez l'enfant de moins de 12 ans.</strong></p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Pourquoi</h3>
+               <ul>
+                 <li>Risque de dépression respiratoire fatale chez les métaboliseurs ultra-rapides du CYP2D6</li>
+                 <li>Décision européenne CMDh, transposée par l'ANSM en juillet 2013</li>
+                 <li>Plusieurs décès pédiatriques rapportés, notamment post-amygdalectomie</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Alternatives recommandées</h3>
+               <ul>
+                 <li>Paracétamol 15 mg/kg toutes les 6 h (max 60 mg/kg/j)</li>
+                 <li>Ibuprofène 10 mg/kg toutes les 8 h en l'absence de contre-indication</li>
+                 <li>Si insuffisant : bloc loco-régional par le dentiste, ou avis spécialisé</li>
+               </ul>
+               <div class="src-cite"><span>ANSM · Lettre aux professionnels · Codéine chez l'enfant · 12 juil. 2013</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          es: `<p class="lead"><strong>La codeína está contraindicada en menores de 12 años.</strong></p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Por qué</h3>
+               <ul>
+                 <li>Riesgo de depresión respiratoria fatal en metabolizadores ultrarrápidos del CYP2D6</li>
+                 <li>Decisión europea CMDh, transpuesta por la AEMPS en 2013</li>
+                 <li>Varios fallecimientos pediátricos comunicados, especialmente tras amigdalectomía</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Alternativas recomendadas</h3>
+               <ul>
+                 <li>Paracetamol 15 mg/kg cada 6 h (máx 60 mg/kg/día)</li>
+                 <li>Ibuprofeno 10 mg/kg cada 8 h sin contraindicación</li>
+                 <li>Si insuficiente: bloqueo locorregional por el dentista o derivación</li>
+               </ul>
+               <div class="src-cite"><span>AEMPS · Nota informativa · Codeína en niños · 2013</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          de: `<p class="lead"><strong>Codein ist bei Kindern unter 12 Jahren kontraindiziert.</strong></p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Warum</h3>
+               <ul>
+                 <li>Risiko einer tödlichen Atemdepression bei CYP2D6-Ultraschnell-Metabolisierern</li>
+                 <li>Europäische CMDh-Entscheidung, vom BfArM 2013 umgesetzt</li>
+                 <li>Mehrere pädiatrische Todesfälle berichtet, insbesondere nach Tonsillektomie</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Empfohlene Alternativen</h3>
+               <ul>
+                 <li>Paracetamol 15 mg/kg alle 6 h (max. 60 mg/kg/Tag)</li>
+                 <li>Ibuprofen 10 mg/kg alle 8 h ohne Kontraindikation</li>
+                 <li>Bei Unzureichendheit: lokoregionale Anästhesie durch den Zahnarzt, oder Facharzt-Konsultation</li>
+               </ul>
+               <div class="src-cite"><span>BfArM · Rote-Hand-Brief · Codein bei Kindern · 2013</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          it: `<p class="lead"><strong>La codeina è controindicata nei bambini sotto i 12 anni.</strong></p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Perché</h3>
+               <ul>
+                 <li>Rischio di depressione respiratoria fatale nei metabolizzatori ultra-rapidi del CYP2D6</li>
+                 <li>Decisione europea CMDh, recepita da AIFA nel 2013</li>
+                 <li>Diversi decessi pediatrici riportati, in particolare post-tonsillectomia</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Alternative raccomandate</h3>
+               <ul>
+                 <li>Paracetamolo 15 mg/kg ogni 6 h (max 60 mg/kg/die)</li>
+                 <li>Ibuprofene 10 mg/kg ogni 8 h senza controindicazioni</li>
+                 <li>Se insufficiente: blocco loco-regionale dal dentista o parere specialistico</li>
+               </ul>
+               <div class="src-cite"><span>AIFA · Nota informativa · Codeina nei bambini · 2013</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          pl: `<p class="lead"><strong>Kodeina jest przeciwwskazana u dzieci poniżej 12 lat.</strong></p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Dlaczego</h3>
+               <ul>
+                 <li>Ryzyko śmiertelnej depresji oddechowej u ultraszybkich metabolizatorów CYP2D6</li>
+                 <li>Decyzja europejska CMDh, transponowana przez URPL w 2013</li>
+                 <li>Kilka zgonów u dzieci, szczególnie po tonsylektomii</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Zalecane alternatywy</h3>
+               <ul>
+                 <li>Paracetamol 15 mg/kg co 6 h (max 60 mg/kg/dobę)</li>
+                 <li>Ibuprofen 10 mg/kg co 8 h bez przeciwwskazań</li>
+                 <li>Jeśli niewystarczające: blokada miejscowa u dentysty lub konsultacja</li>
+               </ul>
+               <div class="src-cite"><span>URPL · Komunikat bezpieczeństwa · Kodeina u dzieci · 2013</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`
+        }
+      },
+      // bronchiolitis
+      {
+        label: { en: 'Infant bronchiolitis', fr: 'Bronchiolite nourrisson', es: 'Bronquiolitis lactante', de: 'Bronchiolitis Säugling', it: 'Bronchiolite lattante', pl: 'Zapalenie oskrzelików' },
+        question: { en: '4-month-old with mild acute bronchiolitis. What care plan?',
+                    fr: 'Nourrisson de 4 mois avec bronchiolite aiguë non sévère. Quelle prise en charge ?',
+                    es: 'Lactante de 4 meses con bronquiolitis aguda leve. ¿Qué tratamiento?',
+                    de: '4 Monate altes Kind mit milder akuter Bronchiolitis. Welche Behandlung?',
+                    it: 'Bambino di 4 mesi con bronchiolite acuta lieve. Quale gestione?',
+                    pl: '4-miesięczne dziecko z łagodnym ostrym zapaleniem oskrzelików. Jakie postępowanie?' },
+        without: {
+          fr: `<p class="lead">Pour une bronchiolite aiguë non sévère :</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Prise en charge habituelle</h3>
+               <ul>
+                 <li>Désobstruction rhino-pharyngée au sérum physiologique</li>
+                 <li>Kinésithérapie respiratoire 1 à 2 séances par jour</li>
+                 <li>Hydratation et fractionnement des repas</li>
+                 <li>Surveillance respiratoire et alimentaire</li>
+               </ul>`,
+          en: `<p class="lead">For mild acute bronchiolitis:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Standard care</h3>
+               <ul>
+                 <li>Nasal saline irrigation</li>
+                 <li>Chest physiotherapy 1–2 sessions per day</li>
+                 <li>Hydration, small frequent feeds</li>
+                 <li>Monitor respiratory rate and feeding</li>
+               </ul>`
+        },
+        with: {
+          fr: `<p class="lead">Prise en charge ambulatoire conforme aux recommandations HAS :</p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>Pas de kinésithérapie respiratoire</h3>
+               <ul>
+                 <li>La HAS ne recommande plus la kinésithérapie respiratoire de routine (recommandations nov. 2019, grade B)</li>
+                 <li>Pas de bénéfice démontré chez le nourrisson hospitalisé ou ambulatoire</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Recommandé</h3>
+               <ul>
+                 <li>Désobstruction rhino-pharyngée pluriquotidienne au sérum physiologique</li>
+                 <li>Hydratation, fractionnement des repas, position proclive</li>
+                 <li>Surveillance : fréquence respiratoire, signes de lutte, prise alimentaire (&lt; 50 % = critère d'hospitalisation)</li>
+                 <li>Reconsultation à 48 h ou avant si aggravation</li>
+               </ul>
+               <div class="src-cite"><span>HAS · Prise en charge bronchiolite &lt;12 mois · 14 nov. 2019</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          en: `<p class="lead">Outpatient management aligned with NICE guidance:</p>
+               <h3 class="warn"><span class="h-ico"><svg><use href="#ic-warn"/></svg></span>No chest physiotherapy</h3>
+               <ul>
+                 <li>NICE NG9 no longer recommends routine chest physiotherapy for infant bronchiolitis</li>
+                 <li>No demonstrated benefit in inpatient or outpatient settings</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Recommended</h3>
+               <ul>
+                 <li>Multiple-times-daily nasal saline irrigation</li>
+                 <li>Hydration, small frequent feeds, semi-upright positioning</li>
+                 <li>Monitor: respiratory rate, signs of distress, feeding intake (&lt; 50 % = hospital admission)</li>
+                 <li>Reassess at 48 h or earlier if worsening</li>
+               </ul>
+               <div class="src-cite"><span>NICE NG9 · Bronchiolitis in children · updated 2021</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`
+        }
+      }
+    ]
+  },
+
+  // 1: EMPLOYMENT
+  {
+    id: 'employment',
+    tab:    { en: 'Employment',     fr: 'Emploi',          es: 'Empleo',        de: 'Beschäftigung',  it: 'Lavoro',         pl: 'Praca' },
+    domain: { en: 'DWP · JOBCENTRE PLUS',
+              fr: 'FRANCE TRAVAIL',
+              es: 'SEPE',
+              de: 'BUNDESAGENTUR FÜR ARBEIT',
+              it: 'ANPAL · CENTRO PER L\'IMPIEGO',
+              pl: 'URZĄD PRACY' },
+    title:  { en: 'Employment<br>& inclusion',
+              fr: 'Emploi<br>& inclusion',
+              es: 'Empleo<br>e inclusión',
+              de: 'Arbeit<br>& Inklusion',
+              it: 'Lavoro<br>e inclusione',
+              pl: 'Praca<br>i inkluzja' },
+    desc:   { en: 'AI agents that centralise all employment, training, and social support services to guide each person toward the right solution at the right time.',
+              fr: 'Des agents IA qui centralisent les services emploi, formation et accompagnement social pour orienter chaque personne vers la bonne solution au bon moment.',
+              es: 'Agentes de IA que centralizan empleo, formación y servicios sociales para guiar a cada persona hacia la solución adecuada en el momento adecuado.',
+              de: 'KI-Agenten, die Arbeitsvermittlung, Weiterbildung und soziale Hilfen bündeln, um jede Person zur richtigen Lösung zum richtigen Zeitpunkt zu führen.',
+              it: 'Agenti IA che centralizzano i servizi di lavoro, formazione e supporto sociale per guidare ogni persona verso la soluzione giusta al momento giusto.',
+              pl: 'Agenci AI łączący usługi zatrudnienia, szkoleń i wsparcia społecznego, by kierować każdą osobę do właściwego rozwiązania we właściwym czasie.' },
+    demoDesc: { en: 'Employment services agent that analyses profiles, labour market data, and available services to suggest custom action plans.',
+                fr: "Agent emploi qui analyse les profils, le marché du travail et les dispositifs disponibles pour proposer des plans d'action personnalisés.",
+                es: 'Agente de empleo que analiza perfiles, mercado laboral y dispositivos disponibles para sugerir planes de acción personalizados.',
+                de: 'Arbeitsmarkt-Agent, der Profile, Arbeitsmarktdaten und verfügbare Programme analysiert, um maßgeschneiderte Aktionspläne vorzuschlagen.',
+                it: 'Agente lavoro che analizza profili, dati del mercato del lavoro e programmi disponibili per suggerire piani d\'azione personalizzati.',
+                pl: 'Agent zatrudnienia analizujący profile, dane rynku pracy i dostępne programy, by sugerować spersonalizowane plany działania.' },
+    sources: {
+      en: [ { code: 'FT', cls: 'brand' }, { code: 'in', cls: 'blue' } ],
+      fr: [ { code: 'FT', cls: 'brand' }, { code: 'in', cls: 'blue' } ],
+      es: [ { code: 'SE', cls: 'brand' }, { code: 'in', cls: 'blue' } ],
+      de: [ { code: 'BA', cls: 'brand' }, { code: 'in', cls: 'blue' } ],
+      it: [ { code: 'AN', cls: 'brand' }, { code: 'in', cls: 'blue' } ],
+      pl: [ { code: 'UP', cls: 'brand' }, { code: 'in', cls: 'blue' } ]
+    },
+    sourceLabel: { en: 'DWP · LinkedIn guidelines',
+                   fr: 'France Travail · LinkedIn',
+                   es: 'SEPE · LinkedIn',
+                   de: 'Arbeitsagentur · LinkedIn',
+                   it: 'ANPAL · LinkedIn',
+                   pl: 'Urząd Pracy · LinkedIn' },
+    scenarios: [
+      // CV review (matches mockup)
+      {
+        label: { en: 'CV review', fr: 'Relecture de CV', es: 'Revisión de CV', de: 'Lebenslauf-Check', it: 'Revisione CV', pl: 'Przegląd CV' },
+        question: { en: 'Can you review my CV?',
+                    fr: 'Peux-tu relire mon CV ?',
+                    es: '¿Puedes revisar mi CV?',
+                    de: 'Kannst du meinen Lebenslauf prüfen?',
+                    it: 'Puoi rivedere il mio CV?',
+                    pl: 'Możesz przejrzeć moje CV?' },
+        without: {
+          en: `<p class="lead">Here are some general tips:</p>
+               <ul>
+                 <li>Use clear formatting with bullet points</li>
+                 <li>Include 3–5 years of relevant experience</li>
+                 <li>Add measurable achievements where possible</li>
+                 <li>Keep it to 1–2 pages</li>
+                 <li>Tailor it to each job application</li>
+               </ul>`,
+          fr: `<p class="lead">Quelques conseils généraux :</p>
+               <ul>
+                 <li>Utilisez un formatage clair avec des puces</li>
+                 <li>Incluez 3 à 5 ans d'expérience pertinente</li>
+                 <li>Ajoutez des résultats chiffrés quand c'est possible</li>
+                 <li>Restez sur 1 à 2 pages</li>
+                 <li>Adaptez le CV à chaque offre</li>
+               </ul>`,
+          es: `<p class="lead">Algunos consejos generales:</p>
+               <ul>
+                 <li>Usa un formato claro con viñetas</li>
+                 <li>Incluye 3 a 5 años de experiencia relevante</li>
+                 <li>Añade logros medibles cuando sea posible</li>
+                 <li>Limítate a 1 o 2 páginas</li>
+                 <li>Adapta el CV a cada oferta</li>
+               </ul>`,
+          de: `<p class="lead">Einige allgemeine Tipps:</p>
+               <ul>
+                 <li>Klare Formatierung mit Aufzählungspunkten</li>
+                 <li>3 bis 5 Jahre relevante Berufserfahrung</li>
+                 <li>Messbare Erfolge ergänzen, wo möglich</li>
+                 <li>1 bis 2 Seiten</li>
+                 <li>Lebenslauf an jede Stelle anpassen</li>
+               </ul>`,
+          it: `<p class="lead">Alcuni consigli generali:</p>
+               <ul>
+                 <li>Formato chiaro con elenchi puntati</li>
+                 <li>3 a 5 anni di esperienza pertinente</li>
+                 <li>Aggiungere risultati misurabili quando possibile</li>
+                 <li>Massimo 1–2 pagine</li>
+                 <li>Adattare il CV a ogni candidatura</li>
+               </ul>`,
+          pl: `<p class="lead">Ogólne wskazówki:</p>
+               <ul>
+                 <li>Czytelny format z punktorami</li>
+                 <li>3 do 5 lat istotnego doświadczenia</li>
+                 <li>Dodaj wymierne osiągnięcia, jeśli to możliwe</li>
+                 <li>1 do 2 stron</li>
+                 <li>Dostosuj CV do każdego ogłoszenia</li>
+               </ul>`
+        },
+        with: {
+          en: `<p class="lead">Here are some aspects you could improve:</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Strengths</h3>
+               <ul>
+                 <li>3 years of proven customer service experience</li>
+                 <li>Strong communication skills highlighted throughout</li>
+                 <li>Clear career progression shown</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Improvement suggestions</h3>
+               <ul>
+                 <li>Expand on conflict resolution examples</li>
+                 <li>Add relevant certifications or training courses</li>
+                 <li>Consider adding a summary at the top</li>
+               </ul>
+               <div class="src-cite"><span>Profile cross-checked with DWP · JobCentre Plus · LinkedIn Talent Insights</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          fr: `<p class="lead">Voici quelques points à améliorer :</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Points forts</h3>
+               <ul>
+                 <li>3 ans d'expérience confirmée en relation client</li>
+                 <li>Compétences en communication bien mises en avant</li>
+                 <li>Progression de carrière claire</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Suggestions d'amélioration</h3>
+               <ul>
+                 <li>Développer des exemples de gestion de conflits</li>
+                 <li>Ajouter des certifications ou formations pertinentes</li>
+                 <li>Envisager une accroche en haut du CV</li>
+               </ul>
+               <div class="src-cite"><span>Profil croisé avec France Travail · répertoire ROME · LinkedIn Talent Insights</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          es: `<p class="lead">Aquí algunos puntos a mejorar:</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Puntos fuertes</h3>
+               <ul>
+                 <li>3 años de experiencia en atención al cliente</li>
+                 <li>Habilidades comunicativas bien destacadas</li>
+                 <li>Progresión profesional clara</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Sugerencias</h3>
+               <ul>
+                 <li>Ampliar ejemplos de resolución de conflictos</li>
+                 <li>Añadir certificaciones o cursos pertinentes</li>
+                 <li>Considerar un resumen al inicio</li>
+               </ul>
+               <div class="src-cite"><span>Perfil cotejado con SEPE · CNO · LinkedIn Talent Insights</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          de: `<p class="lead">Hier einige Verbesserungspunkte:</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Stärken</h3>
+               <ul>
+                 <li>3 Jahre nachweisbare Kundenservice-Erfahrung</li>
+                 <li>Kommunikationsstärken klar hervorgehoben</li>
+                 <li>Klare berufliche Entwicklung</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Verbesserungsvorschläge</h3>
+               <ul>
+                 <li>Beispiele für Konfliktlösung ergänzen</li>
+                 <li>Relevante Zertifikate oder Weiterbildungen hinzufügen</li>
+                 <li>Profilzusammenfassung am Anfang erwägen</li>
+               </ul>
+               <div class="src-cite"><span>Profil abgeglichen mit Arbeitsagentur · BERUFENET · LinkedIn Talent Insights</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          it: `<p class="lead">Ecco alcuni aspetti da migliorare:</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Punti di forza</h3>
+               <ul>
+                 <li>3 anni di esperienza nel servizio clienti</li>
+                 <li>Competenze comunicative ben evidenziate</li>
+                 <li>Progressione di carriera chiara</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Suggerimenti</h3>
+               <ul>
+                 <li>Ampliare gli esempi di gestione conflitti</li>
+                 <li>Aggiungere certificazioni o corsi pertinenti</li>
+                 <li>Considerare un riassunto in alto</li>
+               </ul>
+               <div class="src-cite"><span>Profilo confrontato con ANPAL · classificazione CP · LinkedIn Talent Insights</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          pl: `<p class="lead">Oto kilka aspektów do poprawy:</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Mocne strony</h3>
+               <ul>
+                 <li>3 lata doświadczenia w obsłudze klienta</li>
+                 <li>Umiejętności komunikacyjne dobrze podkreślone</li>
+                 <li>Jasna ścieżka kariery</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Sugestie</h3>
+               <ul>
+                 <li>Rozwinąć przykłady rozwiązywania konfliktów</li>
+                 <li>Dodać istotne certyfikaty lub szkolenia</li>
+                 <li>Rozważyć podsumowanie na początku</li>
+               </ul>
+               <div class="src-cite"><span>Profil zestawiony z Urzędem Pracy · klasyfikacją zawodów · LinkedIn Talent Insights</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`
+        }
+      },
+      // Sophie single mom
+      {
+        label: { en: 'Returning to work', fr: "Reprise d'emploi", es: 'Volver al trabajo', de: 'Wiedereinstieg', it: 'Rientro al lavoro', pl: 'Powrót do pracy' },
+        question: { en: "I'm a single mum, just lost my retail contract. I don't know where to start.",
+                    fr: "Je suis maman solo, je viens de perdre mon CDD en caisse. Je ne sais pas par où commencer.",
+                    es: 'Soy madre soltera, acabo de perder mi contrato de cajera. No sé por dónde empezar.',
+                    de: 'Ich bin alleinerziehend, gerade habe ich meinen Kassiererinnen-Vertrag verloren. Ich weiß nicht, wo ich anfangen soll.',
+                    it: 'Sono una mamma single, ho appena perso il contratto di cassiera. Non so da dove iniziare.',
+                    pl: 'Jestem samotną mamą, właśnie straciłam umowę kasjerki. Nie wiem, od czego zacząć.' },
+        without: {
+          fr: `<p class="lead">Voici quelques pistes pour reprendre :</p>
+               <ul>
+                 <li>Mettez à jour votre CV avec votre expérience récente</li>
+                 <li>Inscrivez-vous sur les principaux sites d'emploi</li>
+                 <li>Vérifiez vos droits sur le simulateur d'aides en ligne</li>
+                 <li>Envisagez une formation courte si le secteur est saturé</li>
+               </ul>`,
+          en: `<p class="lead">Some general steps to get going:</p>
+               <ul>
+                 <li>Update your CV with your recent experience</li>
+                 <li>Sign up on the main job boards</li>
+                 <li>Check your benefits using an online calculator</li>
+                 <li>Consider a short retraining course if your sector is saturated</li>
+               </ul>`
+        },
+        with: {
+          fr: `<p class="lead">Plan d'action <strong>contextualisé pour Lille</strong>, croisé avec votre situation :</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Cette semaine</h3>
+               <ul>
+                 <li><strong>AGEPI</strong> : vous y êtes éligible, ~520 €, délai 5 jours</li>
+                 <li><strong>Halte-garderie Wazemmes</strong> : 2 places à 7 min de chez vous, gratuit pour DE</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Sous 15 jours</h3>
+               <ul>
+                 <li><strong>CDI hôtesse de caisse</strong> · Carrefour Market Lille Centre · horaires compatibles garde</li>
+                 <li><strong>CDD vente</strong> · La Vie Claire · mi-temps matin</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Alertes activées</h3>
+               <ul>
+                 <li>SMS hebdomadaire des nouvelles offres vente/caisse à &lt; 20 min</li>
+                 <li>Notification si une place se libère en crèche</li>
+               </ul>
+               <div class="src-cite"><span>France Travail · Mes Aides · CAF · Data.Inclusion · Mes événements emploi</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          en: `<p class="lead">Action plan <strong>contextualised for Manchester</strong>, matched to your situation:</p>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>This week</h3>
+               <ul>
+                 <li><strong>Universal Credit transitional protection</strong>: eligible, ~£480, 5-day processing</li>
+                 <li><strong>Council day-care (Hulme)</strong>: 2 spots 7 min from home, fee waiver for jobseekers</li>
+               </ul>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Within 15 days</h3>
+               <ul>
+                 <li><strong>Permanent cashier role</strong> · Tesco Manchester Centre · school-hours compatible</li>
+                 <li><strong>Sales assistant</strong> · Holland &amp; Barrett · part-time mornings</li>
+               </ul>
+               <h3 class="imp"><span class="h-ico"><svg><use href="#ic-arrow-up"/></svg></span>Alerts on</h3>
+               <ul>
+                 <li>Weekly SMS of new sales/cashier offers within 20 min</li>
+                 <li>Notification if a day-care spot opens up</li>
+               </ul>
+               <div class="src-cite"><span>DWP · JobCentre Plus · Universal Credit · Manchester City Council · local skills board</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`
+        }
+      }
+    ]
+  },
+
+  // 2: PUBLIC SERVICES (ADMIN)
+  {
+    id: 'admin',
+    tab:    { en: 'Public services', fr: 'Administratif',   es: 'Trámites',      de: 'Behörden',       it: 'Servizi pubblici', pl: 'Urzędy' },
+    domain: { en: 'GOV.UK',          fr: 'SERVICE-PUBLIC.FR', es: 'ADMINISTRACION.GOB.ES', de: 'BUND.DE',       it: 'ITALIA.GOV.IT',   pl: 'GOV.PL' },
+    title:  { en: 'Public<br>services',
+              fr: 'Démarches<br>administratives',
+              es: 'Trámites<br>públicos',
+              de: 'Behörden-<br>verfahren',
+              it: 'Servizi<br>pubblici',
+              pl: 'Procedury<br>urzędowe' },
+    desc:   { en: 'AI agents that read the official rules, identify the right procedure, ask only the missing questions, validate the documents, and prepare a ready-to-send dossier.',
+              fr: "Des agents IA qui lisent les règles officielles, identifient la bonne procédure, posent uniquement les questions manquantes, valident les pièces et préparent un dossier prêt à transmettre.",
+              es: 'Agentes de IA que leen las reglas oficiales, identifican el trámite correcto, hacen solo las preguntas que faltan, validan los documentos y preparan un expediente listo para enviar.',
+              de: 'KI-Agenten, die die offiziellen Regeln lesen, das richtige Verfahren finden, nur die fehlenden Fragen stellen, Belege prüfen und einen versandfertigen Antrag erstellen.',
+              it: 'Agenti IA che leggono le regole ufficiali, individuano la procedura giusta, pongono solo le domande mancanti, validano i documenti e preparano una pratica pronta da inviare.',
+              pl: 'Agenci AI czytający oficjalne przepisy, identyfikujący właściwą procedurę, zadający tylko brakujące pytania, weryfikujący dokumenty i przygotowujący wniosek gotowy do wysłania.' },
+    demoDesc: { en: 'Citizen agent that pre-fills forms from a chat, validates uploads, and packages the dossier for the right administration.',
+                fr: "Agent citoyen qui pré-remplit les formulaires depuis une conversation, valide les pièces et prépare le dossier pour l'administration compétente.",
+                es: 'Agente ciudadano que rellena formularios desde una conversación, valida documentos y prepara el expediente para la administración competente.',
+                de: 'Bürger-Agent, der aus einem Gespräch heraus Formulare ausfüllt, Belege prüft und den Antrag für die zuständige Behörde aufbereitet.',
+                it: 'Agente cittadino che precompila moduli da una conversazione, valida documenti e prepara la pratica per l\'amministrazione competente.',
+                pl: 'Agent obywatelski wypełniający formularze z rozmowy, weryfikujący dokumenty i przygotowujący wniosek dla właściwego urzędu.' },
+    sources: {
+      en: [ { code: 'G', cls: 'brand' }, { code: 'HC', cls: 'blue' } ],
+      fr: [ { code: 'sp', cls: 'brand' }, { code: 'AN', cls: 'blue' } ],
+      es: [ { code: 'AG', cls: 'brand' }, { code: 'Cl', cls: 'blue' } ],
+      de: [ { code: 'B', cls: 'brand' }, { code: 'iD', cls: 'blue' } ],
+      it: [ { code: 'IT', cls: 'brand' }, { code: 'SP', cls: 'blue' } ],
+      pl: [ { code: 'gp', cls: 'brand' }, { code: 'mO', cls: 'blue' } ]
+    },
+    sourceLabel: { en: 'GOV.UK · HMRC · Local Council',
+                   fr: 'service-public.fr · ANTS · CAF',
+                   es: 'administracion.gob.es · Cl@ve · Sede electrónica',
+                   de: 'bund.de · BundID · Verwaltungsportal',
+                   it: 'italia.gov.it · SPID · IO',
+                   pl: 'gov.pl · mObywatel · ePUAP' },
+    scenarios: [
+      // Social housing application
+      {
+        label: { en: 'Social housing', fr: 'Logement social', es: 'Vivienda social', de: 'Sozialwohnung', it: 'Casa popolare', pl: 'Mieszkanie komunalne' },
+        question: { en: 'I want to apply for social housing in Manchester. Single mum, two kids, £1,200/month, currently in a one-bedroom I can\'t afford.',
+                    fr: "Je veux faire une demande de logement social à Lyon. Maman solo, 2 enfants, 1 400 € net, je suis en T2 que je n'arrive plus à payer.",
+                    es: 'Quiero solicitar vivienda protegida en Madrid. Madre soltera, 2 hijos, 1 300 €/mes, vivo en un piso de 1 dormitorio que no puedo pagar.',
+                    de: 'Ich möchte eine Sozialwohnung in Berlin beantragen. Alleinerziehend, 2 Kinder, 1 400 €/Monat, derzeit in 1-Zimmer, das ich mir nicht mehr leisten kann.',
+                    it: 'Vorrei richiedere una casa popolare a Milano. Mamma single, 2 figli, 1 350 €/mese, vivo in un bilocale che non riesco a permettermi.',
+                    pl: 'Chcę złożyć wniosek o mieszkanie komunalne w Warszawie. Samotna mama, 2 dzieci, 5 000 zł/mies., mieszkam w kawalerce, której nie stać mi opłacać.' },
+        without: {
+          fr: `<p class="lead">Pour une demande de logement social :</p>
+               <ul>
+                 <li>Rendez-vous sur demande-logement-social.gouv.fr</li>
+                 <li>Créez un compte et remplissez le CERFA en ligne</li>
+                 <li>Joignez : pièce d'identité, avis d'imposition, justificatif de domicile</li>
+                 <li>Les délais varient selon les départements</li>
+               </ul>`,
+          en: `<p class="lead">To apply for social housing:</p>
+               <ul>
+                 <li>Apply through your local council's housing register</li>
+                 <li>Create an account and fill in the housing form online</li>
+                 <li>Attach: photo ID, recent payslips, proof of residence</li>
+                 <li>Waiting lists vary by council and band</li>
+               </ul>`
+        },
+        with: {
+          fr: `<p class="lead">J'ai trouvé la procédure officielle. <strong>5 informations déjà extraites de votre message</strong>, 4 à compléter.</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Déjà extrait</h3>
+               <ul>
+                 <li>Composition du foyer : 1 adulte + 2 enfants</li>
+                 <li>Revenu mensuel net : 1 400 €</li>
+                 <li>Logement actuel : T2 · trop cher</li>
+                 <li>Ville souhaitée : Lyon (arrondissement à préciser)</li>
+                 <li>Motif : difficulté financière</li>
+               </ul>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>À compléter</h3>
+               <ul>
+                 <li>Identité complète et date de naissance</li>
+                 <li>Avis d'imposition N-2 (pour vérifier les plafonds PLAI/PLUS Lyon zone B1)</li>
+                 <li>Pièce d'identité (recto-verso)</li>
+                 <li>Arrondissement exact souhaité</li>
+               </ul>
+               <div class="src-cite"><span>service-public.fr · F869 · CERFA 14069*04 · DDT du Rhône</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          en: `<p class="lead">I found the right procedure. <strong>5 facts already extracted from your message</strong>, 4 still missing.</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Already extracted</h3>
+               <ul>
+                 <li>Household: 1 adult + 2 children</li>
+                 <li>Monthly net income: £1,200</li>
+                 <li>Current housing: 1-bedroom · unaffordable</li>
+                 <li>Desired city: Manchester (council ward to confirm)</li>
+                 <li>Reason: financial hardship</li>
+               </ul>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Still missing</h3>
+               <ul>
+                 <li>Full name and date of birth</li>
+                 <li>Last 3 months' bank statements (to confirm banding)</li>
+                 <li>Photo ID (passport or driving licence)</li>
+                 <li>Preferred ward and property size</li>
+               </ul>
+               <div class="src-cite"><span>GOV.UK · council housing register · Manchester City Council banding</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`
+        }
+      },
+      // ID renewal
+      {
+        label: { en: 'ID renewal', fr: 'Renouvellement CNI', es: 'Renovación DNI', de: 'Personalausweis', it: 'Carta d\'identità', pl: 'Dowód osobisty' },
+        question: { en: 'I need to renew my passport, it expires in 3 months. I live in Manchester.',
+                    fr: "Je dois renouveler ma carte d'identité, elle expire dans 3 mois. J'habite à Bordeaux.",
+                    es: 'Necesito renovar mi DNI, caduca en 3 meses. Vivo en Madrid.',
+                    de: 'Ich muss meinen Personalausweis erneuern, er läuft in 3 Monaten ab. Ich wohne in Berlin.',
+                    it: 'Devo rinnovare la carta d\'identità, scade fra 3 mesi. Abito a Milano.',
+                    pl: 'Muszę odnowić dowód osobisty, wygasa za 3 miesiące. Mieszkam w Warszawie.' },
+        without: {
+          fr: `<p class="lead">Pour renouveler votre carte d'identité :</p>
+               <ul>
+                 <li>Faites une pré-demande en ligne sur ants.gouv.fr</li>
+                 <li>Prenez rendez-vous en mairie équipée d'un dispositif de recueil</li>
+                 <li>Préparez : photo d'identité aux normes, justificatif de domicile, ancienne carte</li>
+               </ul>`,
+          en: `<p class="lead">To renew your passport:</p>
+               <ul>
+                 <li>Apply online through GOV.UK</li>
+                 <li>Upload a photo that meets the rules, or use Post Office Check &amp; Send</li>
+                 <li>Send your old passport in</li>
+                 <li>Standard turnaround: ~10 weeks</li>
+               </ul>`
+        },
+        with: {
+          fr: `<p class="lead">J'ai identifié la procédure ANTS. <strong>2 infos extraites de votre message</strong>, 5 à compléter.</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Déjà extrait</h3>
+               <ul>
+                 <li>Type : renouvellement CNI</li>
+                 <li>Ville : Bordeaux (code postal à préciser entre 33000 / 33100 / 33200 / 33300 / 33800)</li>
+               </ul>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>À compléter</h3>
+               <ul>
+                 <li>Identité complète et date de naissance</li>
+                 <li>Photo d'identité aux normes ISO/IEC 19794-5 (je vérifie le fond, le regard et l'expression)</li>
+                 <li>Justificatif de domicile &lt; 3 mois</li>
+                 <li>Numéro de votre carte actuelle</li>
+                 <li>Créneau de rendez-vous en mairie (4 dates proposées dans le 33100)</li>
+               </ul>
+               <div class="src-cite"><span>service-public.fr · N358 · ANTS · pré-demande CNI</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`,
+          en: `<p class="lead">I found the GOV.UK passport renewal flow. <strong>2 facts extracted from your message</strong>, 5 still missing.</p>
+               <h3 class="ok"><span class="h-ico"><svg><use href="#ic-check"/></svg></span>Already extracted</h3>
+               <ul>
+                 <li>Procedure: passport renewal</li>
+                 <li>City: Manchester (postcode to confirm)</li>
+               </ul>
+               <h3 class="info"><span class="h-ico"><svg><use href="#ic-info"/></svg></span>Still missing</h3>
+               <ul>
+                 <li>Full name and date of birth</li>
+                 <li>Photo (I'll check rules: plain background, gaze, expression, no headwear)</li>
+                 <li>Proof of address &lt; 3 months</li>
+                 <li>Existing passport number</li>
+                 <li>Preferred Post Office for Check &amp; Send (3 nearby slots available)</li>
+               </ul>
+               <div class="src-cite"><span>GOV.UK · Renew or replace your adult passport · HM Passport Office</span><span class="src-cite-arrow"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l5-5"/><path d="M5 4h5v5"/></svg></span></div>`
+        }
+      }
+    ]
+  }
+];
+
+// ---------- STATE ----------
+let demoIdx = 0;
+let scnIdx = 0;
+let mode = 'with';
+let timers = [];
+let isPlaying = false;
+
+function wait(ms) {
+  return new Promise(res => {
+    const t = setTimeout(res, ms);
+    timers.push(t);
+  });
+}
+function clearTimers() {
+  timers.forEach(clearTimeout);
+  timers = [];
+}
+
+// ---------- RENDER LEFT ----------
+function renderTabs() {
+  document.getElementById('embed-tabs').innerHTML = DEMOS.map((d, i) => `
+    <button class="emb-tab ${i === demoIdx ? 'active' : ''}" data-i="${i}">${L(d.tab)}</button>
+  `).join('');
+  document.querySelectorAll('.emb-tab').forEach(b => {
+    b.addEventListener('click', () => {
+      const i = +b.dataset.i;
+      if (i === demoIdx) return;
+      demoIdx = i;
+      scnIdx = 0;
+      renderLeft();
+      schedulePlay();
+    });
+  });
+}
+
+function renderLeft() {
+  const d = DEMOS[demoIdx];
+  document.getElementById('info-domain').textContent = L(d.domain);
+  document.getElementById('info-title').innerHTML = L(d.title);
+  document.getElementById('info-desc').textContent = L(d.desc);
+  document.getElementById('info-demo-tag').textContent = L(UI.demoTag);
+  document.getElementById('info-demo-desc').textContent = L(d.demoDesc);
+  document.getElementById('info-scenarios').innerHTML = d.scenarios.map((s, i) => `
+    <button class="info-scn ${i === scnIdx ? 'active' : ''}" data-i="${i}">${L(s.label)}</button>
+  `).join('');
+  document.querySelectorAll('.info-scn').forEach(b => {
+    b.addEventListener('click', () => {
+      const i = +b.dataset.i;
+      if (i === scnIdx) return;
+      scnIdx = i;
+      document.querySelectorAll('.info-scn').forEach(x => x.classList.toggle('active', +x.dataset.i === scnIdx));
+      schedulePlay();
+    });
+  });
+  // tabs active state
+  document.querySelectorAll('.emb-tab').forEach(b => b.classList.toggle('active', +b.dataset.i === demoIdx));
+}
+
+function renderModeLabels() {
+  document.querySelectorAll('#mode-toggle .mode-btn').forEach(b => {
+    b.textContent = L(b.dataset.mode === 'with' ? UI.modeWith : UI.modeWithout);
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+}
+
+function renderLang() {
+  document.getElementById('lang-mini').innerHTML = LANGS.map(l => `
+    <button class="embed-lang-btn ${l.code === LANG ? 'active' : ''}" data-lang="${l.code}">${l.label}</button>
+  `).join('');
+  document.querySelectorAll('.embed-lang-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const next = b.dataset.lang;
+      if (next === LANG) return;
+      LANG = next;
+      try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+      document.documentElement.lang = LANG;
+      renderTabs();
+      renderLeft();
+      renderModeLabels();
+      renderLang();
+      schedulePlay();
+    });
+  });
+}
+
+// ---------- CHAT PLAY ----------
+function appendChat(html) {
+  const chat = document.getElementById('chat');
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  while (wrap.firstChild) chat.appendChild(wrap.firstChild);
+  requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
+}
+
+function resetChat() {
+  clearTimers();
+  isPlaying = false;
+  document.getElementById('chat').innerHTML = '';
+}
+
+let scheduleTimer = null;
+function schedulePlay() {
+  if (scheduleTimer) clearTimeout(scheduleTimer);
+  scheduleTimer = setTimeout(play, 120);
+}
+
+async function play() {
+  resetChat();
+  isPlaying = true;
+  const demo = DEMOS[demoIdx];
+  const scn = demo.scenarios[scnIdx];
+
+  // greeting
+  appendChat(`<div class="greet">${L(UI.greet)}</div>`);
+  await wait(550);
+
+  // user msg
+  appendChat(`<div class="umsg">${L(scn.question)}</div>`);
+  await wait(700);
+
+  // typing
+  const chat = document.getElementById('chat');
+  const typing = document.createElement('div');
+  typing.className = 'amsg';
+  typing.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  chat.appendChild(typing);
+  requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
+  await wait(900);
+  typing.remove();
+
+  if (mode === 'with') {
+    // tool badge
+    const sources = demo.sources[LANG] || demo.sources.fr;
+    const iconsHtml = sources.map(s => `<span class="tb-icon ${s.cls || ''}">${s.code}</span>`).join('');
+    appendChat(`
+      <div class="toolbadge">
+        <span class="tb-icons">${iconsHtml}</span>
+        <span class="tb-label">${L(demo.sourceLabel)}</span>
+      </div>
+    `);
+    await wait(700);
+    // response
+    appendChat(`<div class="amsg">${L(scn.with)}</div>`);
+  } else {
+    appendChat(`<div class="amsg">${L(scn.without)}</div>`);
+  }
+
+  isPlaying = false;
+}
+
+// ---------- WIRE ----------
+document.querySelectorAll('#mode-toggle .mode-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    const next = b.dataset.mode;
+    if (next === mode) return;
+    mode = next;
+    renderModeLabels();
+    schedulePlay();
+  });
+});
+
+// resize: keep chat scrolled
+let resizeT = null;
+window.addEventListener('resize', () => {
+  if (resizeT) clearTimeout(resizeT);
+  resizeT = setTimeout(() => {
+    const c = document.getElementById('chat');
+    if (c) c.scrollTop = c.scrollHeight;
+  }, 80);
+});
+
+// init
+document.documentElement.lang = LANG;
+renderTabs();
+renderLeft();
+renderModeLabels();
+renderLang();
+window.addEventListener('load', () => setTimeout(play, 500));
+</script>
+</body>
+</html>
