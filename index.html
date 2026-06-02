@@ -484,7 +484,7 @@
           <span class="badge badge-mcp" data-i18n="panel.right.badge">AVEC MCP</span>
           <span data-i18n="panel.right.title">Assistant IA + Bayes MCP</span>
         </div>
-        <div class="panel-sub" data-i18n="panel.right.sub">Vérifié contre HAS &amp; ANSM</div>
+        <div class="panel-sub" data-i18n="panel.right.sub">Vérifié avec corpus HAS &amp; ANSM</div>
       </div>
       <span class="pill" style="background:var(--ok-soft);border-color:rgba(31,122,63,0.25);color:var(--ok); display:inline-flex; align-items:center; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:500;" data-i18n="panel.right.tag">Conformité contrôlée</span>
     </div>
@@ -554,7 +554,7 @@ const T = {
     'controls.playing': '● En cours…', 'controls.replay': '↻ Rejouer ce scénario',
     'input.placeholder': 'Décrivez votre situation…', 'input.send': 'Envoyer',
     'panel.left.badge': 'SANS MCP', 'panel.left.title': 'Assistant IA généraliste', 'panel.left.sub': 'Modèle commercial standard', 'panel.left.tag': 'Sans vérification',
-    'panel.right.badge': 'AVEC MCP', 'panel.right.title': 'Assistant IA + Bayes MCP', 'panel.right.sub': 'Vérifié contre HAS &amp; ANSM', 'panel.right.tag': 'Conformité contrôlée',
+    'panel.right.badge': 'AVEC MCP', 'panel.right.title': 'Assistant IA + Bayes MCP', 'panel.right.sub': 'Vérifié avec corpus HAS &amp; ANSM', 'panel.right.tag': 'Conformité contrôlée',
     'phaseTag.initial': '<span class="pt-icon">●</span> Réponse initiale · sans vérification',
     'phaseTag.verified': '<span class="pt-icon"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 5 9.5 10 3"/></svg></span> Réponse vérifiée · HAS &amp; ANSM',
     'toolcall.running': 'EN COURS…', 'toolcall.done': 'TERMINÉ',
@@ -743,8 +743,8 @@ const SCENARIOS = [
       ]
     },
     toolArg: {
-      fr: '{ "query": "bronchiolite nourrisson <12 mois", "context": "kinésithérapie respiratoire" }',
-      en: '{ "query": "infant bronchiolitis <12mo", "context": "respiratory physiotherapy" }'
+      fr: '{ "query": "…", "answer_project": "…" }',
+      en: '{ "query": "…", "answer_project": "…" }'
     },
     steps: [
       { name: { fr: 'Extraction des actes et molécules cités', en: 'Extract procedures and drugs cited' }, result: { fr: 'kiné respiratoire AFE', en: 'expiratory flow physio (AFE)' }, tone: 'neutral' },
@@ -814,8 +814,8 @@ const SCENARIOS = [
       ]
     },
     toolArg: {
-      fr: '{ "molecule": "codéine", "patient": { "age": 8, "weight_kg": 25 } }',
-      en: '{ "drug": "codeine", "patient": { "age": 8, "weight_kg": 25 } }'
+      fr: '{ "query": "…", "answer_project": "…" }',
+      en: '{ "query": "…", "answer_project": "…" }'
     },
     steps: [
       { name: { fr: 'Extraction des molécules prescrites', en: 'Extract prescribed drugs' }, result: { fr: 'codéine + paracétamol', en: 'codeine + paracetamol' }, tone: 'neutral' },
@@ -885,8 +885,8 @@ const SCENARIOS = [
       ]
     },
     toolArg: {
-      fr: '{ "diagnostic": "rhinopharyngite aiguë", "prescription": "amoxicilline" }',
-      en: '{ "diagnosis": "acute nasopharyngitis", "prescription": "amoxicillin" }'
+      fr: '{ "query": "…", "answer_project": "…" }',
+      en: '{ "query": "…", "answer_project": "…" }'
     },
     steps: [
       { name: { fr: 'Extraction diagnostic & prescription', en: 'Extract diagnosis & prescription' }, result: { fr: 'amoxicilline 2 g/j', en: 'amoxicillin 2 g/day' }, tone: 'neutral' },
@@ -954,8 +954,8 @@ const SCENARIOS = [
       ]
     },
     toolArg: {
-      fr: '{ "molecule": "dompéridone", "dose_mg": 20, "frequency": 4, "duration_days": 28 }',
-      en: '{ "drug": "domperidone", "dose_mg": 20, "frequency": 4, "duration_days": 28 }'
+      fr: '{ "query": "…", "answer_project": "…" }',
+      en: '{ "query": "…", "answer_project": "…" }'
     },
     steps: [
       { name: { fr: 'Extraction posologie & durée', en: 'Extract dose & duration' }, result: { fr: '80 mg/j · 4 sem.', en: '80 mg/day · 4 weeks' }, tone: 'neutral' },
