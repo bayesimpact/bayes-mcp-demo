@@ -703,36 +703,42 @@ const SCENARIOS = [
     plainAnswer: {
       fr: [
         "Pour une bronchiolite aiguë du nourrisson sans signe de gravité, la prise en charge habituelle comprend :",
-        "• Désobstruction rhino-pharyngée au sérum physiologique avant repas et coucher",
-        "• <mark class='warn'>Kinésithérapie respiratoire</mark> par accélération du flux expiratoire, à raison d'1 à 2 séances par jour",
-        "• Hydratation, fractionnement des repas",
+        "• Désobstruction rhino-pharyngée au sérum physiologique avant les repas et le coucher",
+        "• <mark class='warn'>Kinésithérapie respiratoire</mark> par accélération du flux expiratoire, 1 séance par jour à réévaluer selon l'évolution",
+        "• Couchage en proclive dorsal à 30°, fractionnement des repas, hydratation",
         "• Surveillance de la fréquence respiratoire et de la prise alimentaire",
         "• Reconsultation si aggravation"
       ],
       en: [
         "For mild acute bronchiolitis in an infant, standard care typically includes:",
         "• Nasal saline irrigation before feeds and bedtime",
-        "• <mark class='warn'>Respiratory physiotherapy</mark> via expiratory flow acceleration, 1 to 2 sessions per day",
-        "• Hydration, smaller and more frequent feeds",
+        "• <mark class='warn'>Respiratory physiotherapy</mark> via expiratory flow acceleration, 1 session per day, reassessed as it evolves",
+        "• Head-up (30° prone-incline) positioning, smaller feeds, hydration",
         "• Monitor respiratory rate and feeding",
         "• Return visit if worsening"
       ]
     },
     mcpAnswer: {
       fr: [
-        "Pour une bronchiolite aiguë du nourrisson sans signe de gravité :",
-        "• Désobstruction rhino-pharyngée pluriquotidienne",
-        "• <strong>Pas de kinésithérapie respiratoire systématique</strong> (HAS, recommandations 2019)",
-        "• Hydratation, fractionnement des repas, position proclive",
-        "• Surveillance étroite : fréquence respiratoire, signes de lutte, prise alimentaire (&lt; 50 % = critère d'hospitalisation)",
+        "Pour une bronchiolite aiguë du nourrisson sans signe de gravité (HAS, 2019) :",
+        "• Désobstruction rhino-pharyngée pluriquotidienne au sérum physiologique, surtout avant les repas",
+        "• <strong>Pas de kinésithérapie respiratoire</strong> (non recommandée, grade B)",
+        "• <strong>Aucun médicament</strong> : ni bronchodilatateur, ni corticoïde, ni antibiotique, ni antitussif",
+        "• <strong>Aucun examen complémentaire</strong> en ambulatoire (ni radiographie, ni test virologique)",
+        "• Couchage <strong>strictement sur le dos, à plat</strong> (la position proclive n'est plus recommandée) ; hydratation et fractionnement des repas",
+        "• Mesures associées : éviction du tabagisme passif, chambre à 18-19 °C, lavage des mains et mesures barrières",
+        "• Signes de lutte à expliquer aux parents : refus alimentaire (&lt; 50 % des biberons), apnées, geignement, battement des ailes du nez, tirage, cyanose, somnolence",
         "• Reconsultation à 48 h ou avant si aggravation"
       ],
       en: [
-        "For mild acute bronchiolitis in an infant:",
-        "• Multiple-times-daily nasal saline irrigation",
-        "• <strong>No systematic respiratory physiotherapy</strong> (HAS guidelines, 2019)",
-        "• Hydration, smaller feeds, semi-upright position",
-        "• Close monitoring: respiratory rate, signs of distress, feeding intake (&lt; 50 % = hospital admission criterion)",
+        "For mild acute bronchiolitis in an infant (HAS, 2019):",
+        "• Multiple-times-daily nasal saline irrigation, especially before feeds",
+        "• <strong>No respiratory physiotherapy</strong> (not recommended, grade B)",
+        "• <strong>No medication</strong>: no bronchodilator, corticosteroid, antibiotic or cough suppressant",
+        "• <strong>No complementary test</strong> in outpatient care (no X-ray, no viral testing)",
+        "• <strong>Strictly supine, flat</strong> sleep position (head-up positioning is no longer recommended); hydration and smaller feeds",
+        "• Supportive measures: avoid passive smoking, room at 18-19 °C, hand washing and barrier measures",
+        "• Signs of distress to explain to parents: feeding refusal (&lt; 50 % of bottles), apnea, grunting, nasal flaring, chest retraction, cyanosis, drowsiness",
         "• Return at 48 h or sooner if worsening"
       ]
     },
@@ -773,36 +779,38 @@ const SCENARIOS = [
     },
     plainAnswer: {
       fr: [
-        "Pour un enfant de 25 kg, la codéine peut être prescrite en association au paracétamol :",
-        "• <mark class='bad'>Codéine : 0,5 à 1 mg/kg/prise, soit 12,5 à 25 mg toutes les 6 heures</mark>",
-        "• Paracétamol : 15 mg/kg toutes les 6 heures",
-        "• Durée limitée à 48 à 72 heures",
-        "Surveiller la somnolence et la dépression respiratoire."
+        "Pour une douleur post-extraction de l'enfant (25 kg), on peut associer un palier I à un palier II :",
+        "• Paracétamol 15 mg/kg toutes les 6 heures",
+        "• <mark class='bad'>Codéine 0,5 mg/kg/prise, soit 12,5 mg toutes les 6 heures, sans dépasser 4 prises par jour</mark>",
+        "• Durée courte, limitée à 48 à 72 heures",
+        "Surveiller la somnolence et la dépression respiratoire ; prévenir les parents."
       ],
       en: [
-        "For a 25 kg child, codeine can be prescribed alongside paracetamol:",
-        "• <mark class='bad'>Codeine: 0.5 to 1 mg/kg per dose, i.e. 12.5 to 25 mg every 6 hours</mark>",
-        "• Paracetamol: 15 mg/kg every 6 hours",
-        "• Duration limited to 48 to 72 hours",
-        "Monitor for somnolence and respiratory depression."
+        "For post-extraction pain in a child (25 kg), a tier I and tier II analgesic can be combined:",
+        "• Paracetamol 15 mg/kg every 6 hours",
+        "• <mark class='bad'>Codeine 0.5 mg/kg per dose, i.e. 12.5 mg every 6 hours, no more than 4 doses per day</mark>",
+        "• Short course, limited to 48 to 72 hours",
+        "Monitor for somnolence and respiratory depression; warn the parents."
       ]
     },
     mcpAnswer: {
       fr: [
-        "<strong>La codéine est contre-indiquée chez l'enfant de moins de 12 ans</strong> (ANSM, 2013).",
-        "Alternative recommandée pour une douleur post-extraction modérée à sévère :",
-        "• Paracétamol 15 mg/kg toutes les 6 h (max 60 mg/kg/j)",
-        "• Ibuprofène 10 mg/kg toutes les 8 h en l'absence de contre-indication",
-        "• Si insuffisant : <strong>tramadol pédiatrique</strong> en gouttes (à partir de 3 ans, hors AMM mais utilisé) ou avis spécialisé",
-        "• Bloc loco-régional par le chirurgien-dentiste si pertinent"
+        "<strong>La codéine est contre-indiquée chez l'enfant de moins de 12 ans</strong> (ANSM, 2013), risque de dépression respiratoire chez les métaboliseurs ultra-rapides du CYP2D6.",
+        "Prise en charge recommandée d'une douleur post-extraction :",
+        "• Paracétamol 15 mg/kg toutes les 6 h, soit <strong>375 mg/prise</strong> (max 60 mg/kg/j)",
+        "• Ibuprofène 10 mg/kg toutes les 8 h, soit <strong>250 mg/prise</strong>, en l'absence de contre-indication et <strong>après avoir écarté une varicelle / infection cutanée</strong>",
+        "• Privilégier l'alternance paracétamol-ibuprofène et les mesures locales (cryothérapie / glace, hygiène)",
+        "• <strong>Le tramadol est lui aussi contre-indiqué avant 12 ans</strong> (ANSM, 2020)",
+        "• En cas d'échec, palier III adapté : <strong>morphine orale</strong> (métabolisme prévisible) ou avis spécialisé"
       ],
       en: [
-        "<strong>Codeine is contraindicated in children under 12</strong> (ANSM, 2013).",
-        "Recommended alternatives for moderate to severe post-extraction pain:",
-        "• Paracetamol 15 mg/kg every 6 h (max 60 mg/kg/day)",
-        "• Ibuprofen 10 mg/kg every 8 h if no contraindication",
-        "• If insufficient: <strong>pediatric tramadol</strong> in drops (from age 3, off-label but used) or specialist advice",
-        "• Local anaesthetic block by the dentist if appropriate"
+        "<strong>Codeine is contraindicated in children under 12</strong> (ANSM, 2013), due to respiratory depression in CYP2D6 ultra-rapid metabolisers.",
+        "Recommended management of post-extraction pain:",
+        "• Paracetamol 15 mg/kg every 6 h, i.e. <strong>375 mg/dose</strong> (max 60 mg/kg/day)",
+        "• Ibuprofen 10 mg/kg every 8 h, i.e. <strong>250 mg/dose</strong>, if no contraindication and <strong>after ruling out chickenpox / skin infection</strong>",
+        "• Prefer alternating paracetamol and ibuprofen plus local measures (cryotherapy / ice, hygiene)",
+        "• <strong>Tramadol is also contraindicated under 12</strong> (ANSM, 2020)",
+        "• If insufficient, appropriate tier III: <strong>oral morphine</strong> (predictable metabolism) or specialist advice"
       ]
     },
     toolArg: {
@@ -813,7 +821,7 @@ const SCENARIOS = [
       { name: { fr: 'Extraction des molécules prescrites', en: 'Extract prescribed drugs' }, result: { fr: 'codéine + paracétamol', en: 'codeine + paracetamol' }, tone: 'neutral' },
       { name: { fr: 'Croisement avec base ANSM', en: 'Cross-check with ANSM database' }, result: { fr: 'ANSM-2013-CODEINE', en: 'ANSM-2013-CODEINE' }, tone: 'neutral' },
       { name: { fr: 'Vérification âge', en: 'Age check' }, result: { fr: 'AGE < 12 ANS', en: 'AGE < 12' }, tone: 'danger' },
-      { name: { fr: "Alternatives HAS", en: 'HAS alternatives' }, result: { fr: 'paliers I et II', en: 'tier I and II' }, tone: 'ok' }
+      { name: { fr: "Alternatives HAS", en: 'HAS alternatives' }, result: { fr: 'palier I, II→III', en: 'tier I, II→III' }, tone: 'ok' }
     ],
     verdict: {
       level: 'danger',
@@ -842,36 +850,38 @@ const SCENARIOS = [
     },
     plainAnswer: {
       fr: [
-        "Devant une rhinopharyngite aiguë avec rhinorrhée purulente persistante, une couverture antibiotique de première intention peut se justifier :",
-        "• <mark class='bad'>Amoxicilline 1 g x 3 par jour pendant 7 jours</mark>",
+        "Devant une rhinorrhée purulente persistante depuis 4 jours avec fébricule, on peut craindre une surinfection bactérienne et proposer :",
+        "• <mark class='bad'>Amoxicilline 1 g matin et soir pendant 6 jours</mark>",
         "• Ou, en cas d'allergie : azithromycine 500 mg J1 puis 250 mg J2 à J5",
-        "• Associer du paracétamol pour le confort",
+        "• Associer du paracétamol pour le confort et la fièvre",
         "• Lavages de nez au sérum physiologique"
       ],
       en: [
-        "For acute nasopharyngitis with persistent purulent discharge, first-line antibiotic coverage may be justified:",
-        "• <mark class='bad'>Amoxicillin 1 g three times a day for 7 days</mark>",
+        "Given purulent discharge persisting for 4 days with low-grade fever, a bacterial superinfection may be suspected and one might propose:",
+        "• <mark class='bad'>Amoxicillin 1 g morning and evening for 6 days</mark>",
         "• If allergic: azithromycin 500 mg day 1 then 250 mg days 2 to 5",
-        "• Add paracetamol for comfort",
+        "• Add paracetamol for comfort and fever",
         "• Saline nasal irrigation"
       ]
     },
     mcpAnswer: {
       fr: [
-        "<strong>Aucune antibiothérapie n'est indiquée.</strong> La rhinopharyngite aiguë est une affection <strong>virale</strong> dans la quasi-totalité des cas, y compris en présence de rhinorrhée purulente (qui ne signe pas une surinfection bactérienne).",
-        "Prise en charge recommandée :",
+        "<strong>Aucune antibiothérapie n'est indiquée.</strong> La rhinopharyngite aiguë est une affection <strong>virale</strong> dans la quasi-totalité des cas ; la rhinorrhée purulente est une étape normale de l'évolution et <strong>ne signe pas une surinfection bactérienne</strong>.",
+        "Prise en charge symptomatique :",
         "• Paracétamol si fièvre ou inconfort",
-        "• Désobstruction rhino-pharyngée au sérum physiologique",
-        "• Information du patient sur l'évolution spontanée (7 à 10 jours)",
-        "• Reconsultation si fièvre supérieure à 3 j, douleur faciale unilatérale, otalgie"
+        "• Désobstruction rhino-pharyngée pluriquotidienne au sérum physiologique",
+        "• <strong>Aucun examen complémentaire</strong> nécessaire ; vasoconstricteurs et antibiotiques locaux déconseillés",
+        "• Information du patient : évolution spontanément favorable en 7 à 10 jours",
+        "• Reconsultation si fièvre &gt; 3 j, douleur faciale unilatérale, otalgie ou aggravation (évoquant une complication : sinusite, otite)"
       ],
       en: [
-        "<strong>No antibiotic is indicated.</strong> Acute nasopharyngitis is <strong>viral</strong> in nearly all cases, even with purulent discharge (which does not indicate bacterial superinfection).",
-        "Recommended management:",
+        "<strong>No antibiotic is indicated.</strong> Acute nasopharyngitis is <strong>viral</strong> in nearly all cases; purulent discharge is a normal stage of the course and <strong>does not indicate a bacterial superinfection</strong>.",
+        "Symptomatic management:",
         "• Paracetamol for fever or discomfort",
-        "• Saline nasal irrigation",
-        "• Inform the patient about spontaneous resolution (7 to 10 days)",
-        "• Return if fever lasts beyond 3 days, unilateral facial pain, or ear pain"
+        "• Multiple-times-daily saline nasal irrigation",
+        "• <strong>No complementary test</strong> needed; topical decongestants and antibiotics are not advised",
+        "• Inform the patient: spontaneous resolution in 7 to 10 days",
+        "• Return if fever lasts beyond 3 days, unilateral facial pain, ear pain or worsening (suggesting a complication: sinusitis, otitis)"
       ]
     },
     toolArg: {
@@ -879,7 +889,7 @@ const SCENARIOS = [
       en: '{ "diagnosis": "acute nasopharyngitis", "prescription": "amoxicillin" }'
     },
     steps: [
-      { name: { fr: 'Extraction diagnostic & prescription', en: 'Extract diagnosis & prescription' }, result: { fr: 'amoxicilline 3 g/j', en: 'amoxicillin 3 g/day' }, tone: 'neutral' },
+      { name: { fr: 'Extraction diagnostic & prescription', en: 'Extract diagnosis & prescription' }, result: { fr: 'amoxicilline 2 g/j', en: 'amoxicillin 2 g/day' }, tone: 'neutral' },
       { name: { fr: 'Croisement avec base HAS', en: 'Cross-check with HAS database' }, result: { fr: 'fiche HAS ORL', en: 'HAS ENT sheet' }, tone: 'neutral' },
       { name: { fr: "Vérification de l'indication", en: 'Check indication' }, result: { fr: 'NON INDIQUÉ', en: 'NOT INDICATED' }, tone: 'warn' },
       { name: { fr: 'Plan antibiorésistance', en: 'AMR plan' }, result: { fr: 'PROPRIAS 22-25', en: 'PROPRIAS 22-25' }, tone: 'warn' }
@@ -911,36 +921,36 @@ const SCENARIOS = [
     },
     plainAnswer: {
       fr: [
-        "La dompéridone est efficace sur les nausées d'origine gastrique :",
+        "La dompéridone est un prokinétique habituellement bien toléré sur les nausées d'origine gastrique :",
         "• <mark class='bad'>20 mg 3 à 4 fois par jour avant les repas</mark>",
-        "• <mark class='warn'>Durée : selon évolution clinique, généralement 2 à 4 semaines renouvelables</mark>",
+        "• <mark class='warn'>Durée : selon l'évolution clinique, généralement 2 à 4 semaines renouvelables</mark>",
         "• À prendre 15 à 30 minutes avant les repas",
-        "• Surveiller les effets extrapyramidaux"
+        "• Bonne tolérance ; surveiller d'éventuels effets extrapyramidaux"
       ],
       en: [
-        "Domperidone is effective for nausea of gastric origin:",
+        "Domperidone is a generally well-tolerated prokinetic for nausea of gastric origin:",
         "• <mark class='bad'>20 mg three to four times a day before meals</mark>",
         "• <mark class='warn'>Duration: based on clinical course, typically 2 to 4 weeks, renewable</mark>",
         "• Take 15 to 30 minutes before meals",
-        "• Monitor for extrapyramidal effects"
+        "• Generally well tolerated; monitor for extrapyramidal effects"
       ]
     },
     mcpAnswer: {
       fr: [
-        "<strong>Restrictions ANSM applicables :</strong> la dompéridone augmente le risque d'allongement du QT et de mort subite d'origine cardiaque.",
-        "Posologie autorisée chez l'adulte :",
-        "• <strong>10 mg, jusqu'à 3 fois par jour</strong> (dose totale max 30 mg/j)",
-        "• <strong>Durée maximale : 7 jours</strong>",
-        "• Contre-indications : QT long, insuffisance hépatique modérée à sévère, association à inhibiteurs puissants du CYP3A4",
-        "• À 62 ans : ECG préalable recommandé. Privilégier la métopimazine ou un IPP selon l'étiologie."
+        "<strong>La situation décrite ne relève pas de la dompéridone</strong> : des nausées <strong>chroniques</strong> sont hors indication (réservée à l'aigu).",
+        "• À 62 ans, des nausées chroniques post-prandiales imposent d'abord une <strong>endoscopie digestive haute (FOGD)</strong> pour éliminer une cause organique (cancer, sténose) avant tout traitement prolongé",
+        "Si un recours ponctuel était envisagé, dans le cadre <strong>aigu</strong> uniquement (restrictions ANSM 2014, risque d'allongement du QT et de mort subite, majoré après 60 ans) :",
+        "• <strong>10 mg, jusqu'à 3 fois par jour</strong> (max 30 mg/j), <strong>durée ≤ 7 jours</strong>",
+        "• Contre-indications : QT long, troubles électrolytiques, insuffisance hépatique modérée à sévère, <strong>obstruction / perforation digestive</strong>, inhibiteurs puissants du CYP3A4 ; ECG préalable recommandé",
+        "• La HAS (2022) juge l'efficacité des prokinétiques <strong>mal établie</strong> et recommande de les éviter chez le sujet âgé : privilégier la métopimazine ou un IPP selon l'étiologie"
       ],
       en: [
-        "<strong>ANSM restrictions apply:</strong> domperidone increases the risk of QT prolongation and sudden cardiac death.",
-        "Authorised adult dosing:",
-        "• <strong>10 mg, up to 3 times a day</strong> (total max 30 mg/day)",
-        "• <strong>Maximum duration: 7 days</strong>",
-        "• Contraindications: long QT, moderate-to-severe hepatic impairment, concurrent strong CYP3A4 inhibitors",
-        "• At 62: prior ECG recommended. Prefer metopimazine or a PPI depending on aetiology."
+        "<strong>This situation is not an indication for domperidone</strong>: <strong>chronic</strong> nausea is off-label (it is restricted to acute use).",
+        "• At 62, chronic post-meal nausea first warrants an <strong>upper GI endoscopy (EGD)</strong> to rule out an organic cause (cancer, stenosis) before any prolonged treatment",
+        "If occasional use were considered, for <strong>acute</strong> use only (ANSM 2014 restrictions, risk of QT prolongation and sudden death, greater after 60):",
+        "• <strong>10 mg, up to 3 times a day</strong> (max 30 mg/day), <strong>duration ≤ 7 days</strong>",
+        "• Contraindications: long QT, electrolyte disturbances, moderate-to-severe hepatic impairment, <strong>GI obstruction / perforation</strong>, strong CYP3A4 inhibitors; prior ECG recommended",
+        "• HAS (2022) considers the efficacy of prokinetics <strong>poorly established</strong> and recommends avoiding them in the elderly: prefer metopimazine or a PPI depending on aetiology"
       ]
     },
     toolArg: {
